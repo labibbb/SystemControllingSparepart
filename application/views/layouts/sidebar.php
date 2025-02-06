@@ -24,7 +24,8 @@
 					<li><a href="<?= site_url('lini'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lini</a></li>
 					<li><a href="<?= site_url('area'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Area</a></li>
 					<li><a href="<?= site_url('mesin'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mesin</a></li>
-					<li><a href="extra_taskboard.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Man Power</a></li>
+					<li><a href="<?= site_url('manpower'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Man Power</a></li>
+					<li><a href="<?= site_url('departemen'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Departemen</a></li>
 				  </ul>
 				</li> 	     
 			  </ul>

@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:8080/SystemControllingSparepart/';
+$config['base_url'] = 'http://localhost:8081/SystemControllingSparepart/';
 
 /*
 |--------------------------------------------------------------------------
@@ -498,6 +498,8 @@ $config['compress_output'] = FALSE;
 |
 */
 $config['time_reference'] = 'local';
+date_default_timezone_set('Asia/Jakarta');
+
 
 /*
 |--------------------------------------------------------------------------

@@ -73,3 +73,16 @@ $route['mesin/add'] = 'Mesin/add';
 $route['mesin/edit/(:num)'] = 'Mesin/edit/$1';
 $route['mesin/update'] = 'Mesin/update';
 $route['mesin/delete/(:num)'] = 'Mesin/delete/$1';
+
+$route['manpower'] = 'Manpower/index';
+$route['manpower/add'] = 'Manpower/add';
+$route['manpower/edit/(:num)'] = 'Manpower/edit/$1';
+$route['manpower/update'] = 'Manpower/update';
+$route['manpower/delete/(:num)'] = 'Manpower/delete/$1';
+
+$route['departemen'] = 'Departemen/index';
+$route['departemen/add'] = 'Departemen/add';
+$route['departemen/edit/(:num)'] = 'Departemen/edit/$1';
+$route['departemen/update'] = 'Departemen/update';
+$route['departemen/delete/(:num)'] = 'Departemen/delete/$1';
+

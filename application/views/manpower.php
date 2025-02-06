@@ -6,8 +6,8 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Master Lini</h3>
-                    <button class="btn btn-success" onclick="openModal()">Tambah Lini</button>
+                    <h3 class="box-title">Master Manpower</h3>
+                    <button class="btn btn-success" onclick="openModal()">Tambah Manpower</button>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -15,16 +15,20 @@
                             <thead class="bg-primary">
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Lini</th>
+                                    <th>Nama</th>
+                                    <th>Posisi</th>
+                                    <th>Shift</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="data-lini">
-                                <?php $no = 1; foreach ($lini as $row): ?>
+                            <tbody id="data-manpower">
+                                <?php $no = 1; foreach ($manpower as $row): ?>
                                     <tr>
                                         <td><?= $no++; ?></td>
-                                        <td><?= $row['nama_lini']; ?></td>
+                                        <td><?= $row['nama']; ?></td>
+                                        <td><?= $row['posisi']; ?></td>
+                                        <td><?= $row['shift']; ?></td>
                                         <td>
                                             <?php if ($row['status'] == 1): ?>
                                                 <span class="badge bg-success">Aktif</span>
@@ -34,8 +38,8 @@
                                         </td>
                                         <td>
                                             <?php if ($row['status'] == 1): ?>
-                                                <button class="btn btn-warning btn-sm" onclick="editLini(<?= $row['id_lini']; ?>)">Edit</button>
-                                                <button class="btn btn-danger btn-sm" onclick="deleteLini(<?= $row['id_lini']; ?>)">Delete</button>
+                                                <button class="btn btn-warning btn-sm" onclick="editmanpower(<?= $row['id_manpower']; ?>)">Edit</button>
+                                                <button class="btn btn-danger btn-sm" onclick="deletemanpower(<?= $row['id_manpower']; ?>)">Delete</button>
                                             <?php endif; ?>    
                                         </td>
                                     </tr>
@@ -50,19 +54,27 @@
 </div>
 
 <!-- Modal Form -->
-<div id="modalLini" class="modal fade" tabindex="-1" role="dialog">
+<div id="modalManpower" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Tambah Lini</h5>
-                <button type="button" class="close" onclick="$('#modalLini').modal('hide')">&times;</button>
-            </div>
+                <h5 class="modal-title" id="modal-title">Tambah Manpower</h5>
+                <button type="button" class="close" onclick="$('#modalManpower').modal('hide')">&times;</button>
+                </div>
             <div class="modal-body">
-                <form id="formLini">
-                    <input type="hidden" id="id_lini">
+                <form id="formManpower">
+                    <input type="hidden" id="id_manpower">
                     <div class="form-group">
-                        <label>Nama Lini</label>
-                        <input type="text" id="nama_lini" class="form-control" required>
+                        <label>Nama</label>
+                        <input type="text" id="nama" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Posisi</label>
+                        <input type="text" id="posisi" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Shift</label>
+                        <input type="number" id="shift" class="form-control" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -73,21 +85,23 @@
 
 <script>
 function openModal() {
-    $('#modalLini').modal('show');
-    $('#formLini')[0].reset();
-    $('#id_lini').val('');
-    $('#modal-title').text('Tambah Lini');
+    $('#modalManpower').modal('show');
+    $('#formManpower')[0].reset();
+    $('#id_manpower').val('');
+    $('#modal-title').text('Tambah Manpower');
 }
 
-$('#formLini').submit(function(e) {
+$('#formManpower').submit(function(e) {
     e.preventDefault();
-    let id = $('#id_lini').val();
-    let nama_lini = $('#nama_lini').val();
-    let url = id ? '<?= site_url("lini/update"); ?>' : '<?= site_url("lini/add"); ?>';
+    let id = $('#id_manpower').val();
+    let nama = $('#nama').val();
+    let posisi = $('#posisi').val();
+    let shift = $('#shift').val();
+    let url = id ? '<?= site_url("manpower/update"); ?>' : '<?= site_url("manpower/add"); ?>';
 
-    $.post(url, { id_lini: id, nama_lini: nama_lini }, function(response) {
+    $.post(url, { id_manpower:  id, nama: nama, posisi: posisi, shift: shift }, function(response) {
         console.log(response); // Tambahkan ini untuk debugging
-        $('#modalLini').modal('hide');
+        $('#modalManpower').modal('hide');
         Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
     }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Error:", textStatus, errorThrown);
@@ -96,16 +110,18 @@ $('#formLini').submit(function(e) {
 });
 
 
-function editLini(id) {
-    $.get('<?= site_url("lini/edit/"); ?>' + id, function(data) {
+function editmanpower(id) {
+    $.get('<?= site_url("manpower/edit/"); ?>' + id, function(data) {
         openModal();
-        $('#id_lini').val(data.id_lini);
-        $('#nama_lini').val(data.nama_lini);
-        $('#modal-title').text('Edit Lini');
+        $('#id_manpower').val(data.id_manpower);
+        $('#nama').val(data.nama);
+        $('#posisi').val(data.posisi);
+        $('#shift').val(data.shift);
+        $('#modal-title').text('Edit Manpower');
     }, 'json');
 }
 
-function deleteLini(id) {
+function deletemanpower(id) {
     Swal.fire({
         title: 'Yakin ingin menghapus?',
         icon: 'warning',
@@ -115,7 +131,7 @@ function deleteLini(id) {
         confirmButtonText: 'Ya, hapus!'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post('<?= site_url("lini/delete/"); ?>' + id, function(response) {
+            $.post('<?= site_url("manpower/delete/"); ?>' + id, function(response) {
                 Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success').then(() => location.reload());
             }, 'json');
         }

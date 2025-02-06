@@ -6,8 +6,8 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Master Lini</h3>
-                    <button class="btn btn-success" onclick="openModal()">Tambah Lini</button>
+                    <h3 class="box-title">Master Departemen</h3>
+                    <button class="btn btn-success" onclick="openModal()">Tambah Departemen</button>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -15,16 +15,19 @@
                             <thead class="bg-primary">
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Lini</th>
+                                    <th>Init</th>
+                                    <th>Departemen</th>
                                     <th>Status</th>
+                                    <th>Tanggal Dibuat</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="data-lini">
-                                <?php $no = 1; foreach ($lini as $row): ?>
+                            <tbody id="data-departemen">
+                                <?php $no = 1; foreach ($departemen as $row): ?>
                                     <tr>
-                                        <td><?= $no++; ?></td>
-                                        <td><?= $row['nama_lini']; ?></td>
+                                         <td><?= $no++; ?></td>
+                                        <td><?= $row['init']; ?></td>
+                                        <td><?= $row['dept']; ?></td>
                                         <td>
                                             <?php if ($row['status'] == 1): ?>
                                                 <span class="badge bg-success">Aktif</span>
@@ -32,11 +35,11 @@
                                                 <span class="badge bg-danger">Tidak Aktif</span>
                                             <?php endif; ?>
                                         </td>
+                                        <td><?= date('d-m-Y H:i:s', strtotime($row['sysdate'])); ?></td>
                                         <td>
-                                            <?php if ($row['status'] == 1): ?>
-                                                <button class="btn btn-warning btn-sm" onclick="editLini(<?= $row['id_lini']; ?>)">Edit</button>
-                                                <button class="btn btn-danger btn-sm" onclick="deleteLini(<?= $row['id_lini']; ?>)">Delete</button>
-                                            <?php endif; ?>    
+                                                <button class="btn btn-warning btn-sm" onclick="editdepartemen(<?= $row['id']; ?>)">Edit</button>
+                                                <button class="btn btn-danger btn-sm" onclick="deletedepartemen(<?= $row['id']; ?>)">Delete</button>
+                                              
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -50,19 +53,23 @@
 </div>
 
 <!-- Modal Form -->
-<div id="modalLini" class="modal fade" tabindex="-1" role="dialog">
+<div id="modalDepartemen" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Tambah Lini</h5>
-                <button type="button" class="close" onclick="$('#modalLini').modal('hide')">&times;</button>
-            </div>
+                <h5 class="modal-title" id="modal-title">Tambah Departemen</h5>
+                <button type="button" class="close" onclick="$('#modalDepartemen').modal('hide')">&times;</button>
+                </div>
             <div class="modal-body">
-                <form id="formLini">
-                    <input type="hidden" id="id_lini">
+                <form id="formDepartemen">
+                    <input type="hidden" id="id">
                     <div class="form-group">
-                        <label>Nama Lini</label>
-                        <input type="text" id="nama_lini" class="form-control" required>
+                        <label>init</label>
+                        <input type="text" id="init" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Departemen</label>
+                        <input type="text" id="dept" class="form-control" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -73,21 +80,22 @@
 
 <script>
 function openModal() {
-    $('#modalLini').modal('show');
-    $('#formLini')[0].reset();
-    $('#id_lini').val('');
-    $('#modal-title').text('Tambah Lini');
+    $('#modalDepartemen').modal('show');
+    $('#formDepartemen')[0].reset();
+    $('#id').val('');
+    $('#modal-title').text('Tambah Departemen');
 }
 
-$('#formLini').submit(function(e) {
+$('#formDepartemen').submit(function(e) {
     e.preventDefault();
-    let id = $('#id_lini').val();
-    let nama_lini = $('#nama_lini').val();
-    let url = id ? '<?= site_url("lini/update"); ?>' : '<?= site_url("lini/add"); ?>';
+    let id = $('#id').val();
+    let init = $('#init').val();
+    let dept = $('#dept').val();
+    let url = id ? '<?= site_url("departemen/update"); ?>' : '<?= site_url("departemen/add"); ?>';
 
-    $.post(url, { id_lini: id, nama_lini: nama_lini }, function(response) {
+    $.post(url, { id:  id, init: init, dept: dept }, function(response) {
         console.log(response); // Tambahkan ini untuk debugging
-        $('#modalLini').modal('hide');
+        $('#modalDepartemen').modal('hide');
         Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
     }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Error:", textStatus, errorThrown);
@@ -96,16 +104,17 @@ $('#formLini').submit(function(e) {
 });
 
 
-function editLini(id) {
-    $.get('<?= site_url("lini/edit/"); ?>' + id, function(data) {
+function editdepartemen(id) {
+    $.get('<?= site_url("departemen/edit/"); ?>' + id, function(data) {
         openModal();
-        $('#id_lini').val(data.id_lini);
-        $('#nama_lini').val(data.nama_lini);
-        $('#modal-title').text('Edit Lini');
+        $('#id').val(data.id);
+        $('#init').val(data.init);
+        $('#dept').val(data.dept);
+        $('#modal-title').text('Edit Departemen');
     }, 'json');
 }
 
-function deleteLini(id) {
+function deletedepartemen(id) {
     Swal.fire({
         title: 'Yakin ingin menghapus?',
         icon: 'warning',
@@ -115,7 +124,7 @@ function deleteLini(id) {
         confirmButtonText: 'Ya, hapus!'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post('<?= site_url("lini/delete/"); ?>' + id, function(response) {
+            $.post('<?= site_url("departemen/delete/"); ?>' + id, function(response) {
                 Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success').then(() => location.reload());
             }, 'json');
         }
