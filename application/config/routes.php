@@ -100,3 +100,10 @@ $route['jobdeskripsi/edit/(:num)'] = 'Jobdeskripsi/edit/$1';
 $route['jobdeskripsi/update'] = 'Jobdeskripsi/update';
 $route['jobdeskripsi/delete/(:num)'] = 'Jobdeskripsi/delete/$1';
 
+
+$route['settingfwm'] = 'Settingfwm/index';
+$route['settingfwm/add'] = 'Settingfwm/add';
+$route['settingfwm/get_area'] = 'Settingfwm/get_area';
+$route['settingfwm/get_mesin'] = 'Settingfwm/get_mesin';
+$route['settingfwm/update_frekuensi'] = 'Settingfwm/update_frekuensi';
+$route['settingfwm/update_instruksi'] = 'Settingfwm/update_instruksi';

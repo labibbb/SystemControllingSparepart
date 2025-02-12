@@ -29,6 +29,18 @@
 					<li><a href="<?= site_url('user'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>User</a></li>
 					<li><a href="<?= site_url('jobdeskripsi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Job Deskripsi</a></li>
 				  </ul>
+				</li>
+				<li class="treeview">
+				  <a href="#">
+					<i span class="icon-Layout-grid"><span class="path1"></span><span class="path2"></span></i>
+					<span>Transaksi</span>
+					<span class="pull-right-container">
+					  <i class="fa fa-angle-right pull-right"></i>
+					</span>
+				  </a>
+				  <ul class="treeview-menu">
+					<li><a href="<?= site_url('settingfwm'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Setting Freq & Work Instruction PM</a></li>
+				  </ul>
 				</li> 	     
 			  </ul>
 		  </div>
