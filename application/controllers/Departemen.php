@@ -13,6 +13,8 @@ class Departemen extends CI_Controller {
     }
 
     public function add() {
+        date_default_timezone_set('Asia/Jakarta'); // Pastikan timezone sesuai lokasi
+
         $data = [
             'init' => $this->input->post('init'),
             'dept' => $this->input->post('dept'),

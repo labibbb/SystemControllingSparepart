@@ -11,6 +11,10 @@ class Mesin extends CI_Controller {
         // Ambil data mesin
         $data['mesin'] = $this->Mesin_model->get_all_mesin_with_area();  // Ambil mesin dengan nama area
         $data['areas'] = $this->Mesin_model->get_active_areas();  // Ambil daftar area aktif
+        $data['areas_painting1'] = $this->Mesin_model->get_areas_by_lini('Painting 1');
+        $data['areas_painting2'] = $this->Mesin_model->get_areas_by_lini('Painting 2');
+    
+        // Load view dengan data
         $this->load->view('mesin', $data);
     }
     

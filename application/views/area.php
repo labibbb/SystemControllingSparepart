@@ -10,46 +10,101 @@
                     <button class="btn btn-success" onclick="openModal()">Tambah Area</button>
                 </div>
                 <div class="box-body">
-                    <div class="table-responsive">
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead class="bg-primary">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Area</th>
-                                    <th>Lini</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="data-area">
-                                <?php $no = 1; foreach ($area as $row): ?>
-                                    <tr>
-                                        <td><?= $no++; ?></td>
-                                        <td><?= $row['nama_area']; ?></td>
-                                        <td><?= $row['nama_lini']; ?></td>
-                                        <td>
-                                            <?php if ($row['status'] == 1): ?>
-                                                <span class="badge bg-success">Aktif</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-danger">Tidak Aktif</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?php if ($row['status'] == 1): ?>
-                                                <button class="btn btn-warning btn-sm" onclick="editArea(<?= $row['id_area']; ?>)">Edit</button>
-                                                <button class="btn btn-danger btn-sm" onclick="deleteArea(<?= $row['id_area']; ?>)">Delete</button>
-                                            <?php endif; ?>    
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="row">
+                        <!-- Tabel Painting 1 -->
+                        <div class="col-md-6">
+                            <h4 class="text-center">Painting 1</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Area</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="data-painting1">
+                                        <?php 
+                                        $no1 = 1;
+                                        foreach ($area as $row): 
+                                            if ($row['nama_lini'] == 'Painting 1'): ?>
+                                                <tr>
+                                                    <td><?= $no1++; ?></td>
+                                                    <td><?= $row['nama_area']; ?></td>
+                                                    <td>
+                                                        <?php if ($row['status'] == 1): ?>
+                                                            <span class="badge bg-success">Aktif</span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-danger">Tidak Aktif</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if ($row['status'] == 1): ?>
+                                                            <button class="btn btn-warning btn-sm" onclick="editArea(<?= $row['id_area']; ?>)">Edit</button>
+                                                            <button class="btn btn-danger btn-sm" onclick="deleteArea(<?= $row['id_area']; ?>)">Delete</button>
+                                                        <?php endif; ?>    
+                                                    </td>
+                                                </tr>
+                                        <?php 
+                                            endif;
+                                        endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tabel Painting 2 -->
+                        <div class="col-md-6">
+                            <h4 class="text-center">Painting 2</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Area</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="data-painting2">
+                                        <?php 
+                                        $no2 = 1;
+                                        foreach ($area as $row): 
+                                            if ($row['nama_lini'] == 'Painting 2'): ?>
+                                                <tr>
+                                                    <td><?= $no2++; ?></td>
+                                                    <td><?= $row['nama_area']; ?></td>
+                                                    <td>
+                                                        <?php if ($row['status'] == 1): ?>
+                                                            <span class="badge bg-success">Aktif</span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-danger">Tidak Aktif</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php if ($row['status'] == 1): ?>
+                                                            <button class="btn btn-warning btn-sm" onclick="editArea(<?= $row['id_area']; ?>)">Edit</button>
+                                                            <button class="btn btn-danger btn-sm" onclick="deleteArea(<?= $row['id_area']; ?>)">Delete</button>
+                                                        <?php endif; ?>    
+                                                    </td>
+                                                </tr>
+                                        <?php 
+                                            endif;
+                                        endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- End Row -->
                 </div>
             </div>
         </section>
     </div>
 </div>
+
+
+
 
 <!-- Modal Form -->
 <div id="modalArea" class="modal fade" tabindex="-1" role="dialog">
@@ -82,6 +137,16 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+    $('.table').DataTable({
+        "order": [],
+        "columnDefs": [{
+            "targets": [0, 1, 2, 3],
+            "orderable": true
+        }]
+    });
+});
+
 function openModal() {
     $('#modalArea').modal('show');
     $('#formArea')[0].reset();

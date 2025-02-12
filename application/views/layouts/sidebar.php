@@ -7,10 +7,10 @@
 			  <ul class="sidebar-menu" data-widget="tree">	
 				<li class="header">Dashboard & Apps</li>
 				<li class="treeview">
-				  <a href="<?= site_url('dashboard'); ?>">
+				<a href="javascript:void(0);" onclick="window.location.href='<?= site_url('dashboard'); ?>'">
 					<i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
 					<span>Dashboard</span>
-				  </a>
+				</a>
 				</li>
                 <li class="treeview">
 				  <a href="#">
@@ -26,6 +26,8 @@
 					<li><a href="<?= site_url('mesin'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mesin</a></li>
 					<li><a href="<?= site_url('manpower'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Man Power</a></li>
 					<li><a href="<?= site_url('departemen'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Departemen</a></li>
+					<li><a href="<?= site_url('user'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>User</a></li>
+					<li><a href="<?= site_url('jobdeskripsi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Job Deskripsi</a></li>
 				  </ul>
 				</li> 	     
 			  </ul>

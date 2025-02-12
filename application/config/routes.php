@@ -86,3 +86,17 @@ $route['departemen/edit/(:num)'] = 'Departemen/edit/$1';
 $route['departemen/update'] = 'Departemen/update';
 $route['departemen/delete/(:num)'] = 'Departemen/delete/$1';
 
+
+$route['user'] = 'User/index';
+$route['user/add'] = 'User/add';
+$route['user/edit/(:num)'] = 'User/edit/$1';
+$route['user/update'] = 'User/update';
+$route['user/delete/(:num)'] = 'User/delete/$1';
+
+
+$route['jobdeskripsi'] = 'Jobdeskripsi/index';
+$route['jobdeskripsi/add'] = 'Jobdeskripsi/add';
+$route['jobdeskripsi/edit/(:num)'] = 'Jobdeskripsi/edit/$1';
+$route['jobdeskripsi/update'] = 'Jobdeskripsi/update';
+$route['jobdeskripsi/delete/(:num)'] = 'Jobdeskripsi/delete/$1';
+
