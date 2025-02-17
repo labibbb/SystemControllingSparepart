@@ -107,3 +107,16 @@ $route['settingfwm/get_area'] = 'Settingfwm/get_area';
 $route['settingfwm/get_mesin'] = 'Settingfwm/get_mesin';
 $route['settingfwm/update_frekuensi'] = 'Settingfwm/update_frekuensi';
 $route['settingfwm/update_instruksi'] = 'Settingfwm/update_instruksi';
+
+
+$route['pmyearly'] = 'PmYearly/index';
+$route['pmyearly/filter'] = 'PmYearly/filterData';
+$route['pmyearly/filter2'] = 'PmYearly/filterData2';
+$route['pmyearly/add'] = 'PmYearly/add';
+$route['pmyearly/get_area'] = 'PmYearly/get_area';
+$route['pmyearly/get_mesin'] = 'PmYearly/get_mesin';
+
+$route['pmmonthly'] = 'PmMonthly/index';
+$route['pmmonthly/update_tanggal'] = 'PmMonthly/update_tanggal';
+$route['pmmonthly/update_tanggal2'] = 'PmMonthly/update_tanggal2';
+$route['pmmonthly/update_mp'] = 'PmMonthly/update_mp';
