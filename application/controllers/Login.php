@@ -18,24 +18,26 @@ class Login extends CI_Controller {
         // Validasi input
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
-
+    
         if ($this->form_validation->run() == FALSE) {
             echo json_encode(['status' => 'error', 'message' => validation_errors()]);
         } else {
             $username = $this->input->post('username');
             $password = $this->input->post('password');
-
+    
             // Cek login dengan model
             $user = $this->User_model->check_login($username, $password);
-
+    
             if ($user) {
-                // Set session
+                // Set session dengan waktu kedaluwarsa 8 jam
                 $this->session->set_userdata([
                     'user_id'  => $user->id_users,
                     'username' => $user->username,
-                    'logged_in' => true
+                    'role' => $user->role,
+                    'logged_in' => true,
+                    'last_login_time' => time() // Simpan waktu login
                 ]);
-
+    
                 echo json_encode(['status' => 'success', 'message' => 'Login berhasil', 'redirect' => site_url('dashboard')]);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Username atau Password salah!']);

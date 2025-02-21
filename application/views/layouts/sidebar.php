@@ -28,6 +28,7 @@
 					<li><a href="<?= site_url('departemen'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Departemen</a></li>
 					<li><a href="<?= site_url('user'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>User</a></li>
 					<li><a href="<?= site_url('jobdeskripsi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Job Deskripsi</a></li>
+					<li><a href="<?= site_url('settingwi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Setting WI</a></li>
 				  </ul>
 				</li>
 				<li class="treeview">

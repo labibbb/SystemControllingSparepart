@@ -133,8 +133,8 @@
                                         foreach ($pmyearly2 as $row): ?>
                                             <tr>
                                                 <td><?= $no++; ?></td>
-                                                <td><?= $row['nama_lini']; ?></td>
-                                                <td><?= $row['nama_area']; ?></td>
+                                                <td><?= $row['tahun']; ?></td>
+                                                <td><?= $row['bulan']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
                                                     <?php if ($row['status'] == 1): ?>
