@@ -42,7 +42,7 @@ class Wi extends CI_Controller {
 
         // Konfigurasi upload untuk file Excel
         $config['upload_path']   = $upload_path;
-        $config['allowed_types'] = 'xls|xlsx'; // Hanya menerima file Excel
+        $config['allowed_types'] = 'xls|xlsx|pdf'; // Hanya menerima file Excel
         $config['max_size']      = 10240; // 10 MB
         $config['overwrite']     = FALSE; // Jangan menimpa file dengan nama yang sama
 

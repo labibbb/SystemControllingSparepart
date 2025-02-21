@@ -33,6 +33,7 @@ class Settingfwm extends CI_Controller {
     public function index() {
         $data['settings'] = $this->Settingfwm_model->get_all_settings();
         $data['lini'] = $this->Settingfwm_model->get_lini();
+        $data['wi'] = $this->Settingfwm_model->get_wi();
         $this->load->view('settingfwm', $data);
     }
 

@@ -33,7 +33,7 @@
                                         <td><?= $row['nama_area']; ?></td>
                                         <td><?= $row['nama_mesin']; ?></td>
                                         <td><?= $row['frekuensi']; ?></td>
-                                        <td><?= $row['instruksi_kerja']; ?></td>
+                                        <td><?= $row['nama_wi']; ?></td>
                                         <td>
                                             <button class="btn btn-warning btn-sm" onclick="updateFrekuensi(<?= $row['id_fwp']; ?>)">Update Frekuensi</button>
                                             <button class="btn btn-primary btn-sm" onclick="updateInstruksi(<?= $row['id_fwp']; ?>)">Update Instruksi</button>
@@ -123,10 +123,9 @@
                     <div class="form-group">
                         <label>Instruksi Kerja</label>
                         <select name="instruksi_kerja" class="form-control">
-                            <option value="start">Start</option>
-                            <option value="stop">Stop</option>
-                            <option value="end">End</option>
-                            <option value="not started">Not Started</option>
+                            <?php foreach ($wi as $row): ?>
+                                <option value="<?= $row['id_wi']; ?>"><?= $row['nama_wi']; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
