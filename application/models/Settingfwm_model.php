@@ -9,7 +9,7 @@ class Settingfwm_model extends CI_Model {
         $this->db->join('lini l', 's.id_lini = l.id_lini');
         $this->db->join('area a', 's.id_area = a.id_area');
         $this->db->join('mesin m', 's.id_mesin = m.id_mesin');
-        $this->db->join('data_wi w', 's.instruksi_kerja = w.id_wi');
+        $this->db->join('data_wi w', 's.instruksi_kerja = w.id_wi', 'left');
         return $this->db->get()->result_array();
     }
 

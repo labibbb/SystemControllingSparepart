@@ -33,7 +33,7 @@
                                         <td><?= $row['nama_area']; ?></td>
                                         <td><?= $row['nama_mesin']; ?></td>
                                         <td><?= $row['frekuensi']; ?></td>
-                                        <td><?= $row['nama_wi']; ?></td>
+                                        <td><?= !empty($row['nama_wi']) ? $row['nama_wi'] : '-'; ?></td>
                                         <td>
                                             <button class="btn btn-warning btn-sm" onclick="updateFrekuensi(<?= $row['id_fwp']; ?>)">Update Frekuensi</button>
                                             <button class="btn btn-primary btn-sm" onclick="updateInstruksi(<?= $row['id_fwp']; ?>)">Update Instruksi</button>
