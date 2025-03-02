@@ -5,8 +5,15 @@
     <div class="container-full">
         <section class="content">
             <div class="box">
-                <div class="box-header with-border d-flex justify-content-between align-items-center">
+                <div class="box-header with-border">
                     <h3 class="box-title">Schedule Monthly PM</h3>
+                    <div class="mt-2">
+                        <select id="id_lini" class="form-control" required style="width: 300px;">
+                            <?php foreach ($lini as $l): ?>
+                                <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">

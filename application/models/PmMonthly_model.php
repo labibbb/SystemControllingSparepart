@@ -12,6 +12,10 @@ class PmMonthly_model extends CI_Model {
         return $this->db->get()->result_array();
     }
     
+    public function get_lini() {
+        return $this->db->get_where('lini', ['status' => 1])->result_array();
+    }
+
     public function get_manpower() {
         return $this->db->get_where('users', ['status' => 1, 'level' => 3])->result_array();
     }

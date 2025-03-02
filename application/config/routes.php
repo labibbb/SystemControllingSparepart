@@ -123,3 +123,9 @@ $route['pmmonthly/update_mp'] = 'PmMonthly/update_mp';
 
 $route['settingwi'] = 'Wi/index';
 $route['settingwi/add'] = 'Wi/add';
+
+$route['checkseet'] = 'Checkseet/index';
+$route['checkseet/add'] = 'Checkseet/indexInsertNew';
+$route['checkseet/insert'] = 'Checkseet/insertChecksheet';
+$route['checkseet/edit'] = 'Checkseet/edit';
+$route['checkseet/getdata'] = 'Checkseet/getData';

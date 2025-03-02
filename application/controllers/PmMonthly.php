@@ -34,10 +34,12 @@ class PmMonthly extends CI_Controller {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->PmMonthly_model->get_all_pmmonthly();
         $manpower = $this->PmMonthly_model->get_manpower();
+        $lini = $this->PmMonthly_model->get_lini();
         
         $data = [
             'pmmonthly' => $pmmonthly,
-            'manpower' => $manpower
+            'manpower' => $manpower,
+            'lini' => $lini
         ];
     
         $this->load->view('pmmonthly', $data);
