@@ -76,5 +76,12 @@ class PmMonthly extends CI_Controller {
         $this->PmMonthly_model->update_mp($id_pmm, $data);
         redirect('PmMonthly');
     }
+
+    public function filterData() {
+        $id_lini = $this->input->post('lini');
+
+        $filteredData = $this->PmMonthly_model->getFilteredData($id_lini);
+        echo json_encode($filteredData);
+    }
 }
 ?>

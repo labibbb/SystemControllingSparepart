@@ -117,6 +117,7 @@ $route['pmyearly/get_area'] = 'PmYearly/get_area';
 $route['pmyearly/get_mesin'] = 'PmYearly/get_mesin';
 
 $route['pmmonthly'] = 'PmMonthly/index';
+$route['pmmonthly/filter'] = 'PmMonthly/filterData';
 $route['pmmonthly/update_tanggal'] = 'PmMonthly/update_tanggal';
 $route['pmmonthly/update_tanggal2'] = 'PmMonthly/update_tanggal2';
 $route['pmmonthly/update_mp'] = 'PmMonthly/update_mp';

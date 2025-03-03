@@ -52,7 +52,6 @@
                         <table id="tbCheckSheet" class="table table-bordered table-striped">
                             <thead class="bg-primary text-white">
                                 <tr>
-                                    <th>No</th>
                                     <th>Item Check</th>
                                     <th>Point Check</th>
                                     <th>Metode Check</th>
@@ -81,18 +80,16 @@
 
 <script>
     $(document).ready(function() {
+        let rowCount = 0; // Untuk menjaga count baris yang unik
+
         $("#btnSimpan").click(function () {
             simpanChecksheet();
         });
-        
-        // Fungsi untuk menyimpan data checksheet
-        let rowCount = 0;
 
         // Fungsi untuk menambah baris baru
         function addRow(itemCheck = '', mergeItem = false) {
             rowCount++;
             let newRow = `<tr id="row-${rowCount}">
-                <td id="row-${rowCount}-no">${rowCount}</td>
                 <td id="row-${rowCount}-item" ${mergeItem ? 'rowspan="1"' : ''}>
                     <input type="text" class="form-control item-check" id="row-${rowCount}-itemCheck" value="${itemCheck}" ${mergeItem ? 'readonly' : ''} required>
                 </td>
@@ -101,39 +98,48 @@
                 <td id="row-${rowCount}-col3"><input type="text" class="form-control" id="row-${rowCount}-input3" required></td>
                 <td id="row-${rowCount}-action">
                     <button class="btn btn-secondary btn-sm merge-row">Tambah dengan Item Sama</button>
+                    <button class="btn btn-danger btn-sm delete-row">Hapus</button>
                 </td>
             </tr>`;
             $("#tbCheckSheet tbody").append(newRow);
         }
 
+        // Fungsi untuk menghapus baris
+        $(document).on("click", ".delete-row", function() {
+            let currentRow = $(this).closest("tr");
+            if (currentRow.length > 0) {
+                currentRow.remove(); // Menghapus baris yang memiliki tombol hapus yang diklik
+            }
+        });
+
         // Event handler untuk tombol "Tambah Baru"
         $("#addRow").click(function () {
-            addRow();
+            addRow(); // Menambah baris baru
         });
 
         // Event handler untuk tombol "Tambah dengan Item Sama"
         $(document).on("click", ".merge-row", function () {
             let currentRow = $(this).closest("tr");
-            let itemCheckValue = currentRow.find(".item-check").val();
+            let itemCheckValue = currentRow.find(".item-check").val(); // Mendapatkan item dari baris yang sedang dipilih
 
             // Temukan sel item check yang sudah ada dan tingkatkan rowspan
-            let itemCheckCell = currentRow.find("td:first-child + td");
+            let itemCheckCell = currentRow.find("td:first-child"); // Kolom item check adalah yang pertama
             let rowspan = parseInt(itemCheckCell.attr("rowspan")) || 1;
             itemCheckCell.attr("rowspan", rowspan + 1);
 
-            // Tambah baris baru tanpa kolom Item Check
+            // Tambah baris baru tanpa kolom Item Check (karena kita menggunakan item yang sama)
             let newRow = `<tr id="row-${++rowCount}">
-                <td id="row-${rowCount}-no">${rowCount}</td>
                 <td style="display:none;" id="row-${rowCount}-item"></td>
                 <td id="row-${rowCount}-col1"><input type="text" class="form-control" id="row-${rowCount}-input1" required></td>
                 <td id="row-${rowCount}-col2"><input type="text" class="form-control" id="row-${rowCount}-input2" required></td>
                 <td id="row-${rowCount}-col3"><input type="text" class="form-control" id="row-${rowCount}-input3" required></td>
-                <td id="row-${rowCount}-action"></td>
+                <td id="row-${rowCount}-action">
+                    <button class="btn btn-danger btn-sm delete-row">Hapus</button>
+                </td>
             </tr>`;
 
-            itemCheckCell.closest("tr").after(newRow);
+            itemCheckCell.closest("tr").after(newRow); // Menambahkan baris baru setelah baris yang sedang dipilih
         });
-
 
         $('#id_lini').change(function() {
             let idLini = $(this).val();

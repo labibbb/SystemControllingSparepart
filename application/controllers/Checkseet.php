@@ -74,7 +74,6 @@ class Checkseet extends CI_Controller {
             ]);
         }
     }
-    
 
     public function edit() {
         $lini = $this->Checkseet_model->get_lini();
@@ -83,7 +82,7 @@ class Checkseet extends CI_Controller {
         $data = [
             'lini' => $lini,
             'departemen' => $departemen
-        ]
+        ];
 
         $this->load->view('checksheetEdit', $data);
     }

@@ -9,9 +9,23 @@ class PmMonthly_model extends CI_Model {
         $this->db->join('area', 'pm_monthly.id_area = area.id_area');
         $this->db->join('mesin', 'pm_monthly.id_mesin = mesin.id_mesin');
         $this->db->join('users', 'pm_monthly.id_users = users.id_users', 'left');
+        $this->db->where('pm_monthly.id_lini', 1);
         return $this->db->get()->result_array();
     }
     
+    public function getFilteredData($id_lini) {
+        $this->db->select('pm_monthly.*, lini.nama_lini, area.nama_area, mesin.nama_mesin, users.dipname');
+        $this->db->from('pm_monthly');
+        $this->db->join('lini', 'pm_monthly.id_lini = lini.id_lini');
+        $this->db->join('area', 'pm_monthly.id_area = area.id_area');
+        $this->db->join('mesin', 'pm_monthly.id_mesin = mesin.id_mesin');
+        $this->db->join('users', 'pm_monthly.id_users = users.id_users', 'left');
+
+        $this->db->where('pm_monthly.id_lini', $id_lini);
+
+        return $this->db->get()->result_array();
+    }
+
     public function get_lini() {
         return $this->db->get_where('lini', ['status' => 1])->result_array();
     }

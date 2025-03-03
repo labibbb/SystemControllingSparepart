@@ -22,6 +22,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Tanggal</th>
+                                    <th>Bulan</th>
                                     <th>MP</th>
                                     <th>Lini</th>
                                     <th>Area</th>
@@ -32,12 +33,32 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="data-lini">
+                            <tbody id="table1-body">
                                 <?php $no = 1; foreach ($pmmonthly as $row): ?>
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td>
                                             <?= !empty($row['tanggal']) ? date('d M Y', strtotime($row['tanggal'])) : 'No Set'; ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $bulan = $row['bulan']; // Misalnya nilai bulan adalah 1, 2, 3, dst.
+                                            switch($bulan) {
+                                                case 1: echo "Januari"; break;
+                                                case 2: echo "Februari"; break;
+                                                case 3: echo "Maret"; break;
+                                                case 4: echo "April"; break;
+                                                case 5: echo "Mei"; break;
+                                                case 6: echo "Juni"; break;
+                                                case 7: echo "Juli"; break;
+                                                case 8: echo "Agustus"; break;
+                                                case 9: echo "September"; break;
+                                                case 10: echo "Oktober"; break;
+                                                case 11: echo "November"; break;
+                                                case 12: echo "Desember"; break;
+                                                default: echo "Bulan tidak valid"; break;
+                                            }
+                                            ?>
                                         </td>
                                         <td><?= $row['dipname']; ?></td>
                                         <td><?= $row['nama_lini']; ?></td>
@@ -193,6 +214,94 @@
         document.getElementById("id_pmm_tglstts").value = id;
         $('#modalTanggalStatus').modal('show'); // Menggunakan Bootstrap modal
     }
+
+    $('#id_lini').on('change', filterData);
+
+    function filterData() {
+        $.post("<?= base_url('pmmonthly/filter'); ?>", {
+            lini: $('#id_lini').val()
+        }, function (data) {
+            let rows = '';
+            let result = JSON.parse(data);
+
+            if (result.length === 0) {
+                rows = `<tr>
+                    <td colspan="11" class="text-center text-danger">Data Not Found</td>
+                </tr>`;
+            } else {
+                result.forEach((row, index) => {
+
+                    // Memastikan bulan dan status tidak null atau undefined
+                    let bulan = '';
+                    if (row.bulan !== undefined && row.bulan !== null) {
+                        switch (parseInt(row.bulan)) {
+                            case 1: bulan = "Januari"; break;
+                            case 2: bulan = "Februari"; break;
+                            case 3: bulan = "Maret"; break;
+                            case 4: bulan = "April"; break;
+                            case 5: bulan = "Mei"; break;
+                            case 6: bulan = "Juni"; break;
+                            case 7: bulan = "Juli"; break;
+                            case 8: bulan = "Agustus"; break;
+                            case 9: bulan = "September"; break;
+                            case 10: bulan = "Oktober"; break;
+                            case 11: bulan = "November"; break;
+                            case 12: bulan = "Desember"; break;
+                            default: bulan = "Bulan tidak valid"; break;
+                        }
+                    } else {
+                        bulan = "Bulan tidak valid";
+                    }
+
+                    let status = '';
+                    if (row.status !== undefined && row.status !== null) {
+                        switch (parseInt(row.status)) {
+                            case 1:
+                                status = '<span class="badge bg-info">Terjadwal Tahunan</span>';
+                                break;
+                            case 2:
+                                status = '<span class="badge bg-warning">Belum Terlaksana</span>';
+                                break;
+                            case 3:
+                                status = '<span class="badge bg-success">Sudah Terjadwal</span>';
+                                break;
+                            default:
+                                status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                                break;
+                        }
+                    } else {
+                        status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                    }
+
+                    // Menambahkan baris ke table
+                    rows += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${row.tanggal ? new Date(row.tanggal).toLocaleDateString('id-ID') : 'No Set'}</td>
+                            <td>${bulan}</td>
+                            <td>${row.dipname ? row.dipname : ''}</td>
+                            <td>${row.nama_lini}</td>
+                            <td>${row.nama_area}</td>
+                            <td>${row.nama_mesin}</td>
+                            <td>${status}</td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                ${row.status == 1 ? 
+                                    `<button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm})">Setting</button>` :
+                                    `<button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '${new Date(row.tanggal).toISOString().split('T')[0]}', '${row.catatan}')">Tgl</button>
+                                    <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>`}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            $('#table1-body').html(rows); // UPDATE HANYA TABLE1
+        });
+    }
+
+
 
 </script>
 
