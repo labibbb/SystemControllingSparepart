@@ -101,31 +101,44 @@ class Checkseet extends CI_Controller {
     }
 
     public function insertChecksheet() {
-        $dataList = $this->input->post('data'); // Menerima data sebagai array
-    
-        if (!empty($dataList) && is_array($dataList)) {
-            foreach ($dataList as $data) {
-                $insertData = [
-                    'id_lini'    => $data['id_lini'],
-                    'id_area'    => $data['id_area'],
-                    'id_mesin'   => $data['id_mesin'],
-                    'item_cek'   => $data['item_cek'],
-                    'point_cek'  => $data['point_cek'],
-                    'metode_cek' => $data['metode_cek'],
-                    'standard'   => $data['standard'],
-                    'status'     => 1,
-                    'no_form'    => $data['no_form'],
-                    'no_doc'     => $data['no_doc'],
-                    'id_departemen'     => $data['id_departemen'],
-                ];
-
-                $this->db->insert('data_checksheet', $insertData);
-            }
-    
-            echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
-        } else {
+        // Menerima data dalam format JSON
+        $jsonData = json_decode($this->input->raw_input_stream, true);
+        
+        if (!isset($jsonData['data']) || !is_array($jsonData['data'])) {
             echo json_encode(['status' => 'error', 'message' => 'Data tidak valid']);
+            return;
         }
+    
+        $dataList = $jsonData['data'];
+        $user_id = $this->session->userdata('user_id');
+    
+        foreach ($dataList as $data) {
+            $insertData = [
+                'id_lini'        => isset($data['id_lini']) ? (int)$data['id_lini'] : null, 
+                'id_area'        => isset($data['id_area']) ? (int)$data['id_area'] : null,
+                'id_mesin'       => isset($data['id_mesin']) ? (int)$data['id_mesin'] : null, 
+                'item_cek'       => isset($data['item_cek']) ? trim($data['item_cek']) : null, 
+                'point_cek'      => isset($data['point_cek']) ? trim($data['point_cek']) : null, 
+                'metode_cek'     => isset($data['metode_cek']) ? trim($data['metode_cek']) : null, 
+                'standard'       => isset($data['standard']) ? trim($data['standard']) : null, 
+                'status'         => isset($data['status']) ? (int)$data['status'] : 1, 
+                'no_form'        => isset($data['no_form']) ? trim($data['no_form']) : null, 
+                'no_doc'         => isset($data['no_doc']) ? trim($data['no_doc']) : null, 
+                'id'             => isset($data['id_departemen']) ? (int)$data['id_departemen'] : null,
+            ];
+    
+            log_message('debug', 'Insert Data: ' . print_r($insertData, true));
+    
+            if (!$this->db->insert('data_checksheet', $insertData)) {
+                log_message('error', 'Failed to insert data');
+            }
+        }
+    
+        echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
     }    
+    
+    
+        
+        
 }
 ?>

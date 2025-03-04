@@ -81,6 +81,7 @@
 <script>
     $(document).ready(function() {
         let rowCount = 0; // Untuk menjaga count baris yang unik
+        let lastItemCek = ''; // Initialize the last item check variable
 
         $("#btnSimpan").click(function () {
             simpanChecksheet();
@@ -105,10 +106,22 @@
         }
 
         // Fungsi untuk menghapus baris
-        $(document).on("click", ".delete-row", function() {
+        $(document).on("click", ".delete-row", function () {
             let currentRow = $(this).closest("tr");
+            let itemCheckValue = currentRow.find(".item-check").val(); // Mendapatkan item dari baris yang sedang dipilih
+
             if (currentRow.length > 0) {
                 currentRow.remove(); // Menghapus baris yang memiliki tombol hapus yang diklik
+
+                // Setelah baris dihapus, kita perlu mengecek apakah ada baris lain dengan item yang sama
+                let remainingRows = $("#tbCheckSheet tbody tr").filter(function () {
+                    return $(this).find(".item-check").val() === itemCheckValue;
+                });
+
+                // If there are other rows with the same item, we need to make sure the "Tambah dengan Item Sama" button is moved
+                if (remainingRows.length > 0) {
+                    remainingRows.first().find(".merge-row").closest("td").append('<button class="btn btn-secondary btn-sm merge-row">Tambah dengan Item Sama</button>');
+                }
             }
         });
 
@@ -168,9 +181,9 @@
             $("#tbCheckSheet tbody tr").each(function () {
                 let rowId = $(this).attr("id");
                 let itemCek = $(this).find(".item-check").val() || lastItemCek;
-                let pointCek = $(this).find("td:nth-child(3) input").val();
-                let metodeCek = $(this).find("td:nth-child(4) input").val();
-                let standard = $(this).find("td:nth-child(5) input").val();
+                let pointCek = $(this).find("td:nth-child(2) input").val();
+                let metodeCek = $(this).find("td:nth-child(3) input").val();
+                let standard = $(this).find("td:nth-child(4) input").val();
                 let idLini = $("#id_lini").val();
                 let idArea = $("#id_area").val();
                 let idMesin = $("#id_mesin").val();
