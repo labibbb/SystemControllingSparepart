@@ -17,8 +17,20 @@ class Checkseet_model extends CI_Model {
         return $this->db->get_where('data_checksheet', ['id_mesin' => $id_mesin, 'status' => 1])->result_array();
     }
 
+    public function get_singlecheckseet($id_mesin) {
+        return $this->db->get_where('data_checksheet', ['id_mesin' => $id_mesin, 'status' => 1])->row_array();
+    }    
+
     public function get_lini() {
         return $this->db->get_where('lini', ['status' => 1])->result_array();
+    }
+
+    public function get_area() {
+        return $this->db->get_where('area', ['status' => 1])->result_array();
+    }
+
+    public function get_mesin() {
+        return $this->db->get_where('mesin', ['status' => 1])->result_array();
     }
 
     public function get_departement() {

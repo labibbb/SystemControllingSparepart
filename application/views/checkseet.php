@@ -31,8 +31,10 @@
                                         <td><?= $row['nama_area']; ?></td>
                                         <td><?= $row['nama_mesin']; ?></td>
                                         <td>
-                                            <button class="btn btn-warning btn-sm" onclick="editmanpower(<?= $row['id_ck']; ?>)">Edit</button> 
-                                        </td>
+                                        <form action="<?= site_url('checkseet/edit'); ?>" method="post">
+                                            <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                            <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                        </form>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -43,5 +45,7 @@
         </section>
     </div>
 </div>
+<script>
+</script>
 
 <?php $this->load->view('layouts/footer'); ?>

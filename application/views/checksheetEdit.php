@@ -6,53 +6,68 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Insert Checkseet</h3>
+                    <h3 class="box-title">Edit Checkseet</h3>
                 </div>
                 <div class="box-body">
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="no_form">No Form</label>
-                            <input type="text" id="no_form" class="form-control" required>
+                            <input type="text" id="no_form" name="no_form" class="form-control" value="<?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_form'] : ''; ?>" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="id_depertamen">Pemilik Doc</label>
-                            <select id="id_departemen" class="form-control" required>
-                                <option value="">Pilih Departement</option>
+                            <label for="id_departemen">Pemilik Doc</label>
+                            <select id="id_departemen" name="id_departemen" class="form-control" required>
                                 <?php foreach ($departemen as $d): ?>
-                                    <option value="<?= $d['id']; ?>"><?= $d['dept']; ?></option>
+                                    <option value="<?= $d['id']; ?>" <?= ($d['id'] == $singleChecksheet['id']) ? 'selected' : ''; ?>>
+                                        <?= $d['dept']; ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="no_doc">No Doc</label>
-                            <input type="text" id="no_doc" class="form-control" required>
+                            <input type="text" id="no_doc" class="form-control" value="<?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_doc'] : ''; ?>" required>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="id_lini">Lini</label>
-                            <select id="id_lini" class="form-control" required>
-                                <option value="">Pilih Lini</option>
+                            <select id="id_lini" name="id_lini" class="form-control" required>
                                 <?php foreach ($lini as $l): ?>
-                                    <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
+                                    <option value="<?= $l['id_lini']; ?>" <?= ($l['id_lini'] == $singleChecksheet['id_lini']) ? 'selected' : ''; ?>>
+                                        <?= $l['nama_lini']; ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
+
                         <div class="col-md-6">
                             <label for="id_area">Area</label>
-                            <select id="id_area" class="form-control" required disabled></select>
+                            <select id="id_area" name="id_area" class="form-control" required>
+                                <?php foreach ($area as $a): ?>
+                                    <option value="<?= $a['id_area']; ?>" <?= ($a['id_area'] == $singleChecksheet['id_area']) ? 'selected' : ''; ?>>
+                                        <?= $a['nama_area']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
+
                         <div class="col-md-6">
                             <label for="id_mesin">Mesin</label>
-                            <select id="id_mesin" class="form-control" required disabled></select>
+                            <select id="id_mesin" name="id_mesin" class="form-control" required>
+                                <?php foreach ($mesin as $m): ?>
+                                    <option value="<?= $m['id_mesin']; ?>" <?= ($m['id_mesin'] == $singleChecksheet['id_mesin']) ? 'selected' : ''; ?>>
+                                        <?= $m['nama_mesin']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                     </div>    
                     <div class="table-responsive">
                         <table id="tbCheckSheet" class="table table-bordered table-striped">
                             <thead class="bg-primary text-white">
                                 <tr>
-                                    <th>No</th>
                                     <th>Item Check</th>
                                     <th>Point Check</th>
                                     <th>Metode Check</th>
@@ -61,7 +76,52 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data awal -->
+                                <?php
+                                    $mergedItems = []; // Menyimpan jumlah baris untuk setiap item_cek
+                                    foreach ($checksheet as $row) {
+                                        $item = $row['item_cek'];
+                                        if (!isset($mergedItems[$item])) {
+                                            $mergedItems[$item] = 1;
+                                        } else {
+                                            $mergedItems[$item]++;
+                                        }
+                                    }
+
+                                    $displayedItems = []; // Menyimpan item_cek yang sudah ditampilkan
+                                    $rowCount = 0; // Inisialisasi row count
+
+                                    ?>
+
+                                    <?php foreach ($checksheet as $row): ?>
+                                        <tr id="row-<?= $rowCount; ?>">
+                                            <?php if (!isset($displayedItems[$row['item_cek']])): ?>
+                                                <td rowspan="<?= $mergedItems[$row['item_cek']]; ?>">
+                                                    <input type="text" name="item_cek[]" class="form-control item-check" value="<?= $row['item_cek']; ?>">
+                                                </td>
+                                                <?php $displayedItems[$row['item_cek']] = true; ?>
+                                            <?php endif; ?>
+
+                                            <td id="row-<?= $rowCount; ?>-col1">
+                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input1" value="<?= $row['point_cek']; ?>" required>
+                                            </td>
+                                            <td id="row-<?= $rowCount; ?>-col2">
+                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input2" value="<?= $row['metode_cek']; ?>" required>
+                                            </td>
+                                            <td id="row-<?= $rowCount; ?>-col3">
+                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input3" value="<?= $row['standard']; ?>" required>
+                                            </td>
+
+                                            <?php if (!isset($displayedItems['button_' . $row['item_cek']])): ?>
+                                                <td>
+                                                    <button class="btn btn-secondary btn-sm merge-row"><i class="fas fa-plus"></i></button>
+                                                </td>
+                                                <?php $displayedItems['button_' . $row['item_cek']] = true; ?>
+                                            <?php else: ?>
+                                                <td></td> <!-- Baris selain yang pertama dalam grup dibuat kosong -->
+                                            <?php endif; ?>
+                                        </tr>
+                                        <?php $rowCount++; // Tambahkan row count setiap iterasi ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -81,18 +141,17 @@
 
 <script>
     $(document).ready(function() {
+        let rowCount = 0; // Untuk menjaga count baris yang unik
+        let lastItemCek = ''; // Initialize the last item check variable
+
         $("#btnSimpan").click(function () {
             simpanChecksheet();
         });
-        
-        // Fungsi untuk menyimpan data checksheet
-        let rowCount = 0;
 
         // Fungsi untuk menambah baris baru
         function addRow(itemCheck = '', mergeItem = false) {
             rowCount++;
             let newRow = `<tr id="row-${rowCount}">
-                <td id="row-${rowCount}-no">${rowCount}</td>
                 <td id="row-${rowCount}-item" ${mergeItem ? 'rowspan="1"' : ''}>
                     <input type="text" class="form-control item-check" id="row-${rowCount}-itemCheck" value="${itemCheck}" ${mergeItem ? 'readonly' : ''} required>
                 </td>
@@ -100,7 +159,7 @@
                 <td id="row-${rowCount}-col2"><input type="text" class="form-control" id="row-${rowCount}-input2" required></td>
                 <td id="row-${rowCount}-col3"><input type="text" class="form-control" id="row-${rowCount}-input3" required></td>
                 <td id="row-${rowCount}-action">
-                    <button class="btn btn-secondary btn-sm merge-row">Tambah dengan Item Sama</button>
+                    <button class="btn btn-secondary btn-sm merge-row"><i class="fas fa-plus"></i></button>
                 </td>
             </tr>`;
             $("#tbCheckSheet tbody").append(newRow);
@@ -108,78 +167,31 @@
 
         // Event handler untuk tombol "Tambah Baru"
         $("#addRow").click(function () {
-            addRow();
+            addRow(); // Menambah baris baru
         });
 
         // Event handler untuk tombol "Tambah dengan Item Sama"
         $(document).on("click", ".merge-row", function () {
             let currentRow = $(this).closest("tr");
-            let itemCheckValue = currentRow.find(".item-check").val();
+            let itemCheckValue = currentRow.find(".item-check").val(); // Mendapatkan item dari baris yang sedang dipilih
 
             // Temukan sel item check yang sudah ada dan tingkatkan rowspan
-            let itemCheckCell = currentRow.find("td:first-child + td");
+            let itemCheckCell = currentRow.find("td:first-child"); // Kolom item check adalah yang pertama
             let rowspan = parseInt(itemCheckCell.attr("rowspan")) || 1;
             itemCheckCell.attr("rowspan", rowspan + 1);
 
-            // Tambah baris baru tanpa kolom Item Check
+            // Tambah baris baru tanpa kolom Item Check (karena kita menggunakan item yang sama)
             let newRow = `<tr id="row-${++rowCount}">
-                <td id="row-${rowCount}-no">${rowCount}</td>
                 <td style="display:none;" id="row-${rowCount}-item"></td>
                 <td id="row-${rowCount}-col1"><input type="text" class="form-control" id="row-${rowCount}-input1" required></td>
                 <td id="row-${rowCount}-col2"><input type="text" class="form-control" id="row-${rowCount}-input2" required></td>
                 <td id="row-${rowCount}-col3"><input type="text" class="form-control" id="row-${rowCount}-input3" required></td>
-                <td id="row-${rowCount}-action"></td>
+                <td id="row-${rowCount}-action">
+                </td>
             </tr>`;
 
-            itemCheckCell.closest("tr").after(newRow);
+            itemCheckCell.closest("tr").after(newRow); // Menambahkan baris baru setelah baris yang sedang dipilih
         });
-
-        loadChecksheet();
-
-        function loadChecksheet() {
-            $.ajax({
-                url: "<?= site_url('checkseet/getdata'); ?>", // Endpoint untuk mengambil data
-                type: "GET",
-                dataType: "json",
-                success: function (response) {
-                    if (response.status === "success") {
-                        $("#tbCheckSheet tbody").empty(); // Kosongkan tabel sebelum mengisi data baru
-                        let rowCount = 0;
-                        let lastItemCheck = "";
-
-                        response.data.forEach(function (item) {
-                            rowCount++;
-                            let mergeItem = item.item_cek === lastItemCheck; // Cek apakah perlu merge row
-
-                            let newRow = `<tr id="row-${rowCount}">
-                                <td>${rowCount}</td>`;
-
-                            // Jika item berbeda, tambahkan kolom item check
-                            if (!mergeItem) {
-                                newRow += `<td id="row-${rowCount}-item" rowspan="1">
-                                    <input type="text" class="form-control item-check" id="row-${rowCount}-itemCheck" value="${item.item_cek}" required>
-                                </td>`;
-                            }
-
-                            newRow += `
-                                <td><input type="text" class="form-control" value="${item.point_cek}" ></td>
-                                <td><input type="text" class="form-control" value="${item.metode_cek}" ></td>
-                                <td><input type="text" class="form-control" value="${item.standard}" ></td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm delete-row" data-id="${item.id}">Hapus</button>
-                                </td>
-                            </tr>`;
-
-                            $("#tbCheckSheet tbody").append(newRow);
-
-                            if (!mergeItem) {
-                                lastItemCheck = item.item_cek; // Simpan item check terakhir untuk merge
-                            }
-                        });
-                    }
-                }
-            });
-        }
 
         $('#id_lini').change(function() {
             let idLini = $(this).val();
@@ -200,17 +212,19 @@
                 $.each(JSON.parse(data), function(index, value) {
                     $('#id_mesin').append('<option value="' + value.id_mesin + '">' + value.nama_mesin + '</option>');
                 });
-            });
+            }); 
         });
         
         function simpanChecksheet() {
             let dataList = [];
+            let isValid = true; // Flag untuk validasi
+            let errorMessage = ""; // Menyimpan pesan error
+
             $("#tbCheckSheet tbody tr").each(function () {
-                let rowId = $(this).attr("id");
                 let itemCek = $(this).find(".item-check").val() || lastItemCek;
-                let pointCek = $(this).find("td:nth-child(3) input").val();
-                let metodeCek = $(this).find("td:nth-child(4) input").val();
-                let standard = $(this).find("td:nth-child(5) input").val();
+                let pointCek = $(this).find("td:nth-child(2) input").val();
+                let metodeCek = $(this).find("td:nth-child(3) input").val();
+                let standard = $(this).find("td:nth-child(4) input").val();
                 let idLini = $("#id_lini").val();
                 let idArea = $("#id_area").val();
                 let idMesin = $("#id_mesin").val();
@@ -218,32 +232,56 @@
                 let noDoc = $("#no_doc").val();
                 let idDepartemen = $("#id_departemen").val();
 
-                if (itemCek && pointCek && metodeCek && standard) {
-                    dataList.push({
-                        id_lini: idLini,
-                        id_area: idArea,
-                        id_mesin: idMesin,
-                        item_cek: itemCek,
-                        point_cek: pointCek,
-                        metode_cek: metodeCek,
-                        standard: standard,
-                        status: "1",
-                        no_form: noForm,
-                        no_doc: noDoc,
-                        id_departemen: idDepartemen
-                    });
+                // Validasi setiap kolom input
+                if (!idLini) errorMessage += "- ID Lini harus dipilih!<br>";
+                if (!idArea) errorMessage += "- ID Area harus dipilih!<br>";
+                if (!idMesin) errorMessage += "- ID Mesin harus dipilih!<br>";
+                if (!noForm) errorMessage += "- Nomor Form harus diisi!<br>";
+                if (!noDoc) errorMessage += "- Nomor Dokumen harus diisi!<br>";
+                if (!idDepartemen) errorMessage += "- ID Departemen harus dipilih!<br>";
 
-                    lastItemCek = itemCek;
+                // Jika ada error, set flag isValid ke false
+                if (errorMessage !== "") {
+                    isValid = false;
+                    return false; // Hentikan loop
                 }
+
+                dataList.push({
+                    id_lini: idLini,
+                    id_area: idArea,
+                    id_mesin: idMesin,
+                    item_cek: itemCek,
+                    point_cek: pointCek,
+                    metode_cek: metodeCek,
+                    standard: standard,
+                    status: "1",
+                    no_form: noForm,
+                    no_doc: noDoc,
+                    id_departemen: idDepartemen
+                });
+
+                lastItemCek = itemCek;
             });
 
+            // Jika ada error, tampilkan alert dengan daftar error
+            if (!isValid) {
+                Swal.fire({
+                    title: "Gagal!",
+                    html: errorMessage,
+                    icon: "error"
+                });
+                return;
+            }
+
+            // Pastikan ada data yang dikirim
             if (dataList.length === 0) {
                 Swal.fire("Gagal", "Silakan lengkapi data sebelum menyimpan!", "error");
                 return;
             }
 
+            // Kirim data dengan AJAX
             $.ajax({
-                url: "<?= site_url('checkseet/insert'); ?>",
+                url: "<?= site_url('checkseet/update'); ?>",
                 type: "POST",
                 data: JSON.stringify({ data: dataList }),
                 contentType: "application/json",
@@ -261,7 +299,7 @@
                     Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
                 }
             });
-        }
+        } 
     });
 </script>
 <?php $this->load->view('layouts/footer'); ?>

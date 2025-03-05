@@ -98,32 +98,11 @@
                 <td id="row-${rowCount}-col2"><input type="text" class="form-control" id="row-${rowCount}-input2" required></td>
                 <td id="row-${rowCount}-col3"><input type="text" class="form-control" id="row-${rowCount}-input3" required></td>
                 <td id="row-${rowCount}-action">
-                    <button class="btn btn-secondary btn-sm merge-row">Tambah dengan Item Sama</button>
-                    <button class="btn btn-danger btn-sm delete-row">Hapus</button>
+                    <button class="btn btn-secondary btn-sm merge-row"><i class="fas fa-plus"></i></button>
                 </td>
             </tr>`;
             $("#tbCheckSheet tbody").append(newRow);
         }
-
-        // Fungsi untuk menghapus baris
-        $(document).on("click", ".delete-row", function () {
-            let currentRow = $(this).closest("tr");
-            let itemCheckValue = currentRow.find(".item-check").val(); // Mendapatkan item dari baris yang sedang dipilih
-
-            if (currentRow.length > 0) {
-                currentRow.remove(); // Menghapus baris yang memiliki tombol hapus yang diklik
-
-                // Setelah baris dihapus, kita perlu mengecek apakah ada baris lain dengan item yang sama
-                let remainingRows = $("#tbCheckSheet tbody tr").filter(function () {
-                    return $(this).find(".item-check").val() === itemCheckValue;
-                });
-
-                // If there are other rows with the same item, we need to make sure the "Tambah dengan Item Sama" button is moved
-                if (remainingRows.length > 0) {
-                    remainingRows.first().find(".merge-row").closest("td").append('<button class="btn btn-secondary btn-sm merge-row">Tambah dengan Item Sama</button>');
-                }
-            }
-        });
 
         // Event handler untuk tombol "Tambah Baru"
         $("#addRow").click(function () {
@@ -147,7 +126,6 @@
                 <td id="row-${rowCount}-col2"><input type="text" class="form-control" id="row-${rowCount}-input2" required></td>
                 <td id="row-${rowCount}-col3"><input type="text" class="form-control" id="row-${rowCount}-input3" required></td>
                 <td id="row-${rowCount}-action">
-                    <button class="btn btn-danger btn-sm delete-row">Hapus</button>
                 </td>
             </tr>`;
 
@@ -173,13 +151,15 @@
                 $.each(JSON.parse(data), function(index, value) {
                     $('#id_mesin').append('<option value="' + value.id_mesin + '">' + value.nama_mesin + '</option>');
                 });
-            });
+            }); 
         });
         
         function simpanChecksheet() {
             let dataList = [];
+            let isValid = true; // Flag untuk validasi
+            let errorMessage = ""; // Menyimpan pesan error
+
             $("#tbCheckSheet tbody tr").each(function () {
-                let rowId = $(this).attr("id");
                 let itemCek = $(this).find(".item-check").val() || lastItemCek;
                 let pointCek = $(this).find("td:nth-child(2) input").val();
                 let metodeCek = $(this).find("td:nth-child(3) input").val();
@@ -191,30 +171,54 @@
                 let noDoc = $("#no_doc").val();
                 let idDepartemen = $("#id_departemen").val();
 
-                if (itemCek && pointCek && metodeCek && standard) {
-                    dataList.push({
-                        id_lini: idLini,
-                        id_area: idArea,
-                        id_mesin: idMesin,
-                        item_cek: itemCek,
-                        point_cek: pointCek,
-                        metode_cek: metodeCek,
-                        standard: standard,
-                        status: "1",
-                        no_form: noForm,
-                        no_doc: noDoc,
-                        id_departemen: idDepartemen
-                    });
+                // Validasi setiap kolom input
+                if (!idLini) errorMessage += "- ID Lini harus dipilih!<br>";
+                if (!idArea) errorMessage += "- ID Area harus dipilih!<br>";
+                if (!idMesin) errorMessage += "- ID Mesin harus dipilih!<br>";
+                if (!noForm) errorMessage += "- Nomor Form harus diisi!<br>";
+                if (!noDoc) errorMessage += "- Nomor Dokumen harus diisi!<br>";
+                if (!idDepartemen) errorMessage += "- ID Departemen harus dipilih!<br>";
 
-                    lastItemCek = itemCek;
+                // Jika ada error, set flag isValid ke false
+                if (errorMessage !== "") {
+                    isValid = false;
+                    return false; // Hentikan loop
                 }
+
+                dataList.push({
+                    id_lini: idLini,
+                    id_area: idArea,
+                    id_mesin: idMesin,
+                    item_cek: itemCek,
+                    point_cek: pointCek,
+                    metode_cek: metodeCek,
+                    standard: standard,
+                    status: "1",
+                    no_form: noForm,
+                    no_doc: noDoc,
+                    id_departemen: idDepartemen
+                });
+
+                lastItemCek = itemCek;
             });
 
+            // Jika ada error, tampilkan alert dengan daftar error
+            if (!isValid) {
+                Swal.fire({
+                    title: "Gagal!",
+                    html: errorMessage,
+                    icon: "error"
+                });
+                return;
+            }
+
+            // Pastikan ada data yang dikirim
             if (dataList.length === 0) {
                 Swal.fire("Gagal", "Silakan lengkapi data sebelum menyimpan!", "error");
                 return;
             }
 
+            // Kirim data dengan AJAX
             $.ajax({
                 url: "<?= site_url('checkseet/insert'); ?>",
                 type: "POST",
@@ -234,7 +238,7 @@
                     Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
                 }
             });
-        }
+        } 
     });
 </script>
 <?php $this->load->view('layouts/footer'); ?>
