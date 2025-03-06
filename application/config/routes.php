@@ -130,4 +130,5 @@ $route['checkseet/add'] = 'Checkseet/indexInsertNew';
 $route['checkseet/insert'] = 'Checkseet/insertChecksheet';
 $route['checkseet/update'] = 'Checkseet/editChecksheet';
 $route['checkseet/edit'] = 'Checkseet/edit';
+$route['checkseet/view'] = 'Checkseet/view';
 $route['checkseet/getdata'] = 'Checkseet/getData';

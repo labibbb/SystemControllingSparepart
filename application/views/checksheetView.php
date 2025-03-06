@@ -6,49 +6,64 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Insert Checkseet</h3>
+                    <h3 class="box-title">Edit Checkseet</h3>
                 </div>
                 <div class="box-body">
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="nama_form">Nama Check Sheet</label>
-                            <input type="text" id="nama_form" class="form-control" required>
+                            <input type="text" id="nama_form" class="form-control" value="<?= isset($singleChecksheet['nama_doc']) ? $singleChecksheet['nama_doc'] : ''; ?>" disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="tanggal_form">Tanggal</label>
-                            <input type="date" id="tanggal_form" class="form-control" required>
+                            <input type="date" id="tanggal_form" class="form-control" value="<?= isset($singleChecksheet['tanggal_doc']) ? $singleChecksheet['tanggal_doc'] : ''; ?>" disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="no_form">No Form</label>
-                            <input type="text" id="no_form" class="form-control" required>
+                            <input type="text" id="no_form" name="no_form" class="form-control" value="<?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_form'] : ''; ?>" disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="id_departemen">Pemilik Doc</label>
-                            <input type="text" id="id_departemen" class="form-control" value="MAINTENANCE DEPT" required disabled>
+                            <input type="text" id="id_departemen" class="form-control" value="MAINTENANCE DEPT" disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="no_doc">No Doc</label>
-                            <input type="text" id="no_doc" class="form-control" required>
+                            <input type="text" id="no_doc" class="form-control" value="<?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_doc'] : ''; ?>" disabled>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="id_lini">Lini</label>
-                            <select id="id_lini" class="form-control" required>
-                                <option value="">Pilih Lini</option>
+                            <select id="id_lini" name="id_lini" class="form-control" disabled>
                                 <?php foreach ($lini as $l): ?>
-                                    <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
+                                    <option value="<?= $l['id_lini']; ?>" <?= ($l['id_lini'] == $singleChecksheet['id_lini']) ? 'selected' : ''; ?>>
+                                        <?= $l['nama_lini']; ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
+
                         <div class="col-md-6">
                             <label for="id_area">Area</label>
-                            <select id="id_area" class="form-control" required disabled></select>
+                            <select id="id_area" name="id_area" class="form-control" disabled>
+                                <?php foreach ($area as $a): ?>
+                                    <option value="<?= $a['id_area']; ?>" <?= ($a['id_area'] == $singleChecksheet['id_area']) ? 'selected' : ''; ?>>
+                                        <?= $a['nama_area']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
+
                         <div class="col-md-6">
                             <label for="id_mesin">Mesin</label>
-                            <select id="id_mesin" class="form-control" required disabled></select>
+                            <select id="id_mesin" name="id_mesin" class="form-control" disabled>
+                                <?php foreach ($mesin as $m): ?>
+                                    <option value="<?= $m['id_mesin']; ?>" <?= ($m['id_mesin'] == $singleChecksheet['id_mesin']) ? 'selected' : ''; ?>>
+                                        <?= $m['nama_mesin']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                     </div>    
                     <div class="table-responsive">
@@ -59,20 +74,52 @@
                                     <th>Point Check</th>
                                     <th>Metode Check</th>
                                     <th>Standard</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Data awal -->
+                                <?php
+                                    $mergedItems = []; // Menyimpan jumlah baris untuk setiap item_cek
+                                    foreach ($checksheet as $row) {
+                                        $item = $row['item_cek'];
+                                        if (!isset($mergedItems[$item])) {
+                                            $mergedItems[$item] = 1;
+                                        } else {
+                                            $mergedItems[$item]++;
+                                        }
+                                    }
+
+                                    $displayedItems = []; // Menyimpan item_cek yang sudah ditampilkan
+                                    $rowCount = 0; // Inisialisasi row count
+
+                                    ?>
+
+                                    <?php foreach ($checksheet as $row): ?>
+                                        <tr id="row-<?= $rowCount; ?>">
+                                            <?php if (!isset($displayedItems[$row['item_cek']])): ?>
+                                                <td rowspan="<?= $mergedItems[$row['item_cek']]; ?>">
+                                                    <input type="text" name="item_cek[]" class="form-control item-check" value="<?= $row['item_cek']; ?>" disabled>
+                                                </td>
+                                                <?php $displayedItems[$row['item_cek']] = true; ?>
+                                            <?php endif; ?>
+
+                                            <td id="row-<?= $rowCount; ?>-col1">
+                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input1" value="<?= $row['point_cek']; ?>" disabled>
+                                            </td>
+                                            <td id="row-<?= $rowCount; ?>-col2">
+                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input2" value="<?= $row['metode_cek']; ?>" disabled>
+                                            </td>
+                                            <td id="row-<?= $rowCount; ?>-col3">
+                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input3" value="<?= $row['standard']; ?>" disabled>
+                                            </td>
+                                        </tr>
+                                        <?php $rowCount++; // Tambahkan row count setiap iterasi ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <button class="btn btn-success" id="addRow">
-                             Tambah Baru
-                        </button>
-                        <button id="btnSimpan" class="btn btn-primary">
-                             Simpan
+                        <button class="btn btn-success" id="goBack">
+                            Kembali
                         </button>
                     </div>
                 </div>
@@ -83,6 +130,10 @@
 
 <script>
     $(document).ready(function() {
+        document.getElementById("goBack").addEventListener("click", function() {
+            window.location.href = "<?= site_url('checkseet'); ?>";
+        });
+
         let rowCount = 0; // Untuk menjaga count baris yang unik
         let lastItemCek = ''; // Initialize the last item check variable
 
@@ -227,7 +278,7 @@
 
             // Kirim data dengan AJAX
             $.ajax({
-                url: "<?= site_url('checkseet/insert'); ?>",
+                url: "<?= site_url('checkseet/update'); ?>",
                 type: "POST",
                 data: JSON.stringify({ data: dataList }),
                 contentType: "application/json",

@@ -11,18 +11,20 @@
                 <div class="box-body">
                     <div class="form-group row">
                         <div class="col-md-6">
+                            <label for="nama_form">Nama Check Sheet</label>
+                            <input type="text" id="nama_form" class="form-control" value="<?= isset($singleChecksheet['nama_doc']) ? $singleChecksheet['nama_doc'] : ''; ?>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tanggal_form">Tanggal</label>
+                            <input type="date" id="tanggal_form" class="form-control" value="<?= isset($singleChecksheet['tanggal_doc']) ? $singleChecksheet['tanggal_doc'] : ''; ?>" required>
+                        </div>
+                        <div class="col-md-6">
                             <label for="no_form">No Form</label>
                             <input type="text" id="no_form" name="no_form" class="form-control" value="<?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_form'] : ''; ?>" required>
                         </div>
                         <div class="col-md-6">
                             <label for="id_departemen">Pemilik Doc</label>
-                            <select id="id_departemen" name="id_departemen" class="form-control" required>
-                                <?php foreach ($departemen as $d): ?>
-                                    <option value="<?= $d['id']; ?>" <?= ($d['id'] == $singleChecksheet['id']) ? 'selected' : ''; ?>>
-                                        <?= $d['dept']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="text" id="id_departemen" class="form-control" value="MAINTENANCE DEPT" required disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="no_doc">No Doc</label>
@@ -230,6 +232,8 @@
                 let idMesin = $("#id_mesin").val();
                 let noForm = $("#no_form").val();
                 let noDoc = $("#no_doc").val();
+                let namaForm = $("#nama_form").val();
+                let tanggalForm = $("#tanggal_form").val();
                 let idDepartemen = $("#id_departemen").val();
 
                 // Validasi setiap kolom input
@@ -257,6 +261,8 @@
                     status: "1",
                     no_form: noForm,
                     no_doc: noDoc,
+                    nama_doc: namaForm,
+                    tanggal_doc: tanggalForm,
                     id_departemen: idDepartemen
                 });
 

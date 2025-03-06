@@ -97,6 +97,28 @@ class Checkseet extends CI_Controller {
         $this->load->view('checksheetEdit', $data);
     }
 
+    public function view() {
+        $id_mesin = $this->input->post('id_mesin');
+        
+        $area = $this->Checkseet_model->get_area();
+        $mesin = $this->Checkseet_model->get_mesin();
+        $lini = $this->Checkseet_model->get_lini();
+        $departemen = $this->Checkseet_model->get_departement();
+        $singlechecksheet = $this->Checkseet_model->get_singlecheckseet($id_mesin); 
+        $checksheet = $this->Checkseet_model->get_checkseet($id_mesin); 
+
+        $data = [
+            'lini' => $lini,
+            'area' => $area,
+            'mesin' => $mesin,
+            'departemen' => $departemen,
+            'singleChecksheet' => $singlechecksheet,
+            'checksheet' => $checksheet
+        ];
+
+        $this->load->view('checksheetView', $data);
+    }
+
     public function indexInsert() {
         $id_mesin = $this->input->post('id_mesin');
         $checkseet = $this->Checkseet_model->get_checkseet($id_mesin);
@@ -143,7 +165,11 @@ class Checkseet extends CI_Controller {
                 'status'         => isset($data['status']) ? (int)$data['status'] : 1, 
                 'no_form'        => isset($data['no_form']) ? trim($data['no_form']) : null, 
                 'no_doc'         => isset($data['no_doc']) ? trim($data['no_doc']) : null, 
-                'id'             => isset($data['id_departemen']) ? (int)$data['id_departemen'] : null,
+                'nama_doc'        => isset($data['nama']) ? trim($data['no_form']) : null, 
+                'no_doc'         => isset($data['no_doc']) ? trim($data['no_doc']) : null, 
+                'nama_doc'       => isset($data['nama_doc']) ? trim($data['nama_doc']) : null, 
+                'tanggal_doc'    => isset($data['tanggal_doc']) ? trim($data['tanggal_doc']) : null, 
+                'departemen'     => isset($data['id_departemen']) ? trim($data['id_departemen']) : null,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
@@ -180,7 +206,9 @@ class Checkseet extends CI_Controller {
                 'status'         => isset($data['status']) ? (int)$data['status'] : 1, 
                 'no_form'        => isset($data['no_form']) ? trim($data['no_form']) : null, 
                 'no_doc'         => isset($data['no_doc']) ? trim($data['no_doc']) : null, 
-                'id'             => isset($data['id_departemen']) ? (int)$data['id_departemen'] : null,
+                'nama_doc'       => isset($data['nama_doc']) ? trim($data['nama_doc']) : null, 
+                'tanggal_doc'    => isset($data['tanggal_doc']) ? trim($data['tanggal_doc']) : null, 
+                'departemen'     => isset($data['id_departemen']) ? trim($data['id_departemen']) : null,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));

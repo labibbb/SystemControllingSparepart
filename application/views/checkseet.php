@@ -31,10 +31,17 @@
                                         <td><?= $row['nama_area']; ?></td>
                                         <td><?= $row['nama_mesin']; ?></td>
                                         <td>
-                                        <form action="<?= site_url('checkseet/edit'); ?>" method="post">
-                                            <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
-                                            <button type="submit" class="btn btn-warning btn-sm">Edit</button>
-                                        </form>
+                                            <div class="d-flex gap-2">
+                                                <form action="<?= site_url('checkseet/edit'); ?>" method="post">
+                                                    <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                    <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                                </form>
+                                                <form action="<?= site_url('checkseet/view'); ?>" method="post">
+                                                    <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                    <button type="submit" class="btn btn-sm" style="background-color: yellow; color: black;">View</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
