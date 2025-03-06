@@ -159,58 +159,29 @@
         
         function simpanChecksheet() {
             let dataList = [];
-            let isValid = true; // Flag untuk validasi
             let errorMessage = ""; // Menyimpan pesan error
 
-            $("#tbCheckSheet tbody tr").each(function () {
-                let itemCek = $(this).find(".item-check").val() || lastItemCek;
-                let pointCek = $(this).find("td:nth-child(2) input").val();
-                let metodeCek = $(this).find("td:nth-child(3) input").val();
-                let standard = $(this).find("td:nth-child(4) input").val();
-                let idLini = $("#id_lini").val();
-                let idArea = $("#id_area").val();
-                let idMesin = $("#id_mesin").val();
-                let noForm = $("#no_form").val();
-                let noDoc = $("#no_doc").val();
-                let namaForm = $("#nama_form").val();
-                let tanggalForm = $("#tanggal_form").val();
-                let idDepartemen = $("#id_departemen").val();
+            let idLini = $("#id_lini").val();
+            let idArea = $("#id_area").val();
+            let idMesin = $("#id_mesin").val();
+            let noForm = $("#no_form").val();
+            let noDoc = $("#no_doc").val();
+            let namaForm = $("#nama_form").val();
+            let tanggalForm = $("#tanggal_form").val();
+            let idDepartemen = $("#id_departemen").val();
 
-                // Validasi setiap kolom input
-                if (!idLini) errorMessage += "- ID Lini harus dipilih!<br>";
-                if (!idArea) errorMessage += "- ID Area harus dipilih!<br>";
-                if (!idMesin) errorMessage += "- ID Mesin harus dipilih!<br>";
-                if (!noForm) errorMessage += "- Nomor Form harus diisi!<br>";
-                if (!noDoc) errorMessage += "- Nomor Dokumen harus diisi!<br>";
-                if (!idDepartemen) errorMessage += "- ID Departemen harus dipilih!<br>";
+            // Validasi setiap kolom input
+            if (!idLini) errorMessage += "- ID Lini harus dipilih!<br>";
+            if (!idArea) errorMessage += "- ID Area harus dipilih!<br>";
+            if (!idMesin) errorMessage += "- ID Mesin harus dipilih!<br>";
+            if (!noForm) errorMessage += "- Nomor Form harus diisi!<br>";
+            if (!noDoc) errorMessage += "- Nomor Dokumen harus diisi!<br>";
+            if (!idDepartemen) errorMessage += "- ID Departemen harus dipilih!<br>";
+            if (!namaForm) errorMessage += "- Nama Checksheet harus diisi!<br>";
+            if (!tanggalForm) errorMessage += "- Tanggal Form harus dipilih!<br>";
 
-                // Jika ada error, set flag isValid ke false
-                if (errorMessage !== "") {
-                    isValid = false;
-                    return false; // Hentikan loop
-                }
-
-                dataList.push({
-                    id_lini: idLini,
-                    id_area: idArea,
-                    id_mesin: idMesin,
-                    item_cek: itemCek,
-                    point_cek: pointCek,
-                    metode_cek: metodeCek,
-                    standard: standard,
-                    status: "1",
-                    no_form: noForm,
-                    no_doc: noDoc,
-                    nama_doc: namaForm,
-                    tanggal_doc: tanggalForm,
-                    id_departemen: idDepartemen
-                });
-
-                lastItemCek = itemCek;
-            });
-
-            // Jika ada error, tampilkan alert dengan daftar error
-            if (!isValid) {
+            // Jika ada error, tampilkan alert dan hentikan proses
+            if (errorMessage !== "") {
                 Swal.fire({
                     title: "Gagal!",
                     html: errorMessage,
@@ -219,9 +190,35 @@
                 return;
             }
 
+            // Iterasi melalui tabel hanya jika validasi berhasil
+            $("#tbCheckSheet tbody tr").each(function () {
+                let itemCek = $(this).find(".item-check").val();
+                let pointCek = $(this).find("td:nth-child(2) input").val();
+                let metodeCek = $(this).find("td:nth-child(3) input").val();
+                let standard = $(this).find("td:nth-child(4) input").val();
+                
+                if (itemCek && pointCek && metodeCek && standard) {
+                    dataList.push({
+                        id_lini: idLini,
+                        id_area: idArea,
+                        id_mesin: idMesin,
+                        item_cek: itemCek,
+                        point_cek: pointCek,
+                        metode_cek: metodeCek,
+                        standard: standard,
+                        status: "1",
+                        no_form: noForm,
+                        no_doc: noDoc,
+                        nama_doc: namaForm,
+                        tanggal_doc: tanggalForm,
+                        id_departemen: idDepartemen
+                    });
+                }
+            });
+
             // Pastikan ada data yang dikirim
             if (dataList.length === 0) {
-                Swal.fire("Gagal", "Silakan lengkapi data sebelum menyimpan!", "error");
+                Swal.fire("Gagal", "Isi tabel sebelum menyimpan!", "error");
                 return;
             }
 
