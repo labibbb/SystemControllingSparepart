@@ -23,6 +23,7 @@
                                     <th>No</th>
                                     <th>Tanggal</th>
                                     <th>Bulan</th>
+                                    <th>Tahun</th>
                                     <th>MP</th>
                                     <th>Lini</th>
                                     <th>Area</th>
@@ -60,6 +61,7 @@
                                             }
                                             ?>
                                         </td>
+                                        <td><?= $row['tahun']; ?></td>
                                         <td><?= $row['dipname']; ?></td>
                                         <td><?= $row['nama_lini']; ?></td>
                                         <td><?= $row['nama_area']; ?></td>
@@ -137,6 +139,34 @@
     </div>
 </div>
 
+<div id="modalTanggalStatus" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update MP</h5>
+                <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= base_url('pmmonthly/update_tanggal') ?>" method="post">
+                    <input type="hidden" name="id_pmm" id="id_pmm_tglstts">
+                    
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal</label>
+                        <input type="date" name="tanggal" id="tanggal" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="catatan_mp">Catatan</label>
+                        <input type="text" name="catatan" id="catatan_mp" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Update MP -->
 <div id="modalMP" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -156,34 +186,6 @@
                                 <option value="<?= $mp['id_users']; ?>"><?= $mp['dipname']; ?></option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_mp" class="form-control">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modalTanggalStatus" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
-                <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form action="<?= base_url('pmmonthly/update_tanggal') ?>" method="post">
-                    <input type="hidden" name="id_pmm" id="id_pmm_tglstts">
-                    
-                    <div class="form-group">
-                        <label for="tanggal">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control" required>
                     </div>
 
                     <div class="form-group">

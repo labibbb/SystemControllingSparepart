@@ -132,3 +132,6 @@ $route['checkseet/update'] = 'Checkseet/editChecksheet';
 $route['checkseet/edit'] = 'Checkseet/edit';
 $route['checkseet/view'] = 'Checkseet/view';
 $route['checkseet/getdata'] = 'Checkseet/getData';
+
+$route['pengerjaan'] = 'Pengerjaan/index';
+$route['pengerjaan/detail'] = 'Pengerjaan/detail';
