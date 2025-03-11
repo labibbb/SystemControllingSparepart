@@ -135,3 +135,4 @@ $route['checkseet/getdata'] = 'Checkseet/getData';
 
 $route['pengerjaan'] = 'Pengerjaan/index';
 $route['pengerjaan/detail'] = 'Pengerjaan/detail';
+$route['pengerjaan/add'] = 'Pengerjaan/insertPengerjaan';

@@ -26,17 +26,21 @@
                                 <tbody id="table1-body">
                                     <?php $no = 1; foreach ($pmmonthly as $row): ?>
                                         <tr>
-                                            <td><?= $no++; ?></td>
-                                            <td><?= date('d-m-Y', strtotime($row['tanggal'])); ?></tds>
-                                            <td><?= $row['nama_area']; ?></td>
-                                            <td><?= $row['nama_mesin']; ?></td>
+                                            <td style="font-size: 12px; padding: 3px;"><?= $no++; ?></td>
+                                            <td style="font-size: 12px; padding: 3px;"><?= date('d-m-Y', strtotime($row['tanggal'])); ?></td>
+                                            <td style="font-size: 12px; padding: 3px;"><?= $row['nama_area']; ?></td>
+                                            <td style="font-size: 12px; padding: 3px;"><?= $row['nama_mesin']; ?></td>
                                             <td>
-                                                <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
-                                                    <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
-                                                    <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
-                                                    <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
-                                                    <button type="submit" class="btn btn-warning btn-sm">Buka</button>
-                                                </form>
+                                                <?php if ($row['status'] == 3): ?>
+                                                    <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-warning btn-sm">Buka</button>
+                                                    </form>
+                                                <?php elseif ($row['status'] == 4): ?>
+                                                    <button class="btn btn-secondary btn-sm" style="padding: 2px 5px; font-size: 12px;" disabled>Menunggu Approval</button>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -64,16 +68,21 @@
                                         $no = 1;
                                         foreach ($pmmonthly2 as $row): ?>
                                             <tr>
-                                                <td><?= $no++; ?></td>
-                                                <td><?= date('d-m-Y', strtotime($row['tanggal'])); ?></tds>
-                                                <td><?= $row['nama_area']; ?></td>
-                                                <td><?= $row['nama_mesin']; ?></td>
+                                                <td style="font-size: 12px; padding: 3px;"><?= $no++; ?></td>
+                                                <td style="font-size: 12px; padding: 3px;"><?= date('d-m-Y', strtotime($row['tanggal'])); ?></td>
+                                                <td style="font-size: 12px; padding: 3px;"><?= $row['nama_area']; ?></td>
+                                                <td style="font-size: 12px; padding: 3px;"><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                    <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
-                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
-                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
-                                                        <button type="submit" class="btn btn-warning btn-sm">Buka</button>
-                                                    </form>
+                                                    <?php if ($row['status'] == 3): ?>
+                                                        <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
+                                                            <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                            <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                            <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                            <button type="submit" class="btn btn-warning btn-sm">Buka</button>
+                                                        </form>
+                                                    <?php elseif ($row['status'] == 4): ?>
+                                                        <button class="btn btn-secondary btn-sm" style="padding: 2px 5px; font-size: 12px;" disabled>Menunggu Approval</button>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

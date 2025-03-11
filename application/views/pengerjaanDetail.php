@@ -64,20 +64,23 @@
                             <tr>
                                 <td class="fw-bold">Lini</td>
                                 <td>:</td>
-                                <td id="id_lini"><?= isset($singleChecksheet['nama_lini']) ? $singleChecksheet['nama_lini'] : '-'; ?></td>
+                                <td id="nama_lini"><?= isset($singleChecksheet['nama_lini']) ? $singleChecksheet['nama_lini'] : '-'; ?></td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Area</td>
                                 <td>:</td>
-                                <td id="id_area"><?= isset($singleChecksheet['nama_area']) ? $singleChecksheet['nama_area'] : '-'; ?></td>
+                                <td id="nama_area"><?= isset($singleChecksheet['nama_area']) ? $singleChecksheet['nama_area'] : '-'; ?></td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Mesin</td>
                                 <td>:</td>
-                                <td id="id_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
+                                <td id="nama_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
                             </tr>
                         </table>
                         <input type="hidden" id="id_pmm" value="<?= isset($id_pmm) ? $id_pmm : '-'; ?>">
+                        <input type="hidden" id="id_lini" value="<?= isset($singleChecksheet['id_lini']) ? $singleChecksheet['id_lini'] : '-'; ?>">
+                        <input type="hidden" id="id_area" value="<?= isset($singleChecksheet['id_area']) ? $singleChecksheet['id_area'] : '-'; ?>">
+                        <input type="hidden" id="id_mesin" value="<?= isset($singleChecksheet['id_mesin']) ? $singleChecksheet['id_mesin'] : '-'; ?>">
                     </div>
 
                     <div class="table-responsive">
@@ -218,57 +221,75 @@
         });
         
         function simpanChecksheet() {
-            let dataList = [];
+            Swal.fire({
+                title: "Apakah Anda yakin?",
+                text: "Data yang dimasukkan akan disimpan!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, simpan!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let formData = new FormData();
 
-            let idLini = $("#id_lini").val();
-            let idArea = $("#id_area").val();
-            let idMesin = $("#id_mesin").val();
-            let idPmm = $("#id_pmm").val();
-            let index = 0;
-            // Iterasi melalui tabel hanya jika validasi berhasil
-            $("#tbCheckSheet tbody tr").each(function () {
-                let idCk = $(this).find(`#idCk_${index}`).text().trim(); 
-                let aktual = $(this).find(`#status_${index}`).val();
-                let tindakan = $(this).find(`#tindakan_${index}`).val();
-                let hasil = $(this).find(`#hasil_${index}`).val();
-                let keterangan = $(this).find(`#keterangan_input_${index}`).val();
-                let gambar = $(this).find(`#keterangan_file_${index}`)[0].files[0]; 
-                
+                    let idLini = $("#id_lini").val();
+                    let idArea = $("#id_area").val();
+                    let idMesin = $("#id_mesin").val();
+                    let idPmm = $("#id_pmm").val();
+                    let index = 0;
 
-                dataList.push({
-                    id_pmm: idPmm,
-                    id_ck: idCk,
-                    id_lini: idLini,
-                    id_area: idArea,
-                    id_mesin: idMesin,
-                    aktual: aktual,
-                    tindakan: tindakan,
-                    hasil: hasil,
-                    keterangan: keterangan,
-                    gambar: gambar,
-                    status: "1"
-                });
-                index++;
-            });
+                    // Iterasi tabel untuk mengambil data
+                    $("#tbCheckSheet tbody tr").each(function () {
+                        let idCk = $(this).find(`#idCk_${index}`).text().trim();
+                        let aktual = $(this).find(`#status_${index}`).val();
+                        let tindakan = $(this).find(`#tindakan_${index}`).val();
+                        let hasil = $(this).find(`#hasil_${index}`).val();
+                        let keterangan = $(this).find(`#keterangan_input_${index}`).val();
+                        let gambar = $(this).find(`#keterangan_file_${index}`)[0].files[0];
 
-            // Kirim data dengan AJAX
-            $.ajax({
-                url: "<?= site_url('pengerjaan/add'); ?>",
-                type: "POST",
-                data: JSON.stringify({ data: dataList }),
-                contentType: "application/json",
-                dataType: "json",
-                success: function (response) {
-                    if (response.status === "success") {
-                        Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
-                            window.location.href = "<?= site_url('checkseet'); ?>";
-                        });
-                    } else {
-                        Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
-                    }
-                },
-                error: function () {
-                    Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
+                        // Tambahkan data ke formData
+                        formData.append(`data[${index}][id_pmm]`, idPmm);
+                        formData.append(`data[${index}][id_ck]`, idCk);
+                        formData.append(`data[${index}][id_lini]`, idLini);
+                        formData.append(`data[${index}][id_area]`, idArea);
+                        formData.append(`data[${index}][id_mesin]`, idMesin);
+                        formData.append(`data[${index}][aktual]`, aktual);
+                        formData.append(`data[${index}][tindakan]`, tindakan);
+                        formData.append(`data[${index}][hasil]`, hasil);
+                        formData.append(`data[${index}][keterangan]`, keterangan);
+                        formData.append(`data[${index}][status]`, "1");
+
+                        // Jika ada gambar, tambahkan ke formData
+                        if (gambar) {
+                            formData.append(`gambar_${index}`, gambar);
+                        }
+
+                        index++;
+                    });
+
+                    // Kirim data dengan AJAX menggunakan FormData
+                    $.ajax({
+                        url: "<?= site_url('pengerjaan/add'); ?>",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.status === "success") {
+                                Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
+                                    window.location.href = "<?= site_url('pengerjaan'); ?>";
+                                });
+                            } else {
+                                Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
+                            }
+                        },
+                        error: function () {
+                            Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
+                        }
+                    });
                 }
             });
         } 
