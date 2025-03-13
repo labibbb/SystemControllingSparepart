@@ -62,7 +62,7 @@
                                             ?>
                                         </td>
                                         <td><?= $row['tahun']; ?></td>
-                                        <td><?= $row['dipname']; ?></td>
+                                        <td><?= $row['user_name']; ?></td>
                                         <td><?= $row['nama_lini']; ?></td>
                                         <td><?= $row['nama_area']; ?></td>
                                         <td><?= $row['nama_mesin']; ?></td>
@@ -103,8 +103,8 @@
                                             }                                            
                                             ?>
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td><?= $row['foreman_name']; ?></td>
+                                        <td><?= $row['supervisor_name']; ?></td>
                                         <td>
                                             <div class="d-flex">
                                                 <?php if (!in_array($row['status'], [6, 7, 8, 9])): ?>

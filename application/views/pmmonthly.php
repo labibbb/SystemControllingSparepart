@@ -62,7 +62,7 @@
                                             ?>
                                         </td>
                                         <td><?= $row['tahun']; ?></td>
-                                        <td><?= $row['dipname']; ?></td>
+                                        <td><?= $row['user_name']; ?></td>
                                         <td><?= $row['nama_lini']; ?></td>
                                         <td><?= $row['nama_area']; ?></td>
                                         <td><?= $row['nama_mesin']; ?></td>
@@ -84,15 +84,27 @@
                                                     break;
                                                 case 5:
                                                     echo '<span class="badge bg-danger">Finish On Delay</span>';
-                                                    break;    
+                                                    break;
+                                                case 6:
+                                                    echo '<span class="badge bg-success">Disetujui Foreman</span>';
+                                                    break;
+                                                case 7:
+                                                    echo '<span class="badge bg-danger">Ditolak Foreman</span>';
+                                                    break;
+                                                case 8:
+                                                    echo '<span class="badge bg-success">Disetujui Supervisor</span>';
+                                                    break;
+                                                case 9:
+                                                    echo '<span class="badge bg-danger">Ditolak Supervisor</span>';
+                                                    break;
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                                                     break;
-                                            }
+                                            }                                            
                                             ?>
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td><?= $row['foreman_name']; ?></td>
+                                        <td><?= $row['supervisor_name']; ?></td>
                                         <td>
                                             <?php if ($row['status'] == 1): ?>
                                                 <button class="btn btn-success btn-sm" onclick="editTanggalStatus(<?= $row['id_pmm']; ?>)">Setting</button>
@@ -279,6 +291,18 @@
                             case 5:
                                 status = '<span class="badge bg-danger">Finish On Delay</span>';
                                 break;
+                                case 6:
+                                echo '<span class="badge bg-success">Disetujui Foreman</span>';
+                                break;
+                            case 7:
+                                echo '<span class="badge bg-danger">Ditolak Foreman</span>';
+                                break;
+                            case 8:
+                                echo '<span class="badge bg-success">Disetujui Supervisor</span>';
+                                break;
+                            case 9:
+                                echo '<span class="badge bg-danger">Ditolak Supervisor</span>';
+                                break;
                             default:
                                 status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                                 break;
@@ -294,13 +318,13 @@
                             <td>${row.tanggal ? new Date(row.tanggal).toLocaleDateString('id-ID') : 'No Set'}</td>
                             <td>${bulan}</td>
                             <td>${row.tahun}</td>
-                            <td>${row.dipname ? row.dipname : ''}</td>
+                            <td>${row.user_name ? row.user_name : ''}</td>
                             <td>${row.nama_lini}</td>
                             <td>${row.nama_area}</td>
                             <td>${row.nama_mesin}</td>
                             <td>${status}</td>
-                            <td></td>
-                            <td></td>
+                            <td>${row.foreman_name ? row.foreman_name : ''}</td>
+                            <td>${row.supervisor_name ? row.supervisor_name : ''}</td>
                             <td>
                                 ${row.status == 1 ? 
                                     `<button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm})">Setting</button>` :

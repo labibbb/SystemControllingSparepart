@@ -12,7 +12,7 @@
 					<span>Dashboard</span>
 				</a>
 				</li>
-                <li class="treeview">
+                <!-- <li class="treeview">
 				  <a href="#">
 					<i span class="icon-Layout-grid"><span class="path1"></span><span class="path2"></span></i>
 					<span>Master</span>
@@ -31,24 +31,47 @@
 					<li><a href="<?= site_url('settingwi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Setting WI</a></li>
 					<li><a href="<?= site_url('checkseet'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Checkseet</a></li>
 				  </ul>
-				</li>
-				<li class="treeview">
-				  <a href="#">
-					<i span class="icon-Layout-grid"><span class="path1"></span><span class="path2"></span></i>
-					<span>Transaksi</span>
-					<span class="pull-right-container">
-					  <i class="fa fa-angle-right pull-right"></i>
-					</span>
-				  </a>
-				  <ul class="treeview-menu">
-				  	<li><a href="<?= site_url('pmyearly'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Schedule PM Yearly</a></li>
-				  	<li><a href="<?= site_url('pmmonthly'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Schedule PM Monthly</a></li>
-				  	<li><a href="<?= site_url('pengerjaan'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengerjaan</a></li>
-				  	<li><a href="<?= site_url('approvalFR'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Approval Foreman</a></li>
-				  	<li><a href="<?= site_url('approvalSPV'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Approval Supervisor</a></li>
-					<li><a href="<?= site_url('settingfwm'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Setting Freq & Work Instruction PM</a></li>
-				  </ul>
-				</li> 	     
+				</li> -->
+				<?php if ($this->session->userdata('level') == 1): ?>
+					<li>
+						<a href="<?= site_url('pmyearly'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Schedule PM Yearly</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('approvalSPV'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Approval</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('settingfwm'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Setting Freq & Work Instruction PM</span>
+						</a>
+					</li>
+				<?php elseif ($this->session->userdata('level') == 2): ?>
+					<li>
+						<a href="<?= site_url('pmmonthly'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Schedule PM Monthly</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('approvalFR'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Approval</span>
+						</a>
+					</li>
+				<?php elseif ($this->session->userdata('level') == 3): ?>
+					<li>
+						<a href="<?= site_url('pengerjaan'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Pengerjaan</span>
+						</a>
+					</li>
+				<?php endif; ?> 	     
 			  </ul>
 		  </div>
 		</div>

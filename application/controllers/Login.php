@@ -33,7 +33,7 @@ class Login extends CI_Controller {
                 $this->session->set_userdata([
                     'user_id'  => $user->id_users,
                     'username' => $user->username,
-                    'role' => $user->role,
+                    'level' => $user->level,
                     'logged_in' => true,
                     'last_login_time' => time() // Simpan waktu login
                 ]);
