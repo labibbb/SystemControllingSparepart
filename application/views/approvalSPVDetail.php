@@ -254,13 +254,13 @@
                 if (result.isConfirmed) {
                     let id_pmm = $("#id_pmm").val();
                     $.ajax({
-                        url: "<?= site_url('approvalFR/approveFr/') ?>" + id_pmm, // Kirim sebagai parameter URL
+                        url: "<?= site_url('approvalSPV/approveSpv/') ?>" + id_pmm, // Kirim sebagai parameter URL
                         type: "POST", // Gunakan POST atau bisa juga GET
                         dataType: "json",
                         success: function (response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
-                                    window.location.href = "<?= site_url('approval'); ?>";
+                                    window.location.href = "<?= site_url('approvalSPV'); ?>";
                                 });
                             } else {
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
@@ -288,13 +288,13 @@
                 if (result.isConfirmed) {
                     let id_pmm = $("#id_pmm").val();
                     $.ajax({
-                        url: "<?= site_url('approvalFR/reject/') ?>" + id_pmm, // Kirim sebagai parameter URL
+                        url: "<?= site_url('approvalSPV/reject/') ?>" + id_pmm, // Kirim sebagai parameter URL
                         type: "POST", // Gunakan POST atau bisa juga GET
                         dataType: "json",
                         success: function (response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
-                                    window.location.href = "<?= site_url('approval'); ?>";
+                                    window.location.href = "<?= site_url('approvalSPV'); ?>";
                                 });
                             } else {
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");

@@ -107,8 +107,8 @@
                                         <td></td>
                                         <td>
                                             <div class="d-flex">
-                                                <?php if (!in_array($row['status'], [6, 7, 8, 9])): ?>
-                                                    <form action="<?= site_url('approvalFR/detail'); ?>" method="post" class="me-2">
+                                                <?php if (!in_array($row['status'], [8, 9])): ?>
+                                                    <form action="<?= site_url('approvalSPV/detail'); ?>" method="post" class="me-2">
                                                         <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                         <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
                                                         <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
@@ -133,22 +133,6 @@
 </div>
 
 <script>
-    function editTanggal(id, tanggal, catatan) {
-        document.getElementById("id_pmm_tgl").value = id;
-        document.getElementById("tanggal_tgl").value = tanggal;
-        $('#modalTanggal').modal('show');
-    }
-
-    function editMP(id) {
-        document.getElementById("id_pmm_mp").value = id;
-        $('#modalMP').modal('show'); // Menggunakan Bootstrap modal
-    }
-
-    function editTanggalStatus(id) {
-        document.getElementById("id_pmm_tglstts").value = id;
-        $('#modalTanggalStatus').modal('show'); // Menggunakan Bootstrap modal
-    }
-
     //$('#id_lini').on('change', filterData);
 
     function filterData() {

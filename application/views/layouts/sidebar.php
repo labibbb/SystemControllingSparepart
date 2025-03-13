@@ -45,6 +45,7 @@
 				  	<li><a href="<?= site_url('pmmonthly'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Schedule PM Monthly</a></li>
 				  	<li><a href="<?= site_url('pengerjaan'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengerjaan</a></li>
 				  	<li><a href="<?= site_url('approvalFR'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Approval Foreman</a></li>
+				  	<li><a href="<?= site_url('approvalSPV'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Approval Supervisor</a></li>
 					<li><a href="<?= site_url('settingfwm'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Setting Freq & Work Instruction PM</a></li>
 				  </ul>
 				</li> 	     

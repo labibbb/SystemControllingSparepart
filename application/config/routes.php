@@ -139,5 +139,9 @@ $route['pengerjaan/add'] = 'Pengerjaan/insertPengerjaan';
 
 $route['approvalFR'] = 'Approval/index';
 $route['approvalFR/detail'] = 'Approval/detail';
-$route['approvalFR/approve'] = 'Approval/approveFr';
-$route['approvalFR/reject'] = 'Approval/rejectFr';
+$route['approvalFR/approveFr/(:num)'] = 'Approval/approveFr/$1';
+$route['approvalFR/reject/(:num)'] = 'Approval/rejectFr/$1';
+$route['approvalSPV'] = 'Approval/index2';
+$route['approvalSPV/detail'] = 'Approval/detail2';
+$route['approvalSPV/approveSpv/(:num)'] = 'Approval/approveSpv/$1';
+$route['approvalSPV/reject/(:num)'] = 'Approval/rejectSpv/$1';

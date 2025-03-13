@@ -43,6 +43,39 @@ class Approval extends CI_Controller {
         $this->load->view('approvalFRView', $data);
     }
 
+    public function index2() {
+        // Ambil data sesuai filter awal
+        $pmmonthly = $this->Approval_model->get_all_pmmonthly2();
+        $lini = $this->Approval_model->get_lini();
+        
+        $data = [
+            'pmmonthly' => $pmmonthly,
+            'lini' => $lini
+        ];
+    
+        $this->load->view('approvalSPVView', $data);
+    }
+
+    public function detail2() {    
+        $id_mesin = $this->input->post('id_mesin');
+        $tanggal = $this->input->post('tanggal');
+        $id_pmm = $this->input->post('id_pmm');
+
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
+        $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
+        $wi = $this->Approval_model->get_wi($id_mesin); 
+    
+        $data = [
+            'singleChecksheet' => $singlechecksheet,
+            'checksheet' => $checksheet,
+            'tanggal' => $tanggal,
+            'wi' => $wi,
+            'id_pmm' => $id_pmm
+        ];
+    
+        $this->load->view('approvalSPVDetail', $data);
+    }
+
     public function detail() {    
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
@@ -63,19 +96,16 @@ class Approval extends CI_Controller {
         $this->load->view('approvalFRDetail', $data);
     }
 
-    public function approveFr() {
-        $id_pmm = $this->input->post('id_pmm', true);
+    public function approveFr($id_pmm) {
         $user_id = $this->session->userdata('user_id');
-    
-        // Validasi ID PMM tidak boleh kosong
+
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
             return;
         }
-    
-        // Update status di model
+
         $update = $this->Approval_model->approveFr($id_pmm, $user_id);
-    
+
         if ($update) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
         } else {
@@ -83,8 +113,7 @@ class Approval extends CI_Controller {
         }
     }
     
-    public function rejectFr() {
-        $id_pmm = $this->input->post('id_pmm', true);
+    public function rejectFr($id_pmm) {
         $user_id = $this->session->userdata('user_id');
 
         // Validasi ID PMM tidak boleh kosong
@@ -103,18 +132,16 @@ class Approval extends CI_Controller {
         }
     }
 
-    public function approveSpv() {
-        $id_pmm = $this->input->post('id_pmm', true);
+    public function approveSpv($id_pmm) {
         $user_id = $this->session->userdata('user_id');
-        // Validasi ID PMM tidak boleh kosong
+
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
             return;
         }
-    
-        // Update status di model
+
         $update = $this->Approval_model->approveSpv($id_pmm, $user_id);
-    
+
         if ($update) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
         } else {
@@ -122,9 +149,10 @@ class Approval extends CI_Controller {
         }
     }
 
-    public function rejectSpv() {
-        $id_pmm = $this->input->post('id_pmm', true);
+    
+    public function rejectSpv($id_pmm) {
         $user_id = $this->session->userdata('user_id');
+
         // Validasi ID PMM tidak boleh kosong
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
