@@ -84,7 +84,7 @@
                                                     break;
                                                 case 5:
                                                     echo '<span class="badge bg-danger">Finish On Delay</span>';
-                                                    break;    
+                                                    break;
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                                                     break;
@@ -94,12 +94,17 @@
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <?php if ($row['status'] == 1): ?>
-                                                <button class="btn btn-success btn-sm" onclick="editTanggalStatus(<?= $row['id_pmm']; ?>)">Setting</button>
-                                            <?php else: ?>
-                                                <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>')">Tgl</button>
-                                                <button class="btn btn-warning btn-sm" onclick="editMP(<?= $row['id_pmm']; ?>)">MP</button>
-                                            <?php endif; ?>
+                                            <div class="d-flex">
+                                                <form action="<?= site_url('approvalFR/detail'); ?>" method="post" class="me-2">
+                                                    <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                    <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                    <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                    <button type="submit" class="btn btn-primary btn-sm">Check</button>
+                                                </form>
+                                                <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
+                                                    <i class="fas fa-print"></i> Print
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -109,100 +114,6 @@
                 </div>
             </div>
         </section>
-    </div>
-</div>
-
-<div id="modalTanggal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
-                <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form action="<?= base_url('pmmonthly/update_tanggal2') ?>" method="post">
-                    <input type="hidden" name="id_pmm" id="id_pmm_tgl">
-                    
-                    <div class="form-group">
-                        <label for="tanggal">Tanggal lama</label>
-                        <input type="date" id="tanggal_tgl" class="form-control" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tanggal">Tanggal Baru</label>
-                        <input type="date" name="tanggal" id="tanggal_tgl" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_tgl" class="form-control">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modalTanggalStatus" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
-                <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form action="<?= base_url('pmmonthly/update_tanggal') ?>" method="post">
-                    <input type="hidden" name="id_pmm" id="id_pmm_tglstts">
-                    
-                    <div class="form-group">
-                        <label for="tanggal">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_mp" class="form-control">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Update MP -->
-<div id="modalMP" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
-                <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form action="<?= base_url('pmmonthly/update_mp') ?>" method="post">
-                    <input type="hidden" name="id_pmm" id="id_pmm_mp">
-                    
-                    <div class="form-group">
-                        <label for="id_users">MP</label>
-                        <select name="id_users" id="id_users" class="form-control">
-                            <?php foreach ($manpower as $mp): ?>
-                                <option value="<?= $mp['id_users']; ?>"><?= $mp['dipname']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_mp" class="form-control">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -302,10 +213,12 @@
                             <td></td>
                             <td></td>
                             <td>
-                                ${row.status == 1 ? 
-                                    `<button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm})">Setting</button>` :
-                                    `<button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '${new Date(row.tanggal).toISOString().split('T')[0]}', '${row.catatan}')">Tgl</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>`}
+                                <button class="btn btn-primary btn-sm" onclick="checkFile(<?= $row['id_pmm']; ?>)">
+                                    <i class="fas fa-file"></i> Check
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -315,9 +228,6 @@
             $('#table1-body').html(rows); // UPDATE HANYA TABLE1
         });
     }
-
-
-
 </script>
 
 <?php $this->load->view('layouts/footer'); ?>

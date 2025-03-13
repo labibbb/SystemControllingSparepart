@@ -110,15 +110,27 @@ class Pengerjaan extends CI_Controller {
         }
         
         $uniquePmmIds = array_unique(array_column($dataList, 'id_pmm'));
-        
-        if (!empty($uniquePmmIds)) {
-            $this->db->where_in('id_pmm', $uniquePmmIds);
-            $this->db->update('pm_monthly', ['status' => 4]);
 
-            if ($this->db->affected_rows() > 0) {
-                log_message('debug', 'Status pm_monthly updated for id_pmm: ' . implode(',', $uniquePmmIds));
-            } else {
-                log_message('error', 'Failed to update pm_monthly status');
+        if (!empty($uniquePmmIds)) {
+            // Ambil data tanggal berdasarkan id_pmm
+            $this->db->select('id_pmm, tanggal');
+            $this->db->where_in('id_pmm', $uniquePmmIds);
+            $query = $this->db->get('pm_monthly');
+            $result = $query->result_array();
+
+            $today = date('Y-m-d'); // Tanggal hari ini
+
+            foreach ($result as $row) {
+                $status = ($today < $row['tanggal']) ? 4 : 5;
+
+                $this->db->where('id_pmm', $row['id_pmm']);
+                $this->db->update('pm_monthly', ['status' => $status]);
+
+                if ($this->db->affected_rows() > 0) {
+                    log_message('debug', "Status pm_monthly updated for id_pmm: {$row['id_pmm']} to status: {$status}");
+                } else {
+                    log_message('error', "Failed to update pm_monthly status for id_pmm: {$row['id_pmm']}");
+                }
             }
         }
 

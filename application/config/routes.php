@@ -136,3 +136,8 @@ $route['checkseet/getdata'] = 'Checkseet/getData';
 $route['pengerjaan'] = 'Pengerjaan/index';
 $route['pengerjaan/detail'] = 'Pengerjaan/detail';
 $route['pengerjaan/add'] = 'Pengerjaan/insertPengerjaan';
+
+$route['approvalFR'] = 'Approval/index';
+$route['approvalFR/detail'] = 'Approval/detail';
+$route['approvalFR/approve'] = 'Approval/approveFr';
+$route['approvalFR/reject'] = 'Approval/rejectFr';
