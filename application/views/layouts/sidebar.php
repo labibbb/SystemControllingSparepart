@@ -71,9 +71,16 @@
 							<span>Pengerjaan</span>
 						</a>
 					</li>
-				<?php endif; ?> 	     
+				<?php endif; ?>
+					<li>
+                        <a href="<?= site_url('login'); ?>">
+                            <i class="icon-Logout"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Logout</span>
+                        </a>
+                    </li> 	     
 			  </ul>
 		  </div>
 		</div>
     </section>
 </aside>
+

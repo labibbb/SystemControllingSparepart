@@ -84,32 +84,20 @@
                                                     break;
                                                 case 5:
                                                     echo '<span class="badge bg-danger">Finish On Delay</span>';
-                                                    break;
-                                                case 6:
-                                                    echo '<span class="badge bg-success">Disetujui Foreman</span>';
-                                                    break;
-                                                case 7:
-                                                    echo '<span class="badge bg-danger">Ditolak Foreman</span>';
-                                                    break;
-                                                case 8:
-                                                    echo '<span class="badge bg-success">Disetujui Supervisor</span>';
-                                                    break;
-                                                case 9:
-                                                    echo '<span class="badge bg-danger">Ditolak Supervisor</span>';
-                                                    break;
+                                                    break;    
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                                                     break;
-                                            }                                            
+                                            }
                                             ?>
                                         </td>
                                         <td><?= $row['foreman_name']; ?></td>
                                         <td><?= $row['supervisor_name']; ?></td>
                                         <td>
                                             <?php if ($row['status'] == 1): ?>
-                                                <button class="btn btn-success btn-sm" onclick="editTanggalStatus(<?= $row['id_pmm']; ?>)">Setting</button>
+                                                <button class="btn btn-success btn-sm" onclick="editTanggalStatus(<?= $row['id_pmm']; ?>, <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Setting</button>
                                             <?php else: ?>
-                                                <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>')">Tgl</button>
+                                                <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                                 <button class="btn btn-warning btn-sm" onclick="editMP(<?= $row['id_pmm']; ?>)">MP</button>
                                             <?php endif; ?>
                                         </td>
@@ -132,17 +120,19 @@
                 <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
             </div>
             <div class="modal-body">
-                <form action="<?= base_url('pmmonthly/update_tanggal2') ?>" method="post">
+                <form id="tanggalUpdate" action="<?= base_url('pmmonthly/update_tanggal2') ?>" method="post">
                     <input type="hidden" name="id_pmm" id="id_pmm_tgl">
+                    <input type="hidden" name="bulanU" id="bulanU">
+                    <input type="hidden" name="tahunU" id="tahunU">
                     
                     <div class="form-group">
-                        <label for="tanggal">Tanggal lama</label>
-                        <input type="date" id="tanggal_tgl" class="form-control" disabled>
+                        <label for="tanggal_tgllama">Tanggal lama</label>
+                        <input type="date" id="tanggal_tgllama" class="form-control" disabled>
                     </div>
 
                     <div class="form-group">
                         <label for="tanggal">Tanggal Baru</label>
-                        <input type="date" name="tanggal" id="tanggal_tgl" class="form-control" required>
+                        <input type="date" name="tanggal" id="tanggal_tgl" class="form-control">
                     </div>
 
                     <div class="form-group">
@@ -165,12 +155,14 @@
                 <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
             </div>
             <div class="modal-body">
-                <form action="<?= base_url('pmmonthly/update_tanggal') ?>" method="post">
+                <form id="tanggalStatus" action="<?= base_url('pmmonthly/update_tanggal') ?>" method="post">
                     <input type="hidden" name="id_pmm" id="id_pmm_tglstts">
+                    <input type="hidden" name="bulan" id="bulan">
+                    <input type="hidden" name="tahun" id="tahun">
                     
                     <div class="form-group">
                         <label for="tanggal">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control" required>
+                        <input type="date" name="tanggal" id="tanggal" class="form-control">
                     </div>
 
                     <div class="form-group">
@@ -219,9 +211,93 @@
 </div>
 
 <script>
-    function editTanggal(id, tanggal, catatan) {
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("tanggalStatus").addEventListener("submit", function (event) {
+        event.preventDefault(); // Mencegah submit langsung
+
+        let tanggalInput = document.getElementById("tanggal");
+        let bulan = document.getElementById("bulan").value;
+        let tahun = document.getElementById("tahun").value;
+        if (!tanggalInput.value) {
+            Swal.fire({
+                icon: "warning",
+                title: "Isi Semua Data",
+                text: "Tanggal tidak boleh kosong!",
+            });
+            return;
+        }
+
+        let selectedDate = new Date(tanggalInput.value);
+        let selectedMonth = selectedDate.getMonth() + 1; // JS bulan dari 0
+        let selectedYear = selectedDate.getFullYear();
+
+        if (selectedYear != tahun || selectedMonth != bulan) {
+            Swal.fire({
+                icon: "warning",
+                title: "Error",
+                text: "Tanggal harus berada pada bulan dan tahun yang dipilih!",
+            });
+            return;
+        }
+
+        Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Data berhasil disimpan!",
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            event.target.submit(); // Submit form setelah validasi lolos
+        });
+    });
+
+    document.getElementById("tanggalUpdate").addEventListener("submit", function (event) {
+        event.preventDefault(); // Mencegah submit langsung
+
+        let tanggalInput = document.getElementById("tanggal_tgl");
+        let bulan = document.getElementById("bulanU").value;
+        let tahun = document.getElementById("tahunU").value;
+        if (!tanggalInput.value) {
+            Swal.fire({
+                icon: "warning",
+                title: "Isi Semua Data",
+                text: "Tanggal tidak boleh kosong!",
+            });
+            return;
+        }
+
+        let selectedDate = new Date(tanggalInput.value);
+        let selectedMonth = selectedDate.getMonth() + 1; // JS bulan dari 0
+        let selectedYear = selectedDate.getFullYear();
+
+        if (selectedYear != tahun || selectedMonth != bulan) {
+            Swal.fire({
+                icon: "warning",
+                title: "Error",
+                text: "Tanggal harus berada pada bulan dan tahun yang dipilih!",
+            });
+            return;
+        }
+
+        Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Data berhasil disimpan!",
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            event.target.submit(); // Submit form setelah validasi lolos
+        });
+    });
+});
+</script>
+
+<script>
+    function editTanggal(id, tanggal, catatan, bulan, tahun) {
         document.getElementById("id_pmm_tgl").value = id;
-        document.getElementById("tanggal_tgl").value = tanggal;
+        document.getElementById("tanggal_tgllama").value = tanggal;
+        document.getElementById("bulanU").value = bulan;
+        document.getElementById("tahunU").value = tahun;
         $('#modalTanggal').modal('show');
     }
 
@@ -230,8 +306,10 @@
         $('#modalMP').modal('show'); // Menggunakan Bootstrap modal
     }
 
-    function editTanggalStatus(id) {
+    function editTanggalStatus(id, bulan, tahun) {
         document.getElementById("id_pmm_tglstts").value = id;
+        document.getElementById("bulan").value = bulan;
+        document.getElementById("tahun").value = tahun;
         $('#modalTanggalStatus').modal('show'); // Menggunakan Bootstrap modal
     }
 
@@ -291,18 +369,6 @@
                             case 5:
                                 status = '<span class="badge bg-danger">Finish On Delay</span>';
                                 break;
-                                case 6:
-                                echo '<span class="badge bg-success">Disetujui Foreman</span>';
-                                break;
-                            case 7:
-                                echo '<span class="badge bg-danger">Ditolak Foreman</span>';
-                                break;
-                            case 8:
-                                echo '<span class="badge bg-success">Disetujui Supervisor</span>';
-                                break;
-                            case 9:
-                                echo '<span class="badge bg-danger">Ditolak Supervisor</span>';
-                                break;
                             default:
                                 status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                                 break;
@@ -339,9 +405,6 @@
             $('#table1-body').html(rows); // UPDATE HANYA TABLE1
         });
     }
-
-
-
 </script>
 
 <?php $this->load->view('layouts/footer'); ?>

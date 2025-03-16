@@ -172,7 +172,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>Tahun</label>
-                            <select id="tahun" class="form-control" required>
+                            <select id="tahun" class="form-control">
                                 <option value="">Pilih Tahun</option>
                                 <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
                                     <option value="<?= $i; ?>"><?= $i; ?></option>
@@ -181,7 +181,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>Bulan</label>
-                            <select id="bulan" class="form-control" required>
+                            <select id="bulan" class="form-control">
                                 <option value="">Pilih Bulan</option>
                                 <?php for ($i = 1; $i <= 12; $i++): ?>
                                     <option value="<?= $i; ?>"><?= date('F', mktime(0, 0, 0, $i, 1)); ?></option>
@@ -194,7 +194,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label>Lini</label>
-                            <select id="id_lini" class="form-control" required>
+                            <select id="id_lini" class="form-control">
                                 <option value="">Pilih Lini</option>
                                 <?php foreach ($lini as $l): ?>
                                     <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
@@ -203,14 +203,14 @@
                         </div>
                         <div class="col-md-6">
                             <label>Area</label>
-                            <select id="id_area" class="form-control" required disabled></select>
+                            <select id="id_area" class="form-control" disabled></select>
                         </div>
                     </div>
                     
                     <!-- Baris ketiga: Mesin -->
                     <div class="form-group">
                         <label>Mesin</label>
-                        <select id="id_mesin" class="form-control" required disabled></select>
+                        <select id="id_mesin" class="form-control" disabled></select>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -222,6 +222,43 @@
 
 <script>
     $(document).ready(function() {
+        $("#formSetting").submit(function(event) {
+            event.preventDefault(); // Mencegah submit default
+
+            let tahun = $("#tahun").val();
+            let bulan = $("#bulan").val();
+            let id_lini = $("#id_lini").val();
+            let id_area = $("#id_area").val();
+            let id_mesin = $("#id_mesin").val();
+            let pesan = "";
+
+            if (tahun === "") pesan += "Tahun harus dipilih.<br>";
+            if (bulan === "") pesan += "Bulan harus dipilih.<br>";
+            if (id_lini === "") pesan += "Lini harus dipilih.<br>";
+            if (id_area === "") pesan += "Area harus dipilih.<br>";
+            if (id_mesin === "") pesan += "Mesin harus dipilih.<br>";
+
+            if (pesan !== "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Isi Semua Data",
+                    html: pesan, // Menampilkan pesan dengan break line
+                    confirmButtonText: "Tutup",
+                    confirmButtonColor: "#d33"
+                });
+            } else {
+                // Jika semua terisi, submit form
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Data berhasil disimpan.",
+                    confirmButtonColor: "#3085d6"
+                }).then(() => {
+                    $("#formSetting")[0].submit(); // Submit setelah OK
+                });
+            }
+        });
+
         $('#table1').DataTable({
             "ordering": true, // Mengaktifkan sorting
             "paging": true,   // Mengaktifkan paginasi

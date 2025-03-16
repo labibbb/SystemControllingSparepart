@@ -61,7 +61,7 @@
                 <form id="formSetting">
                     <div class="form-group">
                         <label>Lini</label>
-                        <select id="id_lini" class="form-control" required>
+                        <select id="id_lini" class="form-control">
                             <option value="">Pilih Lini</option>
                             <?php foreach ($lini as $l): ?>
                                 <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
@@ -70,11 +70,11 @@
                     </div>
                     <div class="form-group">
                         <label>Area</label>
-                        <select id="id_area" class="form-control" required disabled></select>
+                        <select id="id_area" class="form-control" disabled></select>
                     </div>
                     <div class="form-group">
                         <label>Mesin</label>
-                        <select id="id_mesin" class="form-control" required disabled></select>
+                        <select id="id_mesin" class="form-control" disabled></select>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -177,11 +177,26 @@
 </script>
 
 <script>
+    function showValidationError(message) {
+        Swal.fire({
+            title: 'Isi Semua Data!',
+            text: message,
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    // Validasi Form Tambah Setting
     $('#formSetting').submit(function(e) {
         e.preventDefault();
         let idLini = $('#id_lini').val();
         let idArea = $('#id_area').val();
         let idMesin = $('#id_mesin').val();
+
+        if (!idLini || !idArea || !idMesin) {
+            showValidationError("Semua field harus diisi!");
+            return;
+        }
 
         $.post('<?= site_url("settingfwm/add"); ?>', { id_lini: idLini, id_area: idArea, id_mesin: idMesin }, function(response) {
             let res = JSON.parse(response);
@@ -203,8 +218,16 @@
         });
     });
 
+    // Validasi Form Update Frekuensi
     $('#formFrekuensi').submit(function(e) {
         e.preventDefault();
+        let frekuensi = $('select[name="frekuensi"]').val();
+
+        if (!frekuensi) {
+            showValidationError("Frekuensi harus dipilih!");
+            return;
+        }
+
         $.ajax({
             url: "<?= site_url('settingfwm/update_frekuensi') ?>",
             type: "POST",
@@ -220,7 +243,7 @@
             error: function() {
                 Swal.fire({
                     title: 'Gagal!',
-                    text: res.message,
+                    text: 'Terjadi kesalahan saat memperbarui frekuensi.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -228,8 +251,16 @@
         });
     });
 
+    // Validasi Form Update Instruksi Kerja
     $('#formInstruksi').submit(function(e) {
         e.preventDefault();
+        let instruksi = $('select[name="instruksi_kerja"]').val();
+
+        if (!instruksi) {
+            showValidationError("Instruksi kerja harus dipilih!");
+            return;
+        }
+
         $.ajax({
             url: "<?= site_url('settingfwm/update_instruksi') ?>",
             type: "POST",
@@ -245,7 +276,7 @@
             error: function() {
                 Swal.fire({
                     title: 'Gagal!',
-                    text: res.message,
+                    text: 'Terjadi kesalahan saat memperbarui instruksi kerja.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
