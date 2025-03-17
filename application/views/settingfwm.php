@@ -97,9 +97,17 @@
                     <div class="form-group">
                         <label>Frekuensi</label>
                         <select name="frekuensi" class="form-control">
+                            <option value="1 week">1 Week</option>
+                            <option value="2 weeks">2 Weeks</option>
+                            <option value="3 weeks">3 Weeks</option>
                             <option value="1 month">1 Month</option>
-                            <option value="2 month">2 Month</option>
-                            <option value="3 month">3 Month</option>
+                            <option value="2 months">2 Months</option>
+                            <option value="3 months">3 Months</option>
+                            <option value="4 months">4 Months</option>
+                            <option value="6 months">6 Months</option>
+                            <option value="1 year">1 Year</option>
+                            <option value="2 years">2 Years</option>
+                            <option value="3 years">3 Years</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
