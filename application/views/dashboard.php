@@ -4,7 +4,7 @@
 	<div class="container-full">
 		<!-- Main content -->
 		<section class="content">
-			<h1><strong>DASHBOARD SUPERVISOR MTC</strong></h1>
+			<h1><strong>DASHBOARD MONTHLY PLANNING</strong></h1>
 			<div class="form-group">
 				<div class="controls">
 					<div class="input-group">

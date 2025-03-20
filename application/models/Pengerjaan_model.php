@@ -57,5 +57,14 @@ class Pengerjaan_model extends CI_Model {
         
         return $this->db->get()->row_array();
     }
+
+    public function updateStatus($id_pmm) {
+        $data = [
+            'status' => 4
+        ];
+    
+        return $this->db->where('id_pmm', $id_pmm)
+                        ->update('pm_monthly', $data);
+    }
 }
 ?>

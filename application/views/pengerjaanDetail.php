@@ -169,13 +169,13 @@
                             <div class="note-box p-3 rounded shadow-sm">
                                 <div class="mb-2">
                                     <strong>Catatan:</strong>
-                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;">
+                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;" disabled>
                                 </div>
                                 <div>
                                     <strong>Masukkan Foto:</strong>
                                     <div class="upload-box mt-2">
                                         <label for="uploadFile">
-                                            <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid">
+                                            <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid" disabled>
                                         </label>
                                         <input type="file" id="uploadFile" hidden>
                                     </div>

@@ -83,7 +83,7 @@
                                                     echo '<span class="badge bg-success">Finish On Time</span>';
                                                     break;
                                                 case 5:
-                                                    echo '<span class="badge bg-danger">Finish On Delay</span>';
+                                                    echo '<span class="badge bg-info">Waiting Approval FM</span>';
                                                     break;
                                                 case 6:
                                                     echo '<span class="badge bg-success">Disetujui Foreman</span>';

@@ -74,16 +74,16 @@
                                                     echo '<span class="badge bg-info">Terjadwal Tahunan</span>';
                                                     break;
                                                 case 2:
-                                                    echo '<span class="badge bg-warning">Belum Terlaksana</span>';
+                                                    echo '<span class="badge bg-warning">Sudah Terjadwal</span>';
                                                     break;
                                                 case 3:
                                                     echo '<span class="badge bg-success">Sudah Terjadwal</span>';
                                                     break;
                                                 case 4:
-                                                    echo '<span class="badge bg-success">Finish On Time</span>';
+                                                    echo '<span class="badge bg-warning">On Progress Checking</span>';
                                                     break;
                                                 case 5:
-                                                    echo '<span class="badge bg-danger">Finish On Delay</span>';
+                                                    echo '<span class="badge bg-warning">Waiting Approval Foreman</span>';
                                                     break;    
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';

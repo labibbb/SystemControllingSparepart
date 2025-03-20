@@ -20,7 +20,7 @@
                             <div class="col-md-4">
                                 <label for="filterTahun1">Tahun</label>
                                 <select id="filterTahun1" class="form-control">
-                                    <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                    <?php for ($i = date('Y'); $i <= date('Y') + 4; $i++): ?>
                                         <option value="<?= $i; ?>" <?= ($i == $tahun_selected) ? 'selected' : ''; ?>><?= $i; ?></option>
                                     <?php endfor; ?>
                                 </select>
@@ -70,8 +70,10 @@
                                             <td>
                                                 <?php if ($row['status'] == 1): ?>
                                                     <button class="btn btn-sm btn-primary">Belum Terlaksana</button>
-                                                <?php else: ?>
-                                                    <button class="btn btn-sm btn-success">Sudah Terlaksana</button>
+                                                <?php elseif ($row['status'] == 2): ?>
+                                                    <button class="btn btn-sm btn-success">Finish On Time</button>
+                                                <?php elseif ($row['status'] == 3): ?>
+                                                    <button class="btn btn-sm btn-danger">Finish On Delay</button>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="bg-secondary text-white text-center">No Action</td>
@@ -89,7 +91,7 @@
                                 <div class="col-md-4">
                                     <label for="filterTahun2">Tahun</label>
                                     <select id="filterTahun2" class="form-control">
-                                        <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                        <?php for ($i = date('Y'); $i <= date('Y') + 4; $i++): ?>
                                             <option value="<?= $i; ?>" <?= ($i == $tahun_selected) ? 'selected' : ''; ?>><?= $i; ?></option>
                                         <?php endfor; ?>
                                     </select>
@@ -139,8 +141,10 @@
                                                 <td>
                                                     <?php if ($row['status'] == 1): ?>
                                                         <button class="btn btn-sm btn-primary">Belum Terlaksana</button>
-                                                    <?php else: ?>
-                                                        <button class="btn btn-sm btn-success">Sudah Terlaksana</button>
+                                                    <?php elseif ($row['status'] == 2): ?>
+                                                        <button class="btn btn-sm btn-success">Finish On Time</button>
+                                                    <?php elseif ($row['status'] == 3): ?>
+                                                        <button class="btn btn-sm btn-danger">Finish On Delay</button>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="bg-secondary text-white text-center">No Action</td>
@@ -174,7 +178,7 @@
                             <label>Tahun</label>
                             <select id="tahun" class="form-control">
                                 <option value="">Pilih Tahun</option>
-                                <?php for ($i = date('Y'); $i >= 2000; $i--): ?>
+                                <?php for ($i = date('Y'); $i <= date('Y') + 4; $i++): ?>
                                     <option value="<?= $i; ?>"><?= $i; ?></option>
                                 <?php endfor; ?>
                             </select>
@@ -222,23 +226,25 @@
 
 <script>
     $(document).ready(function() {
-        $("#formSetting").submit(function(event) {
-            event.preventDefault(); // Mencegah submit default
+        $("#formSetting").submit(function(e) {
+            e.preventDefault(); // Mencegah submit default
 
+            let idLini = $("#id_lini").val();
+            let idArea = $("#id_area").val();
+            let idMesin = $("#id_mesin").val();
             let tahun = $("#tahun").val();
             let bulan = $("#bulan").val();
-            let id_lini = $("#id_lini").val();
-            let id_area = $("#id_area").val();
-            let id_mesin = $("#id_mesin").val();
             let pesan = "";
 
+            // Validasi input
             if (tahun === "") pesan += "Tahun harus dipilih.<br>";
             if (bulan === "") pesan += "Bulan harus dipilih.<br>";
-            if (id_lini === "") pesan += "Lini harus dipilih.<br>";
-            if (id_area === "") pesan += "Area harus dipilih.<br>";
-            if (id_mesin === "") pesan += "Mesin harus dipilih.<br>";
+            if (idLini === "") pesan += "Lini harus dipilih.<br>";
+            if (idArea === "") pesan += "Area harus dipilih.<br>";
+            if (idMesin === "") pesan += "Mesin harus dipilih.<br>";
 
             if (pesan !== "") {
+                // Jika ada input yang kosong, tampilkan peringatan
                 Swal.fire({
                     icon: "warning",
                     title: "Isi Semua Data",
@@ -247,14 +253,30 @@
                     confirmButtonColor: "#d33"
                 });
             } else {
-                // Jika semua terisi, submit form
-                Swal.fire({
-                    icon: "success",
-                    title: "Berhasil",
-                    text: "Data berhasil disimpan.",
-                    confirmButtonColor: "#3085d6"
-                }).then(() => {
-                    $("#formSetting")[0].submit(); // Submit setelah OK
+                // Jika semua terisi, kirim data ke server
+                $.post("<?= site_url('pmyearly/add'); ?>", {
+                    id_lini: idLini,
+                    id_area: idArea,
+                    id_mesin: idMesin,
+                    tahun: tahun,
+                    bulan: bulan
+                }, function(response) {
+                    let res = JSON.parse(response);
+                    if (res.status === "success") {
+                        Swal.fire({
+                            title: "Berhasil!",
+                            text: "Schedule PM Yearly berhasil ditambahkan",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            title: "Gagal!",
+                            text: res.message,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
+                    }
                 });
             }
         });
@@ -373,36 +395,4 @@
         $('#modalSetting').modal('show'); // Perbaiki ID modal
     }
 </script>
-
-<script>
-    $('#formSetting').submit(function(e) {
-        e.preventDefault();
-        let idLini = $('#id_lini').val();
-        let idArea = $('#id_area').val();
-        let idMesin = $('#id_mesin').val();
-        let tahun = $('#tahun').val();
-        let bulan = $('#bulan').val();
-
-        $.post('<?= site_url("pmyearly/add"); ?>', { id_lini: idLini, id_area: idArea, id_mesin: idMesin, tahun:tahun, bulan:bulan }, function(response) {
-            let res = JSON.parse(response);
-            if (res.status === 'success') {
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Schedule PM Yearly berhasil ditambahkan',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => location.reload());
-            } else {
-                Swal.fire({
-                    title: 'Gagal!',
-                    text: res.message,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    });
-</script>
-
-
 <?php $this->load->view('layouts/footer'); ?>

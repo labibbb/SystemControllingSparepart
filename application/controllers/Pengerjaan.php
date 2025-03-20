@@ -46,7 +46,8 @@ class Pengerjaan extends CI_Controller {
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
-
+        
+        $update = $this->Pengerjaan_model->updateStatus($id_pmm);
         $singlechecksheet = $this->Pengerjaan_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Pengerjaan_model->get_checkseet($id_mesin); 
         $wi = $this->Pengerjaan_model->get_wi($id_mesin); 
@@ -121,7 +122,7 @@ class Pengerjaan extends CI_Controller {
             $today = date('Y-m-d'); // Tanggal hari ini
 
             foreach ($result as $row) {
-                $status = ($today < $row['tanggal']) ? 4 : 5;
+                $status = 5;
 
                 $this->db->where('id_pmm', $row['id_pmm']);
                 $this->db->update('pm_monthly', ['status' => $status]);
