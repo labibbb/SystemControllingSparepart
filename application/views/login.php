@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 <body class="hold-transition theme-primary bg-img" style="background-image: url(<?= base_url() ?>public/images/auth-bg/bg-1.jpg)">
 	
-	<div class="container h-p100">
+	<div class="container h-p100" id="loginPage">
 		<div class="row align-items-center justify-content-md-center h-p100">	
 			<div class="col-12">
 				<div class="row justify-content-center g-0">
@@ -72,52 +72,58 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <script>
     $(document).ready(function() {
         $('#loginForm').submit(function(e) {
-            e.preventDefault(); // Mencegah reload halaman
-            
-            $.ajax({
-                url: '<?= site_url("login/process_login") ?>',
-                type: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                beforeSend: function() {
-                    Swal.fire({
-                        title: "Memproses...",
-                        text: "Mohon tunggu sebentar",
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Login Berhasil!',
-                            text: response.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = response.redirect;
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Login Gagal!',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Terjadi Kesalahan!',
-                        text: 'Silakan coba lagi nanti.'
-                    });
+    e.preventDefault(); // Mencegah reload halaman
+    
+    $.ajax({
+        url: '<?= site_url("login/process_login") ?>',
+        type: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        beforeSend: function() {
+            $('#loginPage').hide(); // Sembunyikan form saat proses login dimulai
+            Swal.fire({
+                title: "Memproses...",
+                text: "Mohon tunggu sebentar",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
                 }
             });
-        });
+        },
+        success: function(response) {
+            if (response.status === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Berhasil!',
+                    text: response.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = response.redirect;
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Gagal!',
+                    text: response.message
+                }).then(() => {
+                    $('#loginPage').show(); // Tampilkan kembali form setelah error di-OK
+                });
+            }
+        },
+        error: function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan!',
+                text: 'Silakan coba lagi nanti.'
+            }).then(() => {
+                $('#loginForm').show(); // Tampilkan kembali form jika terjadi error
+            });
+        }
+    });
+});
+
     });
     </script>
 </body>
