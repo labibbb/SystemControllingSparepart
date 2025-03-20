@@ -10,7 +10,8 @@ class Pengerjaan_model extends CI_Model {
     
         // Filter ID Lini = 1 (Untuk Painting 1)
         $this->db->where('pm_monthly.id_lini', 1);
-    
+        $this->db->where_in('pm_monthly.status', [3, 4, 5, 6, 7, 8, 9]); // Menggunakan where_in untuk banyak nilai
+        
         // Filter hanya untuk tanggal hari ini
         $this->db->where('DATE(pm_monthly.tanggal)', date('Y-m-d'));
     
@@ -25,7 +26,9 @@ class Pengerjaan_model extends CI_Model {
     
         // Filter ID Lini = 1 (Untuk Painting 1)
         $this->db->where('pm_monthly.id_lini', 2);
-    
+        $this->db->where('pm_monthly.status', 3);
+        $this->db->where_in('pm_monthly.status', [3, 4, 5, 6, 7, 8, 9]); // Menggunakan where_in untuk banyak nilai
+        
         // Filter hanya untuk tanggal hari ini
         $this->db->where('DATE(pm_monthly.tanggal)', date('Y-m-d'));
     

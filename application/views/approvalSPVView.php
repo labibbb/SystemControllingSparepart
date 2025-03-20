@@ -74,28 +74,28 @@
                                                     echo '<span class="badge bg-info">Terjadwal Tahunan</span>';
                                                     break;
                                                 case 2:
-                                                    echo '<span class="badge bg-warning">Belum Terlaksana</span>';
+                                                    echo '<span class="badge bg-warning">Sudah Terjadwal</span>';
                                                     break;
                                                 case 3:
                                                     echo '<span class="badge bg-success">Sudah Terjadwal</span>';
                                                     break;
                                                 case 4:
-                                                    echo '<span class="badge bg-success">Finish On Time</span>';
+                                                    echo '<span class="badge bg-warning">On Progress Checking</span>';
                                                     break;
                                                 case 5:
-                                                    echo '<span class="badge bg-danger">Finish On Delay</span>';
+                                                    echo '<span class="badge bg-warning">Waiting Approval Foreman</span>';
                                                     break;
                                                 case 6:
-                                                    echo '<span class="badge bg-success">Disetujui Foreman</span>';
+                                                    echo '<span class="badge bg-success">Waiting Approval Supervisor</span>';
                                                     break;
                                                 case 7:
-                                                    echo '<span class="badge bg-danger">Ditolak Foreman</span>';
+                                                    echo '<span class="badge bg-danger">Rejected by Foreman</span>';
                                                     break;
                                                 case 8:
-                                                    echo '<span class="badge bg-success">Disetujui Supervisor</span>';
+                                                    echo '<span class="badge bg-success">Complete All</span>';
                                                     break;
                                                 case 9:
-                                                    echo '<span class="badge bg-danger">Ditolak Supervisor</span>';
+                                                    echo '<span class="badge bg-danger">Rejected by Superviosr</span>';
                                                     break;
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';

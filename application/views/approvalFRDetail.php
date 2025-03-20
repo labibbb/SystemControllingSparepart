@@ -142,7 +142,7 @@
                                                     <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" disabled style="flex: 1; min-width: 200px;">
                                                     
                                                     <?php if (!empty($row['gambar'])): ?>
-                                                        <a href="<?= base_url('uploads/pengerjaan/' . $row['gambar']); ?>" class="btn btn-primary btn-sm" target="_blank">Download</a>
+                                                        <a href="<?= base_url('uploads/pengerjaan/' . $row['gambar']); ?>" class="btn btn-primary btn-sm" target="_blank">Show</a>
                                                     <?php endif; ?>
                                                 </div>
                                             </td>
