@@ -84,7 +84,19 @@
                                                     break;
                                                 case 5:
                                                     echo '<span class="badge bg-warning">Waiting Approval Foreman</span>';
-                                                    break;    
+                                                    break;
+                                                case 6:
+                                                    echo '<span class="badge bg-success">Waiting Approval Supervisor</span>';
+                                                    break;
+                                                case 7:
+                                                    echo '<span class="badge bg-danger">Rejected by Foreman</span>';
+                                                    break;
+                                                case 8:
+                                                    echo '<span class="badge bg-success">Complete All</span>';
+                                                    break;
+                                                case 9:
+                                                    echo '<span class="badge bg-danger">Rejected by Superviosr</span>';
+                                                    break;
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                                                     break;
@@ -93,14 +105,18 @@
                                         </td>
                                         <td><?= $row['foreman_name']; ?></td>
                                         <td><?= $row['supervisor_name']; ?></td>
-                                        <td>
-                                            <?php if ($row['status'] == 1): ?>
+                                        <?php if ($row['status'] == 1): ?>
+                                            <td>
                                                 <button class="btn btn-success btn-sm" onclick="editTanggalStatus(<?= $row['id_pmm']; ?>, <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Setting</button>
-                                            <?php else: ?>
+                                            </td>
+                                        <?php elseif (in_array($row['status'], [2, 3])): ?>
+                                            <td>
                                                 <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                                 <button class="btn btn-warning btn-sm" onclick="editMP(<?= $row['id_pmm']; ?>)">MP</button>
-                                            <?php endif; ?>
-                                        </td>
+                                            </td>
+                                         <?php else: ?>
+                                            <td class="bg-secondary text-white text-center">No Action</td>
+                                        <?php endif; ?>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

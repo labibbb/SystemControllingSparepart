@@ -76,6 +76,11 @@
                                 <td>:</td>
                                 <td id="nama_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
                             </tr>
+                            <tr>
+                                <td class="fw-bold">Catatan</td>
+                                <td>:</td>
+                                <td id="nama_mesin"><?= isset($catatan['catatanReject']) ? $catatan['catatanReject'] : '-'; ?></td>
+                            </tr>
                         </table>
                         <input type="hidden" id="id_pmm" value="<?= isset($id_pmm) ? $id_pmm : '-'; ?>">
                         <input type="hidden" id="id_lini" value="<?= isset($singleChecksheet['id_lini']) ? $singleChecksheet['id_lini'] : '-'; ?>">
@@ -180,7 +185,7 @@
                             <div class="note-box p-3 rounded shadow-sm">
                                 <div class="mb-2">
                                     <strong>Catatan:</strong>
-                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;" disabled>
+                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;">
                                 </div>
                                 <div>
                                     <strong>Masukkan Foto:</strong>
@@ -188,7 +193,7 @@
                                         <label for="uploadFile">
                                             <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid">
                                         </label>
-                                        <input type="file" id="uploadFile" hidden disabled>
+                                        <input type="file" id="uploadFile" hidden>
                                     </div>
                                 </div>
                             </div>
@@ -196,11 +201,8 @@
                     </div>
              
                     <div class="d-flex justify-content-center align-items-center mt-3">
-                        <button class="btn btn-danger px-5 py-2 me-3" id="btnReject" style="width: 200px; font-size: 1.2rem;">
-                            Reject
-                        </button>
-                        <button class="btn btn-success px-5 py-2" id="btnApprove" style="width: 200px; font-size: 1.2rem;">
-                            Approve
+                        <button class="btn btn-secondary px-5 py-2" id="btnBack" style="width: 200px; font-size: 1.2rem;" onclick="window.location.href='<?= site_url('approvalSPV'); ?>'">
+                            Back
                         </button>
                     </div>
 
@@ -254,13 +256,13 @@
                 if (result.isConfirmed) {
                     let id_pmm = $("#id_pmm").val();
                     $.ajax({
-                        url: "<?= site_url('approvalFR/approveFr/') ?>" + id_pmm, // Kirim sebagai parameter URL
+                        url: "<?= site_url('approvalSPV/approveSpv/') ?>" + id_pmm, // Kirim sebagai parameter URL
                         type: "POST", // Gunakan POST atau bisa juga GET
                         dataType: "json",
                         success: function (response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
-                                    window.location.href = "<?= site_url('approval'); ?>";
+                                    window.location.href = "<?= site_url('approvalSPV'); ?>";
                                 });
                             } else {
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
@@ -277,34 +279,24 @@
         function reject() {
             Swal.fire({
                 title: "Apakah Anda yakin?",
-                text: "Masukkan catatan sebelum menyimpan!",
+                text: "Data akan disimpan!",
                 icon: "warning",
-                input: "textarea",  // Tambahkan input textarea untuk catatan
-                inputPlaceholder: "Tulis catatan di sini...",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Ya, simpan!",
-                cancelButtonText: "Batal",
-                inputValidator: (value) => {
-                    if (!value) {
-                        return "Catatan tidak boleh kosong!";
-                    }
-                }
+                cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
                     let id_pmm = $("#id_pmm").val();
-                    let catatan = result.value;  // Ambil nilai dari textarea
-
                     $.ajax({
-                        url: "<?= site_url('approvalFR/reject/') ?>" + id_pmm,
-                        type: "POST",
-                        data: { catatan: catatan },  // Kirim catatan sebagai data
+                        url: "<?= site_url('approvalSPV/reject/') ?>" + id_pmm, // Kirim sebagai parameter URL
+                        type: "POST", // Gunakan POST atau bisa juga GET
                         dataType: "json",
                         success: function (response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
-                                    window.location.href = "<?= site_url('approval'); ?>";
+                                    window.location.href = "<?= site_url('approvalSPV'); ?>";
                                 });
                             } else {
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");

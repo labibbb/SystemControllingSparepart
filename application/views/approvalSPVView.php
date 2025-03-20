@@ -107,12 +107,19 @@
                                         <td><?= $row['supervisor_name']; ?></td>
                                         <td>
                                             <div class="d-flex">
-                                                <?php if (!in_array($row['status'], [8, 9])): ?>
+                                                <?php if (!in_array($row['status'], [7, 8, 9])): ?>
                                                     <form action="<?= site_url('approvalSPV/detail'); ?>" method="post" class="me-2">
                                                         <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                         <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
                                                         <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
                                                         <button type="submit" class="btn btn-primary btn-sm">Check</button>
+                                                    </form>
+                                                <?php elseif ($row['status'] == 7): ?>
+                                                    <form action="<?= site_url('approvalSPV/read'); ?>" method="post" class="me-2">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-warning btn-sm">Detail</button>
                                                     </form>
                                                 <?php endif; ?>
 

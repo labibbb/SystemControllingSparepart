@@ -76,6 +76,28 @@ class Approval extends CI_Controller {
         $this->load->view('approvalSPVDetail', $data);
     }
 
+    public function detail3() {    
+        $id_mesin = $this->input->post('id_mesin');
+        $tanggal = $this->input->post('tanggal');
+        $id_pmm = $this->input->post('id_pmm');
+
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
+        $catatan = $this->Approval_model->get_catatan($id_pmm); 
+        $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
+        $wi = $this->Approval_model->get_wi($id_mesin); 
+    
+        $data = [
+            'singleChecksheet' => $singlechecksheet,
+            'catatan' => $catatan,
+            'checksheet' => $checksheet,
+            'tanggal' => $tanggal,
+            'wi' => $wi,
+            'id_pmm' => $id_pmm
+        ];
+    
+        $this->load->view('approvalSPVRead', $data);
+    }
+
     public function detail() {    
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
@@ -115,22 +137,29 @@ class Approval extends CI_Controller {
     
     public function rejectFr($id_pmm) {
         $user_id = $this->session->userdata('user_id');
-
+        $catatan = $this->input->post('catatan'); // Ambil catatan dari POST request
+    
         // Validasi ID PMM tidak boleh kosong
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
             return;
         }
     
-        // Update status di model
-        $update = $this->Approval_model->rejectFr($id_pmm, $user_id);
+        // Validasi catatan tidak boleh kosong
+        if (empty($catatan)) {
+            echo json_encode(['status' => 'error', 'message' => 'Catatan tidak boleh kosong']);
+            return;
+        }
+    
+        // Update status dan catatan di model
+        $update = $this->Approval_model->rejectFr($id_pmm, $user_id, $catatan);
     
         if ($update) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data']);
         }
-    }
+    }    
 
     public function approveSpv($id_pmm) {
         $user_id = $this->session->userdata('user_id');

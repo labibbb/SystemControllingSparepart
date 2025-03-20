@@ -41,7 +41,7 @@ class Approval_model extends CI_Model {
         $this->db->join('users AS u1', 'pm_monthly.id_users = u1.id_users', 'left'); // User Pembuat
         $this->db->join('users AS u2', 'pm_monthly.fr = u2.id_users', 'left'); // Foreman
         $this->db->join('users AS u3', 'pm_monthly.spv = u3.id_users', 'left'); // Supervisor
-        $this->db->where_in('pm_monthly.status', [6, 8, 9]); // Menggunakan where_in untuk banyak nilai
+        $this->db->where_in('pm_monthly.status', [6, 7, 8, 9]); // Menggunakan where_in untuk banyak nilai
         
         return $this->db->get()->result_array();
     }
@@ -95,6 +95,14 @@ class Approval_model extends CI_Model {
         return $this->db->get()->row_array();
     }
 
+    public function get_catatan($id_pmm) {
+        $this->db->select('pm_monthly.*');
+        $this->db->from('pm_monthly');
+        $this->db->where('pm_monthly.id_pmm', $id_pmm);
+        
+        return $this->db->get()->row_array();
+    }
+
     public function approveFr($id_pmm, $id_user) {
         $data = [
             'status' => 6,
@@ -104,15 +112,15 @@ class Approval_model extends CI_Model {
         return $this->db->where('id_pmm', $id_pmm)->update('pm_monthly', $data);
     }
 
-    public function rejectFr($id_pmm, $id_user) {
+    public function rejectFr($id_pmm, $user_id, $catatan) {
         $data = [
-            'status' => 7,
-            'fr' => $id_user
+            'status' => 7,  // Ubah status ke "rejected"
+            'catatanReject' => $catatan
         ];
     
-        return $this->db->where('id_pmm', $id_pmm)
-                        ->update('pm_monthly', $data);
-    }
+        $this->db->where('id_pmm', $id_pmm);
+        return $this->db->update('pm_monthly', $data); // Pastikan tabelnya benar
+    }    
 
     public function approveSpv($id_pmm, $id_user) {
         $data = [
