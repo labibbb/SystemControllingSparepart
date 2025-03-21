@@ -146,3 +146,5 @@ $route['approvalSPV/detail'] = 'Approval/detail2';
 $route['approvalSPV/read'] = 'Approval/detail3';
 $route['approvalSPV/approveSpv/(:num)'] = 'Approval/approveSpv/$1';
 $route['approvalSPV/reject/(:num)'] = 'Approval/rejectSpv/$1';
+
+$route['monitoringApproval'] = 'Approval/monitoring';
