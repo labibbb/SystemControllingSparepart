@@ -368,30 +368,43 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                     let status = '';
-                    if (row.status !== undefined && row.status !== null) {
-                        switch (parseInt(row.status)) {
-                            case 1:
-                                status = '<span class="badge bg-info">Terjadwal Tahunan</span>';
-                                break;
-                            case 2:
-                                status = '<span class="badge bg-warning">Belum Terlaksana</span>';
-                                break;
-                            case 3:
-                                status = '<span class="badge bg-success">Sudah Terjadwal</span>';
-                                break;
-                            case 4:
-                                status = '<span class="badge bg-success">Finish On Time</span>';
-                                break;
-                            case 5:
-                                status = '<span class="badge bg-danger">Finish On Delay</span>';
-                                break;
-                            default:
-                                status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
-                                break;
-                        }
-                    } else {
-                        status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                if (row.status !== undefined && row.status !== null) {
+                    switch (parseInt(row.status)) {
+                        case 1:
+                            status = '<span class="badge bg-info">Terjadwal Tahunan</span>';
+                            break;
+                        case 2:
+                            status = '<span class="badge bg-warning">Sudah Terjadwal</span>';
+                            break;
+                        case 3:
+                            status = '<span class="badge bg-success">Sudah Terjadwal</span>';
+                            break;
+                        case 4:
+                            status = '<span class="badge bg-warning">On Progress Checking</span>';
+                            break;
+                        case 5:
+                            status = '<span class="badge bg-warning">Waiting Approval Foreman</span>';
+                            break;
+                        case 6:
+                            status = '<span class="badge bg-success">Waiting Approval Supervisor</span>';
+                            break;
+                        case 7:
+                            status = '<span class="badge bg-danger">Rejected by Foreman</span>';
+                            break;
+                        case 8:
+                            status = '<span class="badge bg-success">Complete All</span>';
+                            break;
+                        case 9:
+                            status = '<span class="badge bg-danger">Rejected by Supervisor</span>';
+                            break;
+                        default:
+                            status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                            break;
                     }
+                } else {
+                    status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                }
+
 
                     // Menambahkan baris ke table
                     rows += `
