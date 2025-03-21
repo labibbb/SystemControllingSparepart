@@ -132,7 +132,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
+                <h5 class="modal-title">Update PM Monthly</h5>
                 <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
             </div>
             <div class="modal-body">
@@ -167,7 +167,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
+                <h5 class="modal-title">Update PM Monthly</h5>
                 <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
             </div>
             <div class="modal-body">
@@ -198,7 +198,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Update MP</h5>
+                <h5 class="modal-title">Update PM Monthly</h5>
                 <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
             </div>
             <div class="modal-body">
@@ -407,12 +407,18 @@ document.addEventListener("DOMContentLoaded", function () {
                             <td>${status}</td>
                             <td>${row.foreman_name ? row.foreman_name : ''}</td>
                             <td>${row.supervisor_name ? row.supervisor_name : ''}</td>
-                            <td>
-                                ${row.status == 1 ? 
-                                    `<button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm})">Setting</button>` :
-                                    `<button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '${new Date(row.tanggal).toISOString().split('T')[0]}', '${row.catatan}')">Tgl</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>`}
-                            </td>
+                            ${row.status == 1 ? `
+                                <td>
+                                    <button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm}, ${row.bulan}, ${row.tahun})">Setting</button>
+                                </td>
+                            ` : row.status == 2 || row.status == 3 ? `
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '${row.catatan ? row.catatan : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
+                                    <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>
+                                </td>
+                            ` : `
+                                <td class="bg-secondary text-white text-center">No Action</td>
+                            `}
                         </tr>
                     `;
                 });
