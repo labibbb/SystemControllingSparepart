@@ -91,38 +91,38 @@
 
                                     $displayedItems = []; // Menyimpan item_cek yang sudah ditampilkan
                                     $rowCount = 0; // Inisialisasi row count
-
-                                    ?>
-
-                                    <?php foreach ($checksheet as $row): ?>
-                                        <tr id="row-<?= $rowCount; ?>">
-                                            <?php if (!isset($displayedItems[$row['item_cek']])): ?>
-                                                <td rowspan="<?= $mergedItems[$row['item_cek']]; ?>">
-                                                    <input type="text" name="item_cek[]" class="form-control item-check" value="<?= $row['item_cek']; ?>">
-                                                </td>
-                                                <?php $displayedItems[$row['item_cek']] = true; ?>
-                                            <?php endif; ?>
-
-                                            <td id="row-<?= $rowCount; ?>-col1">
-                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input1" value="<?= $row['point_cek']; ?>" required>
+                                ?>
+                                <?php foreach ($checksheet as $row): ?>
+                                    <tr id="row-<?= $rowCount; ?>">
+                                        <?php if (!isset($displayedItems[$row['item_cek']])): ?>
+                                            <td rowspan="<?= $mergedItems[$row['item_cek']]; ?>">
+                                                <input type="text" name="item_cek[]" class="form-control item-check" value="<?= $row['item_cek']; ?>">
                                             </td>
-                                            <td id="row-<?= $rowCount; ?>-col2">
-                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input2" value="<?= $row['metode_cek']; ?>" required>
-                                            </td>
-                                            <td id="row-<?= $rowCount; ?>-col3">
-                                                <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input3" value="<?= $row['standard']; ?>" required>
-                                            </td>
+                                            <?php $displayedItems[$row['item_cek']] = true; ?>
+                                        <?php else: ?>
+                                            <td style="display: none;"></td> <!-- Baris berikutnya dalam grup disembunyikan -->
+                                        <?php endif; ?>
 
-                                            <?php if (!isset($displayedItems['button_' . $row['item_cek']])): ?>
-                                                <td>
-                                                    <button class="btn btn-secondary btn-sm merge-row"><i class="fas fa-plus"></i></button>
-                                                </td>
-                                                <?php $displayedItems['button_' . $row['item_cek']] = true; ?>
-                                            <?php else: ?>
-                                                <td></td> <!-- Baris selain yang pertama dalam grup dibuat kosong -->
-                                            <?php endif; ?>
-                                        </tr>
-                                        <?php $rowCount++; // Tambahkan row count setiap iterasi ?>
+                                        <td id="row-<?= $rowCount; ?>-col2">
+                                            <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input1" value="<?= $row['point_cek']; ?>" required>
+                                        </td>
+                                        <td id="row-<?= $rowCount; ?>-col3">
+                                            <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input2" value="<?= $row['metode_cek']; ?>" required>
+                                        </td>
+                                        <td id="row-<?= $rowCount; ?>-col4">
+                                            <input type="text" class="form-control" id="row-<?= $rowCount; ?>-input3" value="<?= $row['standard']; ?>" required>
+                                        </td>
+
+                                        <?php if (!isset($displayedItems['button_' . $row['item_cek']])): ?>
+                                            <td>
+                                                <button class="btn btn-secondary btn-sm merge-row"><i class="fas fa-plus"></i></button>
+                                            </td>
+                                            <?php $displayedItems['button_' . $row['item_cek']] = true; ?>
+                                        <?php else: ?>
+                                            <td></td> <!-- Baris selain yang pertama dalam grup dibuat kosong -->
+                                        <?php endif; ?>
+                                    </tr>
+                                    <?php $rowCount++; // Tambahkan row count setiap iterasi ?>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -143,7 +143,8 @@
 
 <script>
     $(document).ready(function() {
-        let rowCount = 0; // Untuk menjaga count baris yang unik
+        let rowCount = $("#tbCheckSheet tbody tr").length; // Hitung jumlah baris awal dalam tbody
+        console.log("Jumlah row awal:", rowCount);
         let lastItemCek = ''; // Initialize the last item check variable
 
         $("#btnSimpan").click(function () {
@@ -251,18 +252,41 @@
             }
 
             // Iterasi melalui tabel hanya jika validasi berhasil
-            $("#tbCheckSheet tbody tr").each(function () {
-                let itemCek = $(this).find(".item-check").val();
-                let pointCek = $(this).find("td:nth-child(2) input").val();
-                let metodeCek = $(this).find("td:nth-child(3) input").val();
-                let standard = $(this).find("td:nth-child(4) input").val();
-                
+            // Iterasi melalui tabel hanya jika validasi berhasil
+            $("#tbCheckSheet tbody tr").each(function (index) {
+                let currentRow = $(this);
+                let itemCekCell = currentRow.find("td:first-child"); // Kolom pertama (Item Check)
+                let itemCek = "";
+
+                // Jika kolom pertama tidak tersembunyi, ambil valuenya langsung
+                if (itemCekCell.css("display") !== "none") {
+                    itemCek = itemCekCell.find("input").val();
+                } else {
+                    // Jika tersembunyi (karena rowspan), cari baris sebelumnya yang memiliki itemCek
+                    let prevRow = currentRow.prevAll("tr").has("td[rowspan]").first();
+                    if (prevRow.length) {
+                        itemCek = prevRow.find("td:first-child input").val();
+                    }
+                }
+
+                let pointCek = currentRow.find("td:nth-child(2) input").val();
+                let metodeCek = currentRow.find("td:nth-child(3) input").val();
+                let standard = currentRow.find("td:nth-child(4) input").val();
+
+                // Log setiap baris yang diproses
+                console.log(`Baris ${index + 1}:`, {
+                    itemCek: itemCek,
+                    pointCek: pointCek,
+                    metodeCek: metodeCek,
+                    standard: standard
+                });
+
                 if (itemCek && pointCek && metodeCek && standard) {
                     dataList.push({
                         id_lini: idLini,
                         id_area: idArea,
                         id_mesin: idMesin,
-                        item_cek: itemCek,
+                        item_cek: itemCek,  // Sekarang item_cek pasti diambil dari row pertama jika merge
                         point_cek: pointCek,
                         metode_cek: metodeCek,
                         standard: standard,

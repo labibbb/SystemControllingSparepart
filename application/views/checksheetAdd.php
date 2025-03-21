@@ -191,18 +191,33 @@
             }
 
             // Iterasi melalui tabel hanya jika validasi berhasil
+            // Iterasi melalui tabel hanya jika validasi berhasil
             $("#tbCheckSheet tbody tr").each(function () {
-                let itemCek = $(this).find(".item-check").val();
-                let pointCek = $(this).find("td:nth-child(2) input").val();
-                let metodeCek = $(this).find("td:nth-child(3) input").val();
-                let standard = $(this).find("td:nth-child(4) input").val();
-                
+                let currentRow = $(this);
+                let itemCekCell = currentRow.find("td:first-child"); // Kolom pertama (Item Check)
+                let itemCek = "";
+
+                // Jika kolom pertama tidak tersembunyi, ambil valuenya langsung
+                if (itemCekCell.css("display") !== "none") {
+                    itemCek = itemCekCell.find("input").val();
+                } else {
+                    // Jika tersembunyi (karena rowspan), cari baris sebelumnya yang memiliki itemCek
+                    let prevRow = currentRow.prevAll("tr").has("td[rowspan]").first();
+                    if (prevRow.length) {
+                        itemCek = prevRow.find("td:first-child input").val();
+                    }
+                }
+
+                let pointCek = currentRow.find("td:nth-child(2) input").val();
+                let metodeCek = currentRow.find("td:nth-child(3) input").val();
+                let standard = currentRow.find("td:nth-child(4) input").val();
+
                 if (itemCek && pointCek && metodeCek && standard) {
                     dataList.push({
                         id_lini: idLini,
                         id_area: idArea,
                         id_mesin: idMesin,
-                        item_cek: itemCek,
+                        item_cek: itemCek,  // Sekarang item_cek pasti diambil dari row pertama jika merge
                         point_cek: pointCek,
                         metode_cek: metodeCek,
                         standard: standard,
