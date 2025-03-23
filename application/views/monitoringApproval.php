@@ -56,18 +56,58 @@
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            events: [
-                { title: 'P2 | FLUID CLEAN | SPRAYBOOTH', start: '2025-02-26', color: 'lightseagreen' },
-                { title: 'P1 | PIPA MAINLINE HOT WATER', start: '2025-02-27', color: 'lightseagreen' },
-                { title: 'P1 | EXHAUST SPRAYBOOTH 3', start: '2025-02-28', color: 'blue' },
-                { title: 'P2 | EXHAUST ROOM 2 | SPRAYBOOTH', start: '2025-02-28', color: 'darkcyan' },
-                { title: 'P1 | BAKE OVEN | BAKE OVEN', start: '2025-03-02', color: 'blue' },
-                { title: 'P1 | SLUDGE SEPARATOR | SPRAY', start: '2025-03-14', color: 'black' }
-            ]
+            events: <?= json_encode(array_map(function ($row) {
+                return [
+                    "title" => "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
+                    "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
+                    "allDay" => true,
+                    "backgroundColor" => 
+                        $row["status"] == 4 ? "black" : 
+                        ($row["status"] == 5 ? "blue" : 
+                        ($row["status"] == 6 ? "darkcyan" : 
+                        ($row["status"] == 7 ? "red" : 
+                        ($row["status"] == 8 ? "lightseagreen" : "gray")))),
+                    "id_mesin" => $row["id_mesin"],
+                    "tanggal" => $row["tanggal"],
+                    "id_pmm" => $row["id_pmm"]
+                ];
+            }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+
+            eventClick: function(info) {
+                // Buat form secara dinamis
+                var form = document.createElement("form");
+                form.action = "<?= site_url('approvalSPV/read'); ?>";
+                form.method = "POST";
+
+                // Tambahkan input hidden untuk data yang dikirim
+                var id_mesin = document.createElement("input");
+                id_mesin.type = "hidden";
+                id_mesin.name = "id_mesin";
+                id_mesin.value = info.event.extendedProps.id_mesin;
+                form.appendChild(id_mesin);
+
+                var tanggal = document.createElement("input");
+                tanggal.type = "hidden";
+                tanggal.name = "tanggal";
+                tanggal.value = info.event.extendedProps.tanggal;
+                form.appendChild(tanggal);
+
+                var id_pmm = document.createElement("input");
+                id_pmm.type = "hidden";
+                id_pmm.name = "id_pmm";
+                id_pmm.value = info.event.extendedProps.id_pmm;
+                form.appendChild(id_pmm);
+
+                // Tambahkan form ke body dan submit
+                document.body.appendChild(form);
+                form.submit();
+            }
         });
+
         calendar.render();
     });
 </script>
+
 
 <style>
     .status-box {
@@ -77,16 +117,18 @@
         margin-right: 10px;
         border-radius: 3px;
     }
-    
+
     .card {
         border: 1px solid #ddd;
         border-radius: 8px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        padding: 10px;
     }
 
     #calendar td, #calendar th {
         border: 1px solid #ddd !important;
         padding: 8px;
+        text-align: center; /* Tengahin teks */
     }
 </style>
 
