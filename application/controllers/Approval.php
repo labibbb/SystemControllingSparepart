@@ -41,6 +41,17 @@ class Approval extends CI_Controller {
         $this->load->view('monitoringApproval', $data);
     }
 
+    public function monitorings() {
+        // Ambil data sesuai filter awal
+        $pmmonthly = $this->Approval_model->get_all_pmmonthly_monitoring();
+        
+        $data = [
+            'pmmonthly' => $pmmonthly
+        ];
+    
+        $this->load->view('monitoringSchedule', $data);
+    }
+
     public function index() {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly();

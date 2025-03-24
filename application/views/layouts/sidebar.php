@@ -52,6 +52,12 @@
 						</a>
 					</li>
 					<li>
+						<a href="<?= site_url('monitoringSchedule'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Monitoring Schedule</span>
+						</a>
+					</li>
+					<li>
 						<a href="<?= site_url('settingfwm'); ?>">
 							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
 							<span>Setting Freq & Work Instruction PM</span>
