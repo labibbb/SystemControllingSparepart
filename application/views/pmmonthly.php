@@ -114,7 +114,11 @@
                                                 <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                                 <button class="btn btn-warning btn-sm" onclick="editMP(<?= $row['id_pmm']; ?>)">MP</button>
                                             </td>
-                                         <?php else: ?>
+                                        <?php elseif (in_array($row['status'], [7])): ?>
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
+                                            </td>    
+                                        <?php else: ?>
                                             <td class="bg-secondary text-white text-center">No Action</td>
                                         <?php endif; ?>
                                     </tr>
@@ -429,6 +433,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '${row.catatan ? row.catatan : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
                                     <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>
                                 </td>
+                            ` : row.status == 7 ? `
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '${row.catatan ? row.catatan : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
+                                </td>    
                             ` : `
                                 <td class="bg-secondary text-white text-center">No Action</td>
                             `}

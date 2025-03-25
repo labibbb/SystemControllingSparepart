@@ -33,10 +33,12 @@ class Pengerjaan extends CI_Controller {
     public function index() {    
         $pmmonthly = $this->Pengerjaan_model->getFilteredData();
         $pmmonthly2 = $this->Pengerjaan_model->getFilteredData2();
+        $pmmonthly3 = $this->Pengerjaan_model->get_all_pmmonthly_monitoring();
     
         $data = [
             'pmmonthly' => $pmmonthly,
-            'pmmonthly2' => $pmmonthly2
+            'pmmonthly2' => $pmmonthly2,
+            'pmmonthly3' => $pmmonthly3
         ];
     
         $this->load->view('pengerjaanView', $data);
@@ -51,13 +53,15 @@ class Pengerjaan extends CI_Controller {
         $singlechecksheet = $this->Pengerjaan_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Pengerjaan_model->get_checkseet($id_mesin); 
         $wi = $this->Pengerjaan_model->get_wi($id_mesin); 
-    
+        
+        $pmm = $this->Pengerjaan_model->get_diverifikasi($id_pmm);
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'checksheet' => $checksheet,
             'tanggal' => $tanggal,
             'wi' => $wi,
-            'id_pmm' => $id_pmm
+            'id_pmm' => $id_pmm,
+            'pmm' => $pmm
         ];
     
         $this->load->view('pengerjaanDetail', $data);
@@ -123,9 +127,14 @@ class Pengerjaan extends CI_Controller {
 
             foreach ($result as $row) {
                 $status = 5;
-
+                $preparedBy = $this->session->userdata('user_id');
+                $preparedDate = date('Y-m-d H:i:s');
                 $this->db->where('id_pmm', $row['id_pmm']);
-                $this->db->update('pm_monthly', ['status' => $status]);
+                $this->db->update('pm_monthly', [
+                        'status' => $status,
+                        'preparedBy' => $preparedBy,
+                        'preparedDate' => $preparedDate
+                    ]);
 
                 if ($this->db->affected_rows() > 0) {
                     log_message('debug', "Status pm_monthly updated for id_pmm: {$row['id_pmm']} to status: {$status}");

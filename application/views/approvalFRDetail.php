@@ -40,43 +40,92 @@
                 </div>
                 <div class="box-body">
                     <div class="form-group">
-                        <table class="table table-borderless" style="width: auto;">
-                            <tr>
-                                <td class="fw-bold">No Form</td>
-                                <td>:</td>
-                                <td><?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_form'] : '-'; ?></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Pemilik Doc</td>
-                                <td>:</td>
-                                <td>MAINTENANCE DEPT</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">No Doc</td>
-                                <td>:</td>
-                                <td><?= isset($singleChecksheet['no_doc']) ? $singleChecksheet['no_doc'] : '-'; ?></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Tanggal</td>
-                                <td>:</td>
-                                <td><?= isset($tanggal) ? date('d-m-Y', strtotime($tanggal)) : '-'; ?></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Lini</td>
-                                <td>:</td>
-                                <td id="nama_lini"><?= isset($singleChecksheet['nama_lini']) ? $singleChecksheet['nama_lini'] : '-'; ?></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Area</td>
-                                <td>:</td>
-                                <td id="nama_area"><?= isset($singleChecksheet['nama_area']) ? $singleChecksheet['nama_area'] : '-'; ?></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Mesin</td>
-                                <td>:</td>
-                                <td id="nama_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
-                            </tr>
-                        </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless" style="width: auto;">
+                                    <tr>
+                                        <td class="fw-bold">No Form</td>
+                                        <td>:</td>
+                                        <td><?= isset($singleChecksheet['no_form']) ? $singleChecksheet['no_form'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Pemilik Doc</td>
+                                        <td>:</td>
+                                        <td>MAINTENANCE DEPT</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">No Doc</td>
+                                        <td>:</td>
+                                        <td><?= isset($singleChecksheet['no_doc']) ? $singleChecksheet['no_doc'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Tanggal</td>
+                                        <td>:</td>
+                                        <td><?= isset($tanggal) ? date('d-m-Y', strtotime($tanggal)) : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Lini</td>
+                                        <td>:</td>
+                                        <td id="nama_lini"><?= isset($singleChecksheet['nama_lini']) ? $singleChecksheet['nama_lini'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Area</td>
+                                        <td>:</td>
+                                        <td id="nama_area"><?= isset($singleChecksheet['nama_area']) ? $singleChecksheet['nama_area'] : '-'; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Mesin</td>
+                                        <td>:</td>
+                                        <td id="nama_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3" class="fw-bold">Diverifikasi oleh System</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Prepared By</th>
+                                            <th>Checked By</th>
+                                            <th>Approved By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><?= isset($pmm['prepared']) ? $pmm['prepared'] : '-'; ?></td>
+                                            <td><?= isset($pmm['checked']) ? $pmm['checked'] : '-'; ?></td>
+                                            <td><?= isset($pmm['approve']) ? $pmm['approve'] : '-'; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td><?= isset($pmm['preparedDate']) ? $pmm['preparedDate'] : '-'; ?></td>
+                                            <td><?= isset($pmm['checkedDate']) ? $pmm['checkedDate'] : '-'; ?></td>
+                                            <td><?= isset($pmm['approveDate']) ? $pmm['approveDate'] : '-'; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status Checksheet :</td>
+                                            <?php 
+                                                if ($pmm['yearStatus'] == 1) {
+                                                    $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
+                                                    $statusText = 'Menunggu Approval';
+                                                } elseif ($pmm['yearStatus'] == 2) {
+                                                    $class = 'bg-success text-white'; // Finish on Time (Hijau)
+                                                    $statusText = 'Finish on Time';
+                                                } elseif ($pmm['yearStatus'] == 3) {
+                                                    $class = 'bg-danger text-white'; // Finish on Delay (Merah)
+                                                    $statusText = 'Finish on Delay';
+                                                } else {
+                                                    $class = 'bg-secondary text-white'; // Default (Abu-abu)
+                                                    $statusText = 'Unknown Status';
+                                                }
+                                            ?>
+                                            <td colspan="2" class="fw-bold <?= $class; ?>"><?= $statusText; ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>    
                         <input type="hidden" id="id_pmm" value="<?= isset($id_pmm) ? $id_pmm : '-'; ?>">
                         <input type="hidden" id="id_lini" value="<?= isset($singleChecksheet['id_lini']) ? $singleChecksheet['id_lini'] : '-'; ?>">
                         <input type="hidden" id="id_area" value="<?= isset($singleChecksheet['id_area']) ? $singleChecksheet['id_area'] : '-'; ?>">

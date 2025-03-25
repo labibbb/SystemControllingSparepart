@@ -14,8 +14,8 @@
     th, td {
         border: 1px solid #ddd;
         text-align: center;
-        padding: 12px; /* Menambah padding agar lebih lebar */
-        min-width: 30px; /* Memberi batasan minimal lebar sel */
+        padding: 12px;
+        min-width: 30px;
     }
     th {
         background-color: #f4f4f4;
@@ -24,7 +24,7 @@
         z-index: 2;
     }
     .gantt-bar {
-        height: 25px; /* Memperbesar tinggi bar */
+        height: 25px;
         border-radius: 4px;
     }
     .plan { background-color: #3498db; }
@@ -32,12 +32,6 @@
     .machine-name {
         font-weight: bold;
     }
-    #currentMonth {
-    font-size: 1.5rem; /* Perbesar ukuran font */
-    font-weight: bold; /* Buat teks tebal */
-    margin: 0 10px; /* Beri jarak kiri dan kanan agar tidak terlalu mepet */
-}
-
 </style>
 
 <div class="content-wrapper">
@@ -50,20 +44,18 @@
             </div>
             <div class="box-body">
                 <div class="row d-flex">
-                    <div class="text-center mb-3">
-                        <button onclick="prevMonth()">⏪ Sebelumnya</button>
-                        <span id="currentMonth"></span>
-                        <button onclick="nextMonth()">Selanjutnya ⏩</button>
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <label for="yearFilter" class="me-2 fw-bold text-primary fs-4">📅 Pilih Tahun:</label>
+                        <select id="yearFilter" class="form-select w-auto shadow-sm border-primary fs-5" onchange="generateGanttChart()">
+                        </select>
                     </div>
-
                     <div class="gantt-container">
                         <table id="ganttTable">
                             <thead id="ganttHeader"></thead>
                             <tbody id="ganttBody"></tbody>
                         </table>
                     </div>
-                    
-                </div>    
+                </div>
             </div>
         </section>
     </div>
@@ -72,68 +64,114 @@
 <?php $this->load->view('layouts/footer'); ?>
 
 <script>
-    let currentDate = new Date();
+    let currentYear = new Date().getFullYear(   );
 
-    // Data dummy
-    const tasks = [
-        { name: "BAKE OVEN", planStart: "2025-03-10", planEnd: "2025-03-10", actualStart: "2025-03-11", actualEnd: "2025-03-11" },
-        { name: "CONVEYOR FI", planStart: "2025-01-15", planEnd: "2025-01-17", actualStart: "2025-01-16", actualEnd: "2025-01-18" },
-        { name: "CONVEYOR UNLOADING", planStart: "2025-01-19", planEnd: "2025-01-21", actualStart: "2025-01-20", actualEnd: "2025-01-22" },
-        { name: "BLOW COOLING 1", planStart: "2025-01-22", planEnd: "2025-01-24", actualStart: "2025-01-23", actualEnd: "2025-01-25" },
-        { name: "CONVEYOR LOADING", planStart: "2025-01-28", planEnd: "2025-01-30", actualStart: "2025-01-29", actualEnd: "2025-01-31" }
-    ];
+    // Mengelompokkan data berdasarkan id_mesin
+const groupedTasks = {};
 
-    function generateGanttChart() {
-        const monthYear = currentDate.toISOString().slice(0, 7); // Format YYYY-MM
-        document.getElementById("currentMonth").innerText = new Date(monthYear).toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+<?php echo json_encode($pmmonthly); ?>.forEach(item => {
+    const idMesin = item.id_mesin;
+    if (!groupedTasks[idMesin]) {
+        groupedTasks[idMesin] = {
+            name: item.nama_mesin,
+            planDates: new Set(),
+            actualDates: new Set()
+        };
+    }
+    if (item.tanggal) groupedTasks[idMesin].planDates.add(formatDate(item.tanggal));
+    if (item.approveDate) groupedTasks[idMesin].actualDates.add(formatDate(item.approveDate));
+});
 
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        
-        let headerHtml = `<tr><th>Mesin</th>`; 
+// Konversi ke array untuk pemetaan data lebih lanjut
+const tasks = Object.values(groupedTasks).map(task => ({
+    name: task.name,
+    planDates: Array.from(task.planDates).sort(),
+    actualDates: Array.from(task.actualDates).sort()
+}));
+
+// Fungsi untuk format tanggal menjadi "YYYY-MM-DD"
+function formatDate(dateString) {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    if (isNaN(date)) return null;
+    return date.toISOString().split('T')[0];
+}
+
+function generateGanttChart() {
+    currentYear = document.getElementById("yearFilter").value;
+    let headerHtml = `<tr><th>Mesin</th>`;
+    let weeks = {};
+
+    // Mengelompokkan hari dalam minggu
+    for (let month = 0; month < 12; month++) {
+        let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+        let weekCounter = 1;
+
         for (let day = 1; day <= daysInMonth; day++) {
-            headerHtml += `<th>${String(day).padStart(2, '0')}</th>`; // Menampilkan angka 2 digit
+            let weekLabel = `${new Date(currentYear, month, day).toLocaleString('id-ID', { month: 'long' })} W${weekCounter}`;
+            if (!weeks[weekLabel]) {
+                weeks[weekLabel] = [];
+            }
+            weeks[weekLabel].push(day);
+            if (new Date(currentYear, month, day).getDay() === 6) {
+                weekCounter++;
+            }
         }
-        headerHtml += `</tr>`;
-        document.getElementById("ganttHeader").innerHTML = headerHtml;
+    }
 
-        let bodyHtml = "";
-        tasks.forEach(task => {
-
-            bodyHtml += `<tr><td><strong>${task.name}</strong> (Plan)</td>`;
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateString = `${monthYear}-${String(day).padStart(2, '0')}`;
-                if (dateString >= task.planStart && dateString <= task.planEnd) {
-                    bodyHtml += `<td class="gantt-bar plan"></td>`;
-                } else {
-                    bodyHtml += `<td></td>`;
-                }
-            }
-            bodyHtml += `</tr>`;
-
-            bodyHtml += `<tr><td><strong>${task.name}</strong> (Aktual)</td>`;
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateString = `${monthYear}-${String(day).padStart(2, '0')}`;
-                if (dateString >= task.actualStart && dateString <= task.actualEnd) {
-                    bodyHtml += `<td class="gantt-bar actual"></td>`;
-                } else {
-                    bodyHtml += `<td></td>`;
-                }
-            }
-            bodyHtml += `</tr>`;
+    // Membuat header tabel
+    for (let week in weeks) {
+        headerHtml += `<th colspan="${weeks[week].length}">${week}</th>`;
+    }
+    headerHtml += `</tr><tr><th></th>`;
+    for (let week in weeks) {
+        weeks[week].forEach(day => {
+            headerHtml += `<th>${String(day).padStart(2, '0')}</th>`;
         });
+    }
+    headerHtml += `</tr>`;
+    document.getElementById("ganttHeader").innerHTML = headerHtml;
 
-        document.getElementById("ganttBody").innerHTML = bodyHtml;
+    let bodyHtml = "";
+    tasks.forEach(task => {
+        bodyHtml += `<tr><td><strong>${task.name}</strong> (Plan)</td>`;
+        for (let month = 0; month < 12; month++) {
+            let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                let dateString = `${currentYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                bodyHtml += (task.planDates.includes(dateString)) ? `<td class="gantt-bar plan"></td>` : `<td></td>`;
+            }
+        }
+        bodyHtml += `</tr>`;
+
+        bodyHtml += `<tr><td><strong>${task.name}</strong> (Aktual)</td>`;
+        for (let month = 0; month < 12; month++) {
+            let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                let dateString = `${currentYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                bodyHtml += (task.actualDates.includes(dateString)) ? `<td class="gantt-bar actual"></td>` : `<td></td>`;
+            }
+        }
+        bodyHtml += `</tr>`;
+    });
+    document.getElementById("ganttBody").innerHTML = bodyHtml;
+}
+
+
+    function populateYearDropdown() {
+        let yearDropdown = document.getElementById("yearFilter");
+        let currentYear = new Date().getFullYear();
+        for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            if (i === currentYear) option.selected = true;
+            yearDropdown.appendChild(option);
+        }
     }
 
-    function prevMonth() {
-        currentDate.setMonth(currentDate.getMonth() - 1);
+    document.addEventListener("DOMContentLoaded", () => {
+        populateYearDropdown();
         generateGanttChart();
-    }
-
-    function nextMonth() {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        generateGanttChart();
-    }
-
-    document.addEventListener("DOMContentLoaded", generateGanttChart);
+    });
 </script>

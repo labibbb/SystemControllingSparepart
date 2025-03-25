@@ -32,7 +32,7 @@ class Approval extends CI_Controller {
 
     public function monitoringPlan() {
         // Ambil data sesuai filter awal
-        $pmmonthly = $this->Approval_model->get_all_pmmonthly_monitoring();
+        $pmmonthly = $this->Approval_model->get_all_pmmonthly_planaktual();
         
         $data = [
             'pmmonthly' => $pmmonthly
@@ -97,13 +97,15 @@ class Approval extends CI_Controller {
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
     
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'checksheet' => $checksheet,
             'tanggal' => $tanggal,
             'wi' => $wi,
-            'id_pmm' => $id_pmm
+            'id_pmm' => $id_pmm,
+            'pmm' => $pmm
         ];
     
         $this->load->view('approvalSPVDetail', $data);
@@ -118,6 +120,7 @@ class Approval extends CI_Controller {
         $catatan = $this->Approval_model->get_catatan($id_pmm); 
         $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
     
         $data = [
             'singleChecksheet' => $singlechecksheet,
@@ -125,7 +128,8 @@ class Approval extends CI_Controller {
             'checksheet' => $checksheet,
             'tanggal' => $tanggal,
             'wi' => $wi,
-            'id_pmm' => $id_pmm
+            'id_pmm' => $id_pmm,
+            'pmm' => $pmm
         ];
     
         $this->load->view('approvalSPVRead', $data);
@@ -139,13 +143,15 @@ class Approval extends CI_Controller {
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
     
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'checksheet' => $checksheet,
             'tanggal' => $tanggal,
             'wi' => $wi,
-            'id_pmm' => $id_pmm
+            'id_pmm' => $id_pmm,
+            'pmm' => $pmm
         ];
     
         $this->load->view('approvalFRDetail', $data);
