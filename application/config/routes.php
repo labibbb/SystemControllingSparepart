@@ -149,3 +149,5 @@ $route['approvalSPV/reject/(:num)'] = 'Approval/rejectSpv/$1';
 
 $route['monitoringApproval'] = 'Approval/monitoring';
 $route['monitoringSchedule'] = 'Approval/monitorings';
+
+$route['monitoringPlanAktual'] = 'Approval/monitoringPlan';

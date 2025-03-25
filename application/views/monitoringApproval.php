@@ -108,7 +108,6 @@
     });
 </script>
 
-
 <style>
     .status-box {
         width: 15px;

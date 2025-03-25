@@ -63,6 +63,12 @@
 							<span>Setting Freq & Work Instruction PM</span>
 						</a>
 					</li>
+					<li>
+						<a href="<?= site_url('monitoringPlanAktual'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Monitoring Plan Aktual</span>
+						</a>
+					</li>
 				<?php elseif ($this->session->userdata('level') == 2): ?>
 					<li>
 						<a href="<?= site_url('pmmonthly'); ?>">
