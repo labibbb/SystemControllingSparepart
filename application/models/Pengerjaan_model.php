@@ -72,7 +72,7 @@ class Pengerjaan_model extends CI_Model {
         return $this->db->get()->row_array();
     }
 
-    public function updateStatus($id_pmm, $id_users) {
+    public function updateStatus($id_pmm) {
         $data = [
             'status' => 4,
         ];
