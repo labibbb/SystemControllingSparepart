@@ -149,10 +149,11 @@
                     "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
                     "allDay" => true,
                     "backgroundColor" => 
-                    ($row["status"] == 4 || $row["status"] == 5) ? "blue" :  
-                    ($row["status"] == 6 ? "darkcyan" :  
-                    ($row["status"] == 7 ? "red" :  
-                    ($row["status"] == 8 ? "lightseagreen" : "gray"))),
+                    ($row["status"] == 3) ? "blue" : 
+                    (($row["status"] == 4 || $row["status"] == 5) ? "blue" :  
+                    (($row["status"] == 6) ? "darkcyan" :  
+                    (($row["status"] == 7) ? "red" :  
+                    (($row["status"] == 8) ? "lightseagreen" : "gray")))),
                     "id_mesin" => $row["id_mesin"],
                     "tanggal" => $row["tanggal"],
                     "id_pmm" => $row["id_pmm"]
