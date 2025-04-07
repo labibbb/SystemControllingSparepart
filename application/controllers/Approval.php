@@ -40,6 +40,17 @@ class Approval extends CI_Controller {
     
         $this->load->view('actualPlanView', $data);
     }
+    
+    public function monitoringPlan2() {
+        // Ambil data sesuai filter awal
+        $pmmonthly = $this->Approval_model->get_all_pmmonthly_planaktual2();
+        
+        $data = [
+            'pmmonthly' => $pmmonthly
+        ];
+    
+        $this->load->view('actualPlanViews', $data);
+    }
 
     public function monitoring() {
         // Ambil data sesuai filter awal

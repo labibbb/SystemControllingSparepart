@@ -151,3 +151,4 @@ $route['monitoringApproval'] = 'Approval/monitoring';
 $route['monitoringSchedule'] = 'Approval/monitorings';
 
 $route['monitoringPlanAktual'] = 'Approval/monitoringPlan';
+$route['monitoringPlanAktual2'] = 'Approval/monitoringPlan2';

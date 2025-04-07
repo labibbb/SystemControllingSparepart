@@ -66,7 +66,13 @@
 					<li>
 						<a href="<?= site_url('monitoringPlanAktual'); ?>">
 							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-							<span>Monitoring Plan Aktual</span>
+							<span>Plan Actual painting 1</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('monitoringPlanAktual2'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Plan Actual painting 2</span>
 						</a>
 					</li>
 				<?php elseif ($this->session->userdata('level') == 2): ?>

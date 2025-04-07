@@ -42,9 +42,34 @@ class Approval_model extends CI_Model {
         $this->db->join('users AS u2', 'pm_monthly.fr = u2.id_users', 'left'); // Foreman
         $this->db->join('users AS u3', 'pm_monthly.spv = u3.id_users', 'left'); // Supervisor
         $this->db->where_in('pm_monthly.status', [2, 3, 4, 5, 6, 7, 8]); // Menggunakan where_in untuk banyak nilai
-        
+        $this->db->where('pm_monthly.id_lini', 1); // Menambahkan filter untuk id_lini = 1
+    
         return $this->db->get()->result_array();
     }
+    
+    public function get_all_pmmonthly_planaktual2() {
+        $this->db->select('
+            pm_monthly.*, 
+            lini.nama_lini, 
+            area.nama_area, 
+            mesin.nama_mesin, 
+            u1.dipname AS user_name, 
+            u2.dipname AS foreman_name, 
+            u3.dipname AS supervisor_name
+        ');
+        $this->db->from('pm_monthly');
+        $this->db->join('lini', 'pm_monthly.id_lini = lini.id_lini');
+        $this->db->join('area', 'pm_monthly.id_area = area.id_area');
+        $this->db->join('mesin', 'pm_monthly.id_mesin = mesin.id_mesin');
+        $this->db->join('users AS u1', 'pm_monthly.id_users = u1.id_users', 'left'); // User Pembuat
+        $this->db->join('users AS u2', 'pm_monthly.fr = u2.id_users', 'left'); // Foreman
+        $this->db->join('users AS u3', 'pm_monthly.spv = u3.id_users', 'left'); // Supervisor
+        $this->db->where_in('pm_monthly.status', [2, 3, 4, 5, 6, 7, 8]); // Menggunakan where_in untuk banyak nilai
+        $this->db->where('pm_monthly.id_lini', 2); // Menambahkan filter untuk id_lini = 1
+    
+        return $this->db->get()->result_array();
+    }
+    
     
     public function get_all_pmmonthly() {
         $this->db->select('
