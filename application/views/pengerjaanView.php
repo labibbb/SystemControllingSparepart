@@ -9,9 +9,12 @@
                     <div class="row">
                         <!-- Input Filter Tanggal -->
                         <div class="col-md-12 text-center mb-3">
-                            <label for="filterTanggal"><strong>Filter Tanggal:</strong></label>
-                            <input type="date" id="filterTanggal" class="form-control d-inline-block" style="width: 200px;" value="<?= date('Y-m-d'); ?>">
-                        </div>
+                        <label for="filterTanggalMulai"><strong>Filter Tanggal:</strong></label>
+                        <input type="date" id="filterTanggalMulai" class="form-control d-inline-block" style="width: 200px;" value="<?= date('Y-m-01'); ?>">
+                        <span class="mx-2">s/d</span>
+                        <input type="date" id="filterTanggalSampai" class="form-control d-inline-block" style="width: 200px;" value="<?= date('Y-m-d'); ?>">
+                        <button id="btnFilter" class="btn btn-primary ml-2">Filter</button>
+                    </div>
 
                         <!-- Tabel Kiri -->
                         <div class="col-md-6">
@@ -194,23 +197,55 @@
         var table1 = $('#table1').DataTable();
         var table2 = $('#table2').DataTable();
 
-        // Fungsi filter berdasarkan tanggal
-        function filterByDate() {
-            var selectedDate = $('#filterTanggal').val();
+        // Fungsi filter berdasarkan range tanggal
+        function filterByDateRange() {
+            var startDate = $('#filterTanggalMulai').val();
+            var endDate = $('#filterTanggalSampai').val();
             
             // Filter Table 1
-            table1.column(1).search(selectedDate).draw();
+            table1.rows().every(function() {
+                var rowDate = this.data()[1]; // Kolom tanggal (indeks 1)
+                var date = new Date(rowDate);
+                var start = new Date(startDate);
+                var end = new Date(endDate);
+                end.setDate(end.getDate() + 1); // Tambah 1 hari untuk mencakup hari terakhir
+
+                if (date >= start && date <= end) {
+                    $(this.node()).show();
+                } else {
+                    $(this.node()).hide();
+                }
+            });
 
             // Filter Table 2
-            table2.column(1).search(selectedDate).draw();
+            table2.rows().every(function() {
+                var rowDate = this.data()[1]; // Kolom tanggal (indeks 1)
+                var date = new Date(rowDate);
+                var start = new Date(startDate);
+                var end = new Date(endDate);
+                end.setDate(end.getDate() + 1); // Tambah 1 hari untuk mencakup hari terakhir
+
+                if (date >= start && date <= end) {
+                    $(this.node()).show();
+                } else {
+                    $(this.node()).hide();
+                }
+            });
         }
 
-        // Panggil filterByDate saat halaman dimuat
-        filterByDate();
+        // Panggil filterByDateRange saat halaman dimuat
+        filterByDateRange();
 
-        // Event listener ketika tanggal diubah
-        $('#filterTanggal').on('change', function() {
-            filterByDate();
+        // Event listener ketika tombol filter diklik
+        $('#btnFilter').on('click', function() {
+            filterByDateRange();
+        });
+
+        // Juga bisa di-trigger saat enter di input tanggal
+        $('#filterTanggalMulai, #filterTanggalSampai').on('keypress', function(e) {
+            if (e.which == 13) {
+                filterByDateRange();
+            }
         });
     });
 </script>

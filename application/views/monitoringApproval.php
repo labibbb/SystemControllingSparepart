@@ -73,7 +73,12 @@
                 ];
             }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
 
-            eventClick: function(info) {
+                eventClick: function(info) {
+                // Cek level user dari PHP session
+                <?php if ($this->session->userdata('level') == 2): ?>
+                    // Jika level 2, tidak melakukan apa-apa (nonaktifkan klik)
+                    return false;
+                <?php else: ?>
                 // Buat form secara dinamis
                 var form = document.createElement("form");
                 form.action = "<?= site_url('approvalSPV/read'); ?>";
@@ -101,6 +106,7 @@
                 // Tambahkan form ke body dan submit
                 document.body.appendChild(form);
                 form.submit();
+                <?php endif; ?>
             }
         });
 

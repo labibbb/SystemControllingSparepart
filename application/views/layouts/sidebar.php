@@ -12,7 +12,9 @@
 					<span>Dashboard</span>
 				</a>
 				</li>
-                <li class="treeview">
+                
+				<?php if ($this->session->userdata('level') == 1): ?>
+					<li class="treeview">
 				  <a href="#">
 					<i span class="icon-Layout-grid"><span class="path1"></span><span class="path2"></span></i>
 					<span>Master</span>
@@ -21,18 +23,14 @@
 					</span>
 				  </a>
 				  <ul class="treeview-menu">
-					<!-- <li><a href="<?= site_url('lini'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lini</a></li>
+					 <li><a href="<?= site_url('lini'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lini</a></li>
 					<li><a href="<?= site_url('area'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Area</a></li>
 					<li><a href="<?= site_url('mesin'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mesin</a></li>
-					<li><a href="<?= site_url('manpower'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Man Power</a></li>
-					<li><a href="<?= site_url('departemen'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Departemen</a></li>
-					<li><a href="<?= site_url('user'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>User</a></li>
-					<li><a href="<?= site_url('jobdeskripsi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Job Deskripsi</a></li> -->
+
 					<li><a href="<?= site_url('settingwi'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Setting WI</a></li>
 					<li><a href="<?= site_url('checkseet'); ?>"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Checkseet</a></li>
 				  </ul>
 				</li>
-				<?php if ($this->session->userdata('level') == 1): ?>
 					<li>
 						<a href="<?= site_url('pmyearly'); ?>">
 							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
@@ -83,6 +81,30 @@
 						</a>
 					</li>
 					<li>
+						<a href="<?= site_url('monitoringApproval'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Monitoring Approval</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('monitoringSchedule'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Monitoring Schedule</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('monitoringPlanAktual'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Plan Actual painting 1</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('monitoringPlanAktual2'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Plan Actual painting 2</span>
+						</a>
+					</li>
+					<li>
 						<a href="<?= site_url('approvalFR'); ?>">
 							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
 							<span>Approval</span>
@@ -93,6 +115,18 @@
 						<a href="<?= site_url('pengerjaan'); ?>">
 							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
 							<span>Pengerjaan</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('monitoringPlanAktual'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Plan Actual painting 1</span>
+						</a>
+					</li>
+					<li>
+						<a href="<?= site_url('monitoringPlanAktual2'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>Plan Actual painting 2</span>
 						</a>
 					</li>
 				<?php endif; ?>

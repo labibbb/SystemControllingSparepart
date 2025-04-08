@@ -5,44 +5,70 @@
     .gantt-container {
         width: 100%;
         overflow-x: auto;
+        position: relative;
     }
+    
     table {
         width: 100%;
         border-collapse: collapse;
         white-space: nowrap;
     }
+    
     th, td {
         border: 1px solid #ddd;
         text-align: center;
         padding: 12px;
         min-width: 30px;
     }
+    
     th {
         background-color: #f4f4f4;
         position: sticky;
         top: 0;
         z-index: 2;
     }
+    
+    /* Sticky first column */
+    th:first-child,
+    td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background-color: white;
+    }
+    
+    /* Sticky header first column */
+    th:first-child {
+        z-index: 3;
+        background-color: #f4f4f4;
+    }
+    
     .gantt-bar {
         height: 25px;
         border-radius: 4px;
     }
+    
     .plan { background-color: #3498db; }
     .actual { background-color: #e74c3c; }
+    
     .machine-name {
         font-weight: bold;
+        white-space: nowrap;
     }
+    
     .legend {
         display: flex;
         justify-content: center;
         margin-top: 20px;
         gap: 20px;
     }
+    
     .legend-item {
         display: flex;
         align-items: center;
         gap: 5px;
     }
+    
     .legend-color {
         width: 20px;
         height: 20px;
