@@ -120,6 +120,7 @@ $route['pmmonthly'] = 'PmMonthly/index';
 $route['pmmonthly/filter'] = 'PmMonthly/filterData';
 $route['pmmonthly/update_tanggal'] = 'PmMonthly/update_tanggal';
 $route['pmmonthly/update_tanggal2'] = 'PmMonthly/update_tanggal2';
+$route['pmmonthly/update_tanggal3'] = 'PmMonthly/update_tanggal3';
 $route['pmmonthly/update_mp'] = 'PmMonthly/update_mp';
 
 $route['settingwi'] = 'Wi/index';

@@ -205,7 +205,8 @@ class Approval_model extends CI_Model {
     public function rejectFr($id_pmm, $user_id, $catatan) {
         $data = [
             'status' => 7,  // Ubah status ke "rejected"
-            'catatanReject' => $catatan
+            'catatanReject' => $catatan,
+            'statusReject' => 1
         ];
     
         $this->db->where('id_pmm', $id_pmm);

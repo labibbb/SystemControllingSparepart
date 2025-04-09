@@ -66,6 +66,17 @@ class PmMonthly extends CI_Controller {
         redirect('PmMonthly');
     }
 
+    public function update_tanggal3() {
+        $id_pmm = $this->input->post('id_pmm');
+        $data = [
+            'tanggal' => $this->input->post('tanggal'),
+            'catatan' => $this->input->post('catatan'),
+            'status' => 3
+        ];
+        $this->PmMonthly_model->update_tanggal_catatan($id_pmm, $data);
+        redirect('PmMonthly');
+    }
+
     public function update_mp() {
         $id_pmm = $this->input->post('id_pmm');
         $data = [

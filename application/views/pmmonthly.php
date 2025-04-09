@@ -116,7 +116,7 @@
                                             </td>
                                         <?php elseif (in_array($row['status'], [7])): ?>
                                             <td>
-                                                <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
+                                                <button class="btn btn-warning btn-sm" onclick="editTanggal2(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                             </td>    
                                         <?php else: ?>
                                             <td class="bg-secondary text-white text-center">No Action</td>
@@ -158,6 +158,41 @@
                     <div class="form-group">
                         <label for="catatan_mp">Catatan</label>
                         <input type="text" name="catatan" id="catatan_tgl" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalTanggal2" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update PM Monthly</h5>
+                <button type="button" class="close" onclick="$('#modalMP').modal('hide')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="tanggalUpdate" action="<?= base_url('pmmonthly/update_tanggal3') ?>" method="post">
+                    <input type="hidden" name="id_pmm" id="id_pmm_tgl2">
+                    <input type="hidden" name="bulanU" id="bulanU2">
+                    <input type="hidden" name="tahunU" id="tahunU2">
+                    
+                    <div class="form-group">
+                        <label for="tanggal_tgllama2">Tanggal lama</label>
+                        <input type="date" id="tanggal_tgllama2" class="form-control" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tanggal">Tanggal Baru</label>
+                        <input type="date" name="tanggal" id="tanggal_tgl2" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="catatan_mp">Catatan</label>
+                        <input type="text" name="catatan" id="catatan_tgl2" class="form-control">
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -319,6 +354,14 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("bulanU").value = bulan;
         document.getElementById("tahunU").value = tahun;
         $('#modalTanggal').modal('show');
+    }
+
+    function editTanggal2(id, tanggal, catatan, bulan, tahun) {
+        document.getElementById("id_pmm_tgl2").value = id;
+        document.getElementById("tanggal_tgllama2").value = tanggal;
+        document.getElementById("bulanU2").value = bulan;
+        document.getElementById("tahunU2").value = tahun;
+        $('#modalTanggal2').modal('show');
     }
 
     function editMP(id) {

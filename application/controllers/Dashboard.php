@@ -52,7 +52,7 @@ class Dashboard extends CI_Controller {
         $this->db->where('status', 6);
         $waitingApproval = $this->db->count_all_results('pm_monthly');
     
-        $this->db->where('status', 7);
+        $this->db->where('statusReject', 1);
         $rejected = $this->db->count_all_results('pm_monthly');
     
         $this->db->where('status', 8);
