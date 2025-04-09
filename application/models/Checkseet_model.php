@@ -54,6 +54,13 @@ class Checkseet_model extends CI_Model {
         $this->db->where('id_area', $id_area);
         $this->db->where('id_mesin', $id_mesin);
         return $this->db->delete('data_checksheet');
-    }    
+    }
+    
+    public function check_existing_data($id_mesin) {
+        $this->db->where('id_mesin', $id_mesin);
+        $query = $this->db->get('data_checksheet'); // ganti dengan nama tabel yang benar jika berbeda
+    
+        return $query->num_rows() > 0;
+    }   
 }
 ?>

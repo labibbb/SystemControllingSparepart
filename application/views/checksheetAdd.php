@@ -250,7 +250,7 @@
                             window.location.href = "<?= site_url('checkseet'); ?>";
                         });
                     } else {
-                        Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
+                        Swal.fire("Gagal!", response.message || "Data dengan mesin tersebut sudah ada!!", "error");
                     }
                 },
                 error: function () {

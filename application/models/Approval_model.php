@@ -132,12 +132,12 @@ class Approval_model extends CI_Model {
         return $this->db->get_where('lini', ['status' => 1])->result_array();
     }
 
-    public function get_checkseet($id_mesin) {
+    public function get_checkseet($id_pmm) {
         $this->db->select('trs_pengerjaan_checksheet.*, data_checksheet.item_cek, data_checksheet.point_cek, data_checksheet.metode_cek, data_checksheet.standard');
         $this->db->from('trs_pengerjaan_checksheet');
         $this->db->join('data_checksheet', 'trs_pengerjaan_checksheet.id_ck = data_checksheet.id_ck');
         
-        $this->db->where('data_checksheet.id_mesin', $id_mesin);
+        $this->db->where('trs_pengerjaan_checksheet.id_pmm', $id_pmm);
         
         return $this->db->get()->result_array();
     } 
@@ -183,12 +183,13 @@ class Approval_model extends CI_Model {
     }
 
     public function get_catatan($id_pmm) {
-        $this->db->select('pm_monthly.*');
+        $this->db->select('catatanReject');
         $this->db->from('pm_monthly');
-        $this->db->where('pm_monthly.id_pmm', $id_pmm);
-        
-        return $this->db->get()->row_array();
-    }
+        $this->db->where('id_pmm', $id_pmm);
+    
+        $result = $this->db->get()->row();
+        return $result ? $result->catatanReject : null;
+    }    
 
     public function approveFr($id_pmm, $id_user) {
         $data = [

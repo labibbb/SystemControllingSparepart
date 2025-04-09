@@ -193,7 +193,18 @@ class Checkseet extends CI_Controller {
     
         $dataList = $jsonData['data'];
         $user_id = $this->session->userdata('user_id');
-    
+        
+        $firstData = $dataList[0];
+        $id_mesin = isset($firstData['id_mesin']) ? (int)$firstData['id_mesin'] : null;
+        $existing = $this->Checkseet_model->check_existing_data($id_mesin);
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
+
         foreach ($dataList as $data) {
             $insertData = [
                 'id_lini'        => isset($data['id_lini']) ? (int)$data['id_lini'] : null, 

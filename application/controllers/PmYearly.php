@@ -91,21 +91,37 @@ class PmYearly extends CI_Controller {
     }
 
     public function add() {
+        $id_mesin = $this->input->post('id_mesin');
+        $tahun = $this->input->post('tahun');
+        $bulan = $this->input->post('bulan');
+    
+        // Cek apakah data sudah ada
+        $existing = $this->PmYearly_model->check_existing_data($id_mesin);
+    
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Data dengan mesin tersebut sudah diinputkan untuk tahun dan bulan yang sama.'
+            ]);
+            return;
+        }
+    
+        // Data belum ada, lanjutkan insert
         $data = [
             'id_lini' => $this->input->post('id_lini'),
             'id_area' => $this->input->post('id_area'),
-            'id_mesin' => $this->input->post('id_mesin'),
-            'tahun' => $this->input->post('tahun'),
-            'bulan' => $this->input->post('bulan'),
+            'id_mesin' => $id_mesin,
+            'tahun' => $tahun,
+            'bulan' => $bulan,
             'status' => 1,
             'sysdate' => date('Y-m-d H:i:s')
         ];
-
+    
         if ($this->PmYearly_model->insert_pmyearly($data)) {
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error']);
         }
-    }
+    }    
 }
 ?>

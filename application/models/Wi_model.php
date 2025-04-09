@@ -28,5 +28,12 @@ class Wi_model extends CI_Model {
         $this->db->where('id_area', $id);
         return $this->db->update('area', ['status' => 0]); // Soft delete
     }
+
+    public function check_existing_data($nama) {
+        $this->db->where('nama_wi', $nama);
+        $query = $this->db->get('data_wi'); // ganti dengan nama tabel yang benar jika berbeda
+    
+        return $query->num_rows() > 0;
+    }   
 }
 ?>

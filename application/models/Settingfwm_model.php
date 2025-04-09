@@ -39,5 +39,12 @@ class Settingfwm_model extends CI_Model {
     public function update_instruksi($id, $instruksi) {
         return $this->db->update('trs_settingfwm', ['instruksi_kerja' => $instruksi], ['id_fwp' => $id]);
     }
+
+    public function check_existing_data($id_mesin) {
+        $this->db->where('id_mesin', $id_mesin);
+        $query = $this->db->get('trs_settingfwm'); // ganti dengan nama tabel yang benar jika berbeda
+    
+        return $query->num_rows() > 0;
+    }    
 }
 ?>

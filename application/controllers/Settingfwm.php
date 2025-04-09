@@ -58,6 +58,15 @@ class Settingfwm extends CI_Controller {
             'sysdate' => date('Y-m-d H:i:s')
         ];
 
+        $existing = $this->Settingfwm_model->check_existing_data($this->input->post('id_mesin'));
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
+
         if ($this->Settingfwm_model->insert_setting($data)) {
             echo json_encode(['status' => 'success']);
         } else {

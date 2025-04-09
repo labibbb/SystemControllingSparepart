@@ -121,11 +121,11 @@
                                                         <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
                                                         <button type="submit" class="btn btn-warning btn-sm">Detail</button>
                                                     </form>
+                                                <?php elseif ($row['status'] == 8): ?>  
+                                                    <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
+                                                        <i class="fas fa-print"></i> Print
+                                                    </button>  
                                                 <?php endif; ?>
-
-                                                <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
-                                                    <i class="fas fa-print"></i> Print
-                                                </button>
                                             </div>
                                         </td>
                                     </tr>

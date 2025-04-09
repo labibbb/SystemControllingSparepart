@@ -272,7 +272,7 @@
                     } else {
                         Swal.fire({
                             title: "Gagal!",
-                            text: res.message,
+                            text: "Schedule PM Yearly mesin tersebut sudah ada!",
                             icon: "error",
                             confirmButtonText: "OK"
                         });

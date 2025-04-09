@@ -116,9 +116,11 @@
                                                     </form>
                                                 <?php endif; ?>
 
-                                                <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
-                                                    <i class="fas fa-print"></i> Print
-                                                </button>
+                                                <?php if ($row['status'] == 8): ?>  
+                                                    <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
+                                                        <i class="fas fa-print"></i> Print
+                                                    </button>  
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>

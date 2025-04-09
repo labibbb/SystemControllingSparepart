@@ -218,7 +218,7 @@
             } else {
                 Swal.fire({
                     title: 'Gagal!',
-                    text: res.message,
+                    text: "Data dengan mesin tersebut sudah tersedia!",
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });

@@ -4,15 +4,7 @@
 	<div class="container-full">
 		<!-- Main content -->
 		<section class="content">
-			<h1><strong>DASHBOARD MONTHLY PLANNING</strong></h1>
-			<div class="form-group">
-				<div class="controls">
-					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Terdapat abnormality yang belum di follow > 2 hari total abnormality = 1 temuan" disabled style="background-color: white; color: black; font-size: 18px; padding: 12px;">
-						<button class="btn btn-primary" type="button" style="margin-left: 8px; font-size: 18px; padding: 12px 20px;">OPEN</button>
-					</div>
-				</div>
-			</div>						
+			<h1 class="mb-30"><strong>DASHBOARD MONTHLY PLANNING</strong></h1>				
 			<div class="row d-flex">
 				<div class="col">
 					<a class="box box-link-shadow text-center pull-up border border-2 border-primary" href="javascript:void(0)">
@@ -22,7 +14,7 @@
 							</p>
 						</div>						  
 						<div class="box-body" style="text-align: right;">	
-							<h1 class="countnm fs-50 m-0">5</h1>
+							<h1 class="countnm fs-50 m-0"><?= $inProcess ?></h1>
 							<button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 						</div>
 					</a>
@@ -33,7 +25,7 @@
 					  <p class="fw-600 text-white" style="font-size: 20px;"><i class="mdi mdi-timer-sand me-15 fs-4"></i>WAITING APPROVE SPV</p>
 					</div>
 					<div class="box-body" style="text-align: right;">
-					  <h1 class="countnm fs-50 m-0" >25</h1>
+					  <h1 class="countnm fs-50 m-0" ><?= $waitingApproval ?></h1>
 					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
@@ -46,7 +38,7 @@
 						</p>		
 					</div>
 					<div class="box-body" style="text-align: right;">
-					  <h1 class="countnm fs-50 m-0 text-danger">5</h1>
+					  <h1 class="countnm fs-50 m-0 text-danger"><?= $rejected ?></h1>
 					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-danger mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
@@ -59,7 +51,7 @@
 						</p>
 					</div>
 					<div class="box-body" style="text-align: right;">
-					  <h1 class="countnm fs-50 m-0">25</h1>
+					  <h1 class="countnm fs-50 m-0"><?= $completeAll ?></h1>
 					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
@@ -70,7 +62,7 @@
 					  <p class="fw-600 text-white" style="font-size: 20px;"><i class="si-plus si me-15 fs-4"></i>TOTAL</p>
 					</div>
 					<div class="box-body" style="text-align: right;">
-					  <h1 class="countnm fs-50 m-0" >5</h1>
+					  <h1 class="countnm fs-50 m-0" ><?= $total ?></h1>
 					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
@@ -79,104 +71,144 @@
 		</section>
 		<section class="content">
 			<div class="row">
-				<div class="col-lg-6">
-					<div class="box">
-						<div class="box-body">
-							<h2 class="box-title" >Today PM : PAINTING 1</h2>
-							<div class="table-responsive">
-								<table class="table" style="font-size: 15px;">
-									<thead class="bg-primary">
-										<tr>
-											<th>No</th>
-											<th>Tanggal</th>
-											<th>Area</th>
-											<th>Mesin</th>
-											<th>Status</th>
-											<th>Check</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>1</td>
-											<td>23-01-2025</td>
-											<td>Bake Oven</td>
-											<td>Conveyor Unloading</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>23-01-2025</td>
-											<td>Bake Oven</td>
-											<td>Conveyor Unloading</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>23-01-2025</td>
-											<td>Bake Oven</td>
-											<td>Conveyor Unloading</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
+				<div class="col-md-6">
+					<h3 class="text-center">Today PM: Painting 1</h3>
+					<div class="table-responsive">
+						<table id="table1" class="table table-bordered table-striped">
+							<thead class="bg-primary text-white">
+								<tr>
+									<th>No</th>
+									<th>Tanggal</th>
+									<th>Area</th>
+									<th>Mesin</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody id="table1-body">
+								<?php $no = 1; foreach ($pmmonthly as $row): ?>
+									<tr>
+										<td><?= $no++; ?></td>
+										<td class="tanggal"><?= date('Y-m-d', strtotime($row['tanggal'])); ?></td>
+										<td><?= $row['nama_area']; ?></td>
+										<td><?= $row['nama_mesin']; ?></td>
+										<td>
+                                            <?php 
+                                            // Menentukan status berdasarkan angka
+                                            switch ($row['status']) {
+                                                case 1:
+                                                    echo '<span class="badge bg-info">Terjadwal Tahunan</span>';
+                                                    break;
+                                                case 2:
+                                                    echo '<span class="badge bg-warning">Sudah Terjadwal</span>';
+                                                    break;
+                                                case 3:
+                                                    echo '<span class="badge bg-success">Sudah Terjadwal</span>';
+                                                    break;
+                                                case 4:
+                                                    echo '<span class="badge bg-warning">On Progress Checking</span>';
+                                                    break;
+                                                case 5:
+                                                    echo '<span class="badge bg-warning">Waiting Approval Foreman</span>';
+                                                    break;
+                                                case 6:
+                                                    echo '<span class="badge bg-success">Waiting Approval Supervisor</span>';
+                                                    break;
+                                                case 7:
+                                                    echo '<span class="badge bg-danger">Rejected by Foreman</span>';
+                                                    break;
+                                                case 8:
+                                                    echo '<span class="badge bg-success">Complete All</span>';
+                                                    break;
+                                                case 9:
+                                                    echo '<span class="badge bg-danger">Rejected by Superviosr</span>';
+                                                    break;
+                                                default:
+                                                    echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
-				<div class="col-lg-6">
-					<div class="box">
-						<div class="box-body">
-							<h2 class="box-title">Today PM : PAINTING 2</h2>
-							<div class="table-responsive">
-								<table class="table" style="font-size: 15px;">
-									<thead class="bg-primary">
-										<tr>
-											<th>No</th>
-											<th>Tanggal</th>
-											<th>Area</th>
-											<th>Mesin</th>
-											<th>Status</th>
-											<th>Check</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>1</td>
-											<td>23-01-2025</td>
-											<td>Bake Oven</td>
-											<td>Conveyor Unloading</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>23-01-2025</td>
-											<td>Bake Oven</td>
-											<td>Conveyor Unloading</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>23-01-2025</td>
-											<td>Bake Oven</td>
-											<td>Conveyor Unloading</td>
-											<td>-</td>
-											<td>-</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
+
+				<!-- Tabel Kanan -->
+				<div class="col-md-6">
+					<h3 class="text-center">Today PM: Painting 2</h3>
+					<div class="table-responsive">
+						<table id="table2" class="table table-bordered table-striped">
+							<thead class="bg-primary text-white">
+								<tr>
+									<th>No</th>
+									<th>Tanggal</th>
+									<th>Area</th>
+									<th>Mesin</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody id="table2-body">
+								<?php $no = 1; foreach ($pmmonthly2 as $row): ?>
+									<tr>
+										<td><?= $no++; ?></td>
+										<td class="tanggal"><?= date('Y-m-d', strtotime($row['tanggal'])); ?></td>
+										<td><?= $row['nama_area']; ?></td>
+										<td><?= $row['nama_mesin']; ?></td>
+										<td>
+                                            <?php 
+                                            // Menentukan status berdasarkan angka
+                                            switch ($row['status']) {
+                                                case 1:
+                                                    echo '<span class="badge bg-info">Terjadwal Tahunan</span>';
+                                                    break;
+                                                case 2:
+                                                    echo '<span class="badge bg-warning">Sudah Terjadwal</span>';
+                                                    break;
+                                                case 3:
+                                                    echo '<span class="badge bg-success">Sudah Terjadwal</span>';
+                                                    break;
+                                                case 4:
+                                                    echo '<span class="badge bg-warning">On Progress Checking</span>';
+                                                    break;
+                                                case 5:
+                                                    echo '<span class="badge bg-warning">Waiting Approval Foreman</span>';
+                                                    break;
+                                                case 6:
+                                                    echo '<span class="badge bg-success">Waiting Approval Supervisor</span>';
+                                                    break;
+                                                case 7:
+                                                    echo '<span class="badge bg-danger">Rejected by Foreman</span>';
+                                                    break;
+                                                case 8:
+                                                    echo '<span class="badge bg-success">Complete All</span>';
+                                                    break;
+                                                case 9:
+                                                    echo '<span class="badge bg-danger">Rejected by Superviosr</span>';
+                                                    break;
+                                                default:
+                                                    echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
+				
 			</div>
 		</section>	  		  
 		<!-- /.content -->
     </div>
 </div>
-
+<script>
+    $(document).ready(function() {
+        var table1 = $('#table1').DataTable();
+        var table2 = $('#table2').DataTable();
+    });
+</script>
 <?php $this->load->view('layouts/footer'); ?>

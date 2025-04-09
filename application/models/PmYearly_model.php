@@ -92,5 +92,12 @@ class PmYearly_model extends CI_Model {
         $this->db->order_by('id_area', 'ASC');
         return $this->db->get()->result_array();
     }
+
+    public function check_existing_data($id_mesin) {
+        $this->db->where('id_mesin', $id_mesin);
+        $query = $this->db->get('pm_yearly'); // ganti dengan nama tabel yang benar jika berbeda
+    
+        return $query->num_rows() > 0;
+    }    
 }
 ?>

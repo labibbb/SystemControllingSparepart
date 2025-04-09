@@ -152,7 +152,7 @@ class Approval extends CI_Controller {
         $id_pmm = $this->input->post('id_pmm');
 
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
-        $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
     

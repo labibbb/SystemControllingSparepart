@@ -35,6 +35,15 @@ class Wi extends CI_Controller {
     }
 
     public function add() {
+        $existing = $this->Wi_model->check_existing_data($this->input->post('nama_wi'));
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
+        
         $upload_path = './uploads/wi_files/';
         if (!is_dir($upload_path)) {
             mkdir($upload_path, 0777, true);

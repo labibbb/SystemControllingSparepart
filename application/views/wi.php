@@ -109,7 +109,7 @@ $('#formWi').submit(function(e) {
                 $('#modalWi').modal('hide');
                 $('#formWi')[0].reset(); // Reset form setelah sukses
             } else {
-                Swal.fire("Error!", data.message, "error");
+                Swal.fire("Error!", "Data dengan nama tersebut sudah terseida!", "error");
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
