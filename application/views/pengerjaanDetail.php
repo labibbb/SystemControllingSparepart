@@ -158,7 +158,8 @@
                                             <td id="standard_<?= $index; ?>"><?= $row['standard']; ?></td>
                                             <td id="idCk_<?= $index; ?>" style="display: none;"><?= $row['id_ck']; ?></td>
                                             <td>
-                                                <select id="status_<?= $index; ?>" class="form-select status-dropdown" onchange="changeColor(this)" style="background-color: green; color: white;">
+                                                <select id="status_<?= $index; ?>" class="form-select status-dropdown" onchange="changeColor(this)" required>
+                                                    <option value="">-- Pilih --</option>
                                                     <option value="OK" class="bg-success text-white">OK</option>
                                                     <option value="NG" class="bg-danger text-white">NG</option>
                                                 </select>
@@ -270,6 +271,59 @@
         });
         
         function simpanChecksheet() {
+           // Validasi semua dropdown Aktual harus terisi
+    let allFilled = true;
+    let ngWithoutPhoto = false;
+    let errorMessage = "";
+    
+    $(".status-dropdown").each(function() {
+        const index = $(this).attr('id').split('_')[1];
+        if ($(this).val() === "") {
+            allFilled = false;
+            $(this).addClass("is-invalid");
+            errorMessage = "Semua kolom Aktual harus terisi!";
+            return false; // Keluar dari loop each
+        } else {
+            $(this).removeClass("is-invalid");
+            
+            // Validasi khusus untuk status NG
+            if ($(this).val() === "NG") {
+                const fileInput = $(`#keterangan_file_${index}`)[0];
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    ngWithoutPhoto = true;
+                    $(`#keterangan_container_${index}`).addClass("border border-danger");
+                    $(`#keterangan_file_${index}`).addClass("is-invalid");
+                    errorMessage = "Harap unggah foto untuk item dengan status NG!";
+                    return false;
+                } else {
+                    $(`#keterangan_container_${index}`).removeClass("border border-danger");
+                    $(`#keterangan_file_${index}`).removeClass("is-invalid");
+                }
+            }
+        }
+    });
+
+    if (!allFilled) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: errorMessage || "Semua kolom Aktual harus terisi!",
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    if (ngWithoutPhoto) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: errorMessage || "Harap unggah foto untuk item dengan status NG!",
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
             Swal.fire({
                 title: "Apakah Anda yakin?",
                 text: "Data yang dimasukkan akan disimpan!",
@@ -356,33 +410,37 @@
 </script>
 
 <script>
-    function changeColor(select) {
-        let row = select.closest("tr");
-        let tindakanDropdown = row.querySelector(".tindakan-dropdown");
-        let hasilDropdown = row.querySelector(".hasil-dropdown");
-        let keteranganInput = row.querySelector(".keterangan-input");
-        let keteranganFile = row.querySelector(".keterangan-file");
+   function changeColor(select) {
+    let row = select.closest("tr");
+    let tindakanDropdown = row.querySelector(".tindakan-dropdown");
+    let hasilDropdown = row.querySelector(".hasil-dropdown");
+    let keteranganInput = row.querySelector(".keterangan-input");
+    let keteranganFile = row.querySelector(".keterangan-file");
 
-        if (select.value === "OK") {
-            select.style.backgroundColor = "green";
-            select.style.color = "white";
+    // Reset semua style terlebih dahulu
+    select.style.backgroundColor = "";
+    select.style.color = "";
 
-            // Sembunyikan elemen tanpa mengubah ukuran kolom
-            tindakanDropdown.style.visibility = "hidden";
-            hasilDropdown.style.visibility = "hidden";
-            keteranganInput.style.visibility = "hidden";
-            keteranganFile.style.visibility = "hidden";
-
-        } else if (select.value === "NG") {
-            select.style.backgroundColor = "red";
-            select.style.color = "white";
-
-            // Tampilkan elemen tanpa mengubah ukuran kolom
-            tindakanDropdown.style.visibility = "visible";
-            hasilDropdown.style.visibility = "visible";
-            keteranganInput.style.visibility = "visible";
-            keteranganFile.style.visibility = "visible";
-        }
+    if (select.value === "OK") {
+        select.style.backgroundColor = "green";
+        select.style.color = "white";
+        
+        // Sembunyikan elemen
+        tindakanDropdown.style.visibility = "hidden";
+        hasilDropdown.style.visibility = "hidden";
+        keteranganInput.style.visibility = "hidden";
+        keteranganFile.style.visibility = "hidden";
+        
+    } else if (select.value === "NG") {
+        select.style.backgroundColor = "red";
+        select.style.color = "white";
+        
+        // Tampilkan elemen
+        tindakanDropdown.style.visibility = "visible";
+        hasilDropdown.style.visibility = "visible";
+        keteranganInput.style.visibility = "visible";
+        keteranganFile.style.visibility = "visible";
     }
+}
 </script>
 <?php $this->load->view('layouts/footer'); ?>
