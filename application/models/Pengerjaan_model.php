@@ -81,6 +81,11 @@ class Pengerjaan_model extends CI_Model {
                         ->update('pm_monthly', $data);
     }
 
+    public function deleteById($id_pmm) {
+        return $this->db->where('id_pmm', $id_pmm)
+                        ->delete('trs_pengerjaan_checksheet');
+    }
+
     public function get_all_pmmonthly_monitoring() {
         $this->db->select('
             pm_monthly.*, 
@@ -102,5 +107,34 @@ class Pengerjaan_model extends CI_Model {
         
         return $this->db->get()->result_array();
     }
+
+    public function get_checkseet2($id_pmm) {
+        $this->db->select('trs_pengerjaan_checksheet.*, data_checksheet.item_cek, data_checksheet.point_cek, data_checksheet.metode_cek, data_checksheet.standard');
+        $this->db->from('trs_pengerjaan_checksheet');
+        $this->db->join('data_checksheet', 'trs_pengerjaan_checksheet.id_ck = data_checksheet.id_ck');
+        
+        $this->db->where('trs_pengerjaan_checksheet.id_pmm', $id_pmm);
+        
+        return $this->db->get()->result_array();
+    }
+
+    public function get_catatan($id_pmm) {
+        $this->db->select('catatanReject');
+        $this->db->from('pm_monthly');
+        $this->db->where('id_pmm', $id_pmm);
+    
+        $result = $this->db->get()->row();
+        return $result ? $result->catatanReject : null;
+    }
+
+    public function get_checkseetres($id_pmm) {
+        $this->db->select('trs_pengerjaan_checksheet.*, data_checksheet.item_cek, data_checksheet.point_cek, data_checksheet.metode_cek, data_checksheet.standard');
+        $this->db->from('trs_pengerjaan_checksheet');
+        $this->db->join('data_checksheet', 'trs_pengerjaan_checksheet.id_ck = data_checksheet.id_ck');
+        
+        $this->db->where('trs_pengerjaan_checksheet.id_pmm', $id_pmm);
+        
+        return $this->db->get()->result_array();
+    } 
 }
 ?>

@@ -182,7 +182,7 @@
                                             <td>
                                                 <div id="keterangan_container_<?= $index; ?>" class="keterangan-container" style="display: flex; gap: 5px; visibility: hidden;">
                                                     <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" placeholder="Masukkan keterangan" style="flex: 1; min-width: 200px;">
-                                                    <input id="keterangan_file_<?= $index; ?>" type="file" class="form-control keterangan-file" style="width: 18%;">
+                                                    <input id="keterangan_file_<?= $index; ?>" type="file" class="form-control keterangan-file" style="width: 18%;" capture="environment">
                                                 </div>
                                             </td>
                                         </tr>
@@ -428,7 +428,7 @@
         // Sembunyikan elemen
         tindakanDropdown.style.visibility = "hidden";
         hasilDropdown.style.visibility = "hidden";
-        keteranganInput.style.visibility = "hidden";
+        keteranganInput.style.visibility = "visible";
         keteranganFile.style.visibility = "hidden";
         
     } else if (select.value === "NG") {

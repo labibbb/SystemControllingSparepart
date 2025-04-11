@@ -114,7 +114,7 @@
                                                 <button class="btn btn-warning btn-sm" onclick="editTanggal(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                                 <button class="btn btn-warning btn-sm" onclick="editMP(<?= $row['id_pmm']; ?>)">MP</button>
                                             </td>
-                                        <?php elseif (in_array($row['status'], [7])): ?>
+                                        <?php elseif (in_array($row['status'], [7, 9])): ?>
                                             <td>
                                                 <button class="btn btn-warning btn-sm" onclick="editTanggal2(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                             </td>    

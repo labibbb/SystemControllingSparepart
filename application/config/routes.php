@@ -136,7 +136,9 @@ $route['checkseet/getdata'] = 'Checkseet/getData';
 
 $route['pengerjaan'] = 'Pengerjaan/index';
 $route['pengerjaan/detail'] = 'Pengerjaan/detail';
+$route['pengerjaan/detailRes'] = 'Pengerjaan/detailRes';
 $route['pengerjaan/add'] = 'Pengerjaan/insertPengerjaan';
+$route['pengerjaan/addRes/(:num)'] = 'Pengerjaan/insertPengerjaanRes/$1';
 
 $route['approvalFR'] = 'Approval/index';
 $route['approvalFR/detail'] = 'Approval/detail';

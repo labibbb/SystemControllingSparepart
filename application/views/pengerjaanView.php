@@ -38,7 +38,14 @@
                                                 <td><?= $row['nama_area']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                    <?php if (in_array($row['status'], [3, 4, 7])): ?>
+                                                <?php if (in_array($row['status'], [3, 4]) && $row['statusReject'] == 1): ?>
+                                                        <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
+                                                            <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                            <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                            <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                            <button type="submit" class="btn btn-warning btn-sm">Ubah</button>
+                                                        </form>
+                                                    <?php elseif (in_array($row['status'], [3, 4])): ?>
                                                         <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
@@ -47,6 +54,8 @@
                                                         </form>
                                                     <?php elseif (in_array($row['status'], [5, 6])): ?>
                                                         <button class="btn btn-secondary btn-sm" disabled>Menunggu Approval</button>
+                                                    <?php elseif ($row['status'] == 7): ?>
+                                                            <button class="btn btn-danger btn-sm" disabled>Rejected</button>
                                                     <?php elseif ($row['status'] == 8): ?>
                                                         <button class="btn btn-primary btn-sm" disabled>Complete All</button>
                                                     <?php endif; ?>
@@ -80,7 +89,14 @@
                                                 <td><?= $row['nama_area']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                    <?php if (in_array($row['status'], [3, 4, 7])): ?>
+                                                    <?php if (in_array($row['status'], [3, 4]) && $row['statusReject'] == 1): ?>
+                                                        <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
+                                                            <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                            <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                            <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                            <button type="submit" class="btn btn-warning btn-sm">Ubah</button>
+                                                        </form>
+                                                    <?php elseif (in_array($row['status'], [3, 4])): ?>
                                                         <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
@@ -89,6 +105,8 @@
                                                         </form>
                                                     <?php elseif (in_array($row['status'], [5, 6])): ?>
                                                         <button class="btn btn-secondary btn-sm" disabled>Menunggu Approval</button>
+                                                    <?php elseif ($row['status'] == 7): ?>
+                                                            <button class="btn btn-danger btn-sm" disabled>Rejected</button>
                                                     <?php elseif ($row['status'] == 8): ?>
                                                         <button class="btn btn-primary btn-sm" disabled>Complete All</button>
                                                     <?php endif; ?>

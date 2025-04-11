@@ -106,7 +106,7 @@ class Approval extends CI_Controller {
         $id_pmm = $this->input->post('id_pmm');
 
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
-        $checksheet = $this->Approval_model->get_checkseet($id_mesin); 
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
     
@@ -231,15 +231,22 @@ class Approval extends CI_Controller {
     
     public function rejectSpv($id_pmm) {
         $user_id = $this->session->userdata('user_id');
-
+        $catatan = $this->input->post('catatan'); // Ambil catatan dari POST request
+    
         // Validasi ID PMM tidak boleh kosong
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
             return;
         }
     
-        // Update status di model
-        $update = $this->Approval_model->rejectSpv($id_pmm, $user_id);
+        // Validasi catatan tidak boleh kosong
+        if (empty($catatan)) {
+            echo json_encode(['status' => 'error', 'message' => 'Catatan tidak boleh kosong']);
+            return;
+        }
+    
+        // Update status dan catatan di model
+        $update = $this->Approval_model->rejectSpv($id_pmm, $user_id, $catatan);
     
         if ($update) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);

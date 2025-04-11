@@ -213,10 +213,12 @@ class Approval_model extends CI_Model {
         return $this->db->update('pm_monthly', $data); // Pastikan tabelnya benar
     }        
 
-    public function rejectSpv($id_pmm, $id_user) {
+    public function rejectSpv($id_pmm, $id_user, $catatan) {
         $data = [
             'status' => 9,
-            'spv' => $id_user
+            'catatanReject' => $catatan,
+            'spv' => $id_user,
+            'statusReject' => 1
         ];
     
         return $this->db->where('id_pmm', $id_pmm)
