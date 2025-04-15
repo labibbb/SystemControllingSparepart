@@ -254,5 +254,150 @@ class Approval extends CI_Controller {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data']);
         }
     }
+
+public function exportPdf() {
+    $this->load->library('pdf');
+    
+    // Menentukan ukuran halaman A2 landscape
+    $pdf = new Pdf(array(594, 420), 'mm', '', true, 'UTF-8', false); // A2 landscape
+
+    // Menambahkan halaman dengan ukuran yang telah ditentukan
+    $pdf->AddPage('L', array(594, 420)); // A2 landscape
+
+
+    // Header judul
+    $pdf->SetFont('helvetica', 'B', 14);
+    $pdf->Cell(0, 10, 'CHECK SHEET PERAWATAN PIPA MAIN LINE HOT WATER', 0, 1, 'C');
+
+    // =====================
+    // Kolom Kiri (Informasi Detail)
+    // =====================
+    $pdf->SetFont('helvetica', '', 12);
+
+    // Koordinat kiri atas
+    $pdf->SetXY(10, 15);
+    $pdf->Cell(30, 6, 'No Form', 0, 0);
+    $pdf->Cell(60, 6, ': QF.01.QMS.02.07', 0, 1);
+
+    $pdf->SetX(10);
+    $pdf->Cell(30, 6, 'Pemilik Doc', 0, 0);
+    $pdf->Cell(60, 6, ': MAINTENANCE DEPT', 0, 1);
+
+    $pdf->SetX(10);
+    $pdf->Cell(30, 6, 'No Doc', 0, 0);
+    $pdf->Cell(60, 6, ': QF.12.CS.MTCS.17', 0, 1);
+
+    $pdf->SetX(10);
+    $pdf->Cell(30, 6, 'Tanggal', 0, 0);
+    $pdf->Cell(60, 6, ': 27-01-2025', 0, 1);
+
+    $pdf->SetX(10);
+    $pdf->Cell(30, 6, 'Lini', 0, 0);
+    $pdf->Cell(60, 6, ': PAINTING 2', 0, 1);
+
+    $pdf->SetX(10);
+    $pdf->Cell(30, 6, 'Area', 0, 0);
+    $pdf->Cell(60, 6, ': PRE TREATMENT', 0, 1);
+
+    $pdf->SetX(10);
+    $pdf->Cell(30, 6, 'Mesin', 0, 0);
+    $pdf->Cell(60, 6, ': PIPA MAINLINE HOT WATER', 0, 1);
+    // =====================
+    // Kolom Kanan (Tabel Verifikasi)
+    // =====================
+    // Atur koordinat pojok kanan atas manual (misal di pojok kanan halaman)
+    $pdf->SetXY(464, 15); // Ubah posisi sesuai kebutuhan layout
+
+    $pdf->SetFont('', 'B');
+    $pdf->Cell(120, 7, 'Diverifikasi oleh System', 1, 1, 'C');
+
+    $pdf->SetXY(464, 22);
+    $pdf->Cell(40, 7, 'Prepared By', 1, 0, 'C');
+    $pdf->Cell(40, 7, 'Checked By', 1, 0, 'C');
+    $pdf->Cell(40, 7, 'Approved By', 1, 1, 'C');
+
+    $pdf->SetFont('', '');
+    $pdf->SetXY(464, 29);
+    $pdf->Cell(40, 21, 'op', 1, 0, 'C');
+    $pdf->Cell(40, 21, 'foreman foreman', 1, 0, 'C');
+    $pdf->Cell(40, 21, '-', 1, 1, 'C');
+
+    $pdf->SetXY(464, 50);
+    $pdf->Cell(40, 7, '2025-04-11', 1, 0, 'C');
+    $pdf->Cell(40, 7, '2025-04-11', 1, 0, 'C');
+    $pdf->Cell(40, 7, '-', 1, 1, 'C');
+    $pdf->Ln(5);
+    // Buat tabel
+    $tbl = '
+        <style>
+            table, th, td {
+                border: 1px solid #000;
+            }
+        </style>
+        <table cellspacing="0" cellpadding="3">
+            <tr>
+                <th rowspan="2" width="10mm" style="text-align: center; vertical-align: middle;">No</th>
+                <th rowspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Item Check</th>
+                <th rowspan="2" width="80mm" style="text-align: center; vertical-align: middle;">Point Check</th>
+                <th rowspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Metode</th>
+                <th rowspan="2" width="70mm" style="text-align: center; vertical-align: middle;">Standard</th>
+                <th colspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Aktual</th>
+                <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Tindakan</th>
+                <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Hasil</th>
+                <th rowspan="2" width="165mm" style="text-align: center; vertical-align: middle;">Keterangan</th>
+            </tr>
+            <tr>
+                <th style="text-align: center; vertical-align: middle;">OK</th><th style="text-align: center; vertical-align: middle;">NG</th>
+                <th style="text-align: center; vertical-align: middle;">1</th><th style="text-align: center; vertical-align: middle;">2</th><th style="text-align: center; vertical-align: middle;">3</th><th style="text-align: center; vertical-align: middle;">4</th>
+                <th style="text-align: center; vertical-align: middle;">✓</th><th style="text-align: center; vertical-align: middle;">△</th><th style="text-align: center; vertical-align: middle;">×</th><th style="text-align: center; vertical-align: middle;">-</th>
+            </tr>';
+
+        // Dummy isi
+        for ($i = 1; $i <= 10; $i++) {
+            $tbl .= '
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">'.$i.'</td>
+                <td style="text-align: center; vertical-align: middle;">'.($i == 1 ? 'HOT WATER' : '').'</td>
+                <td style="text-align: center; vertical-align: middle;">KEBERSIHAN PIPA OUT POMPA</td>
+                <td style="text-align: center; vertical-align: middle;">VISUAL</td>
+                <td style="text-align: center; vertical-align: middle;">TIDAK MAMPET</td>
+                <td style="text-align: center; vertical-align: middle;">OK</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
+                <td style="text-align: center; vertical-align: middle;">✓</td><td></td><td></td><td></td>
+                <td style="text-align: center; vertical-align: middle;">✓</td><td></td><td></td><td></td>
+                <td style="text-align: center; vertical-align: middle;"></td>
+            </tr>';
+        }
+    
+    $tbl .= '</table>';
+    $tbl .= '
+        <table cellspacing="0" cellpadding="4" style="border:1px solid #000;" width="180mm">
+            <tr>
+                <td width="140mm" style="border-right:1px solid #000;">
+                    <b>TINDAKAN :</b><br>
+                    1 : Dibersihkan/Dirapikan/Pelumasan<br>
+                    2 : Disetting/Disencangkan<br>
+                    3 : Dicopot<br>
+                    4 : Diganti
+                </td>
+                <td width="50mm" style="border-right:1px solid #000;">
+                    <b>HASIL :</b><br>
+                    ✓ : OK & Mesin Jalan<br>
+                    △ : Abnormal<br>
+                    × : Mesin Stop
+                </td>
+                <td width="70mm">
+                    <b>CATATAN:</b><br><br><br><br><br>
+                </td>
+            </tr>
+        </table>';
+
+    $pdf->writeHTML($tbl, true, false, false, false, '');
+
+    // Output PDF
+    $pdf->Output('checksheet.pdf', 'I');
+}
+
+    
 }
 ?>

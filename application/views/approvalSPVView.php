@@ -121,10 +121,13 @@
                                                         <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
                                                         <button type="submit" class="btn btn-warning btn-sm">Detail</button>
                                                     </form>
-                                                <?php elseif ($row['status'] == 8): ?>  
-                                                    <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
-                                                        <i class="fas fa-print"></i> Print
-                                                    </button>  
+                                                <?php elseif ($row['status'] == 8): ?>
+                                                    <form action="<?= site_url('approvalSPV/exportPdf'); ?>" method="post" class="me-2">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-print"></i> Print</button>
+                                                    </form>  
                                                 <?php endif; ?>
                                             </div>
                                         </td>
