@@ -7,6 +7,7 @@ class Approval extends CI_Controller {
         parent::__construct();
         $this->load->model('Approval_model');
         $this->load->library('session');
+        $this->load->library('pdf');
         $this->check_session_timeout();
     }
 
@@ -264,6 +265,8 @@ public function exportPdf() {
     // Menambahkan halaman dengan ukuran yang telah ditentukan
     $pdf->AddPage('L', array(594, 420)); // A2 landscape
 
+    $logoPath = FCPATH . './uploads/logo.png'; // Ganti dengan path sesuai gambar Anda
+    $pdf->Image($logoPath, 10, 10, 30);
 
     // Header judul
     $pdf->SetFont('helvetica', 'B', 14);
@@ -329,47 +332,94 @@ public function exportPdf() {
     $pdf->Ln(5);
     // Buat tabel
     $tbl = '
-        <style>
-            table, th, td {
-                border: 1px solid #000;
-            }
-        </style>
-        <table cellspacing="0" cellpadding="3">
-            <tr>
-                <th rowspan="2" width="10mm" style="text-align: center; vertical-align: middle;">No</th>
-                <th rowspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Item Check</th>
-                <th rowspan="2" width="80mm" style="text-align: center; vertical-align: middle;">Point Check</th>
-                <th rowspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Metode</th>
-                <th rowspan="2" width="70mm" style="text-align: center; vertical-align: middle;">Standard</th>
-                <th colspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Aktual</th>
-                <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Tindakan</th>
-                <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Hasil</th>
-                <th rowspan="2" width="165mm" style="text-align: center; vertical-align: middle;">Keterangan</th>
-            </tr>
-            <tr>
-                <th style="text-align: center; vertical-align: middle;">OK</th><th style="text-align: center; vertical-align: middle;">NG</th>
-                <th style="text-align: center; vertical-align: middle;">1</th><th style="text-align: center; vertical-align: middle;">2</th><th style="text-align: center; vertical-align: middle;">3</th><th style="text-align: center; vertical-align: middle;">4</th>
-                <th style="text-align: center; vertical-align: middle;">✓</th><th style="text-align: center; vertical-align: middle;">△</th><th style="text-align: center; vertical-align: middle;">×</th><th style="text-align: center; vertical-align: middle;">-</th>
-            </tr>';
+<style>
+    table, th, td {
+        border: 1px solid #000;
+    }
+</style>
+<table cellspacing="0" cellpadding="3">
+    <tr>
+        <th rowspan="2" width="10mm" valign="middle" align="center">No</th>
+        <th rowspan="2" width="50mm" valign="middle" align="center">Item Check</th>
+        <th rowspan="2" width="80mm" style="text-align: center; vertical-align: middle;">Point Check</th>
+        <th rowspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Metode</th>
+        <th rowspan="2" width="70mm" style="text-align: center; vertical-align: middle;">Standard</th>
+        <th colspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Aktual</th>
+        <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Tindakan</th>
+        <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Hasil</th>
+        <th rowspan="2" width="165mm" style="text-align: center; vertical-align: middle;">Keterangan</th>
+    </tr>
+    <tr>
+        <th style="text-align: center; vertical-align: middle;">OK</th><th style="text-align: center; vertical-align: middle;">NG</th>
+        <th style="text-align: center; vertical-align: middle;">1</th><th style="text-align: center; vertical-align: middle;">2</th><th style="text-align: center; vertical-align: middle;">3</th><th style="text-align: center; vertical-align: middle;">4</th>
+        <th style="text-align: center; vertical-align: middle;">✓</th><th style="text-align: center; vertical-align: middle;">△</th><th style="text-align: center; vertical-align: middle;">×</th><th style="text-align: center; vertical-align: middle;">-</th>
+    </tr>';
 
-        // Dummy isi
-        for ($i = 1; $i <= 10; $i++) {
-            $tbl .= '
-            <tr>
-                <td style="text-align: center; vertical-align: middle;">'.$i.'</td>
-                <td style="text-align: center; vertical-align: middle;">'.($i == 1 ? 'HOT WATER' : '').'</td>
-                <td style="text-align: center; vertical-align: middle;">KEBERSIHAN PIPA OUT POMPA</td>
-                <td style="text-align: center; vertical-align: middle;">VISUAL</td>
-                <td style="text-align: center; vertical-align: middle;">TIDAK MAMPET</td>
-                <td style="text-align: center; vertical-align: middle;">OK</td>
-                <td style="text-align: center; vertical-align: middle;"></td>
-                <td style="text-align: center; vertical-align: middle;">✓</td><td></td><td></td><td></td>
-                <td style="text-align: center; vertical-align: middle;">✓</td><td></td><td></td><td></td>
-                <td style="text-align: center; vertical-align: middle;"></td>
-            </tr>';
-        }
-    
-    $tbl .= '</table>';
+// Dummy data
+$data = [];
+for ($i = 1; $i <= 10; $i++) {
+    $data[] = [
+        'no' => $i,
+        'item_check' => 'HOT WATER',
+        'point_check' => 'KEBERSIHAN PIPA OUT POMPA',
+        'metode' => 'VISUAL',
+        'standard' => 'TIDAK MAMPET',
+        'aktual_ok' => 'OK',
+        'aktual_ng' => '',
+        'tindakan' => ['✓', '', '', ''],
+        'hasil' => ['✓', '', '', ''],
+        'keterangan' => ''
+    ];
+}
+
+// Grouping untuk rowspan
+$lastItemCheck = '';
+$rowspanCount = 0;
+$itemCheckIndex = 0;
+
+// Hitung rowspan
+foreach ($data as $i => $row) {
+    if ($row['item_check'] !== $lastItemCheck) {
+        $lastItemCheck = $row['item_check'];
+        $rowspanCount = 1;
+        $itemCheckIndex = $i;
+    } else {
+        $rowspanCount++;
+    }
+    $data[$itemCheckIndex]['rowspan'] = $rowspanCount;
+    $data[$i]['show_item_check'] = ($i === $itemCheckIndex);
+}
+
+// Render table rows
+foreach ($data as $i => $row) {
+    $tbl .= '<tr>';
+    $tbl .= '<td style="text-align: center; vertical-align: middle;">'.$row['no'].'</td>';
+
+    // Merge "Item Check" jika perlu
+    if ($row['show_item_check']) {
+        $tbl .= '<td rowspan="'.$row['rowspan'].'" style="text-align: center; vertical-align: middle;">'.$row['item_check'].'</td>';
+    }
+
+    $tbl .= '
+        <td style="text-align: center; vertical-align: middle;">'.$row['point_check'].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['metode'].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['standard'].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['aktual_ok'].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['aktual_ng'].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][0].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][1].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][2].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][3].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][0].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][1].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][2].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][3].'</td>
+        <td style="text-align: center; vertical-align: middle;">'.$row['keterangan'].'</td>
+    ';
+    $tbl .= '</tr>';
+}
+
+$tbl .= '</table>';
     $tbl .= '
         <table cellspacing="0" cellpadding="4" style="border:1px solid #000;" width="180mm">
             <tr>
