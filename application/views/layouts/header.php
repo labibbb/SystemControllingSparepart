@@ -37,12 +37,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</a>	
 		<!-- Logo -->
 		<a href="index.html" class="logo">
-		  <!-- logo-->
-		  <div class="logo-lg">
-			  <span class="light-logo"><img src="<?= base_url() ?>public/images/logo-dark-text.png" alt="logo"></span>
-			  <span class="dark-logo"><img src="<?= base_url() ?>public/images/logo-light-text.png" alt="logo"></span>
-		  </div>
-		</a>	
+  <!-- logo-->
+  <div class="logo-lg">
+      <span class="light-logo">
+          <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo" style="width: 15000px; height: 40px;">
+      </span>
+  </div>
+</a>
 	</div>  
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top">

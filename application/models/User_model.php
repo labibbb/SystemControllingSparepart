@@ -24,7 +24,19 @@ class User_model extends CI_Model {
 
     public function get_all_users() {
         return $this->db->get('users')->result_array();
-    }    
+    }
+    
+    public function get_all_userz() {
+        $this->db->select('users.*, departemen.dept');
+        $this->db->from('users');
+        $this->db->join('departemen', 'departemen.id = users.id');
+        $this->db->order_by('users.status', 'DESC');
+        return $this->db->get()->result_array();
+    }
+
+    public function get_all_dept() {
+        return $this->db->get('departemen')->result_array();
+    }
 
     public function insert_user($data) {
         return $this->db->insert('users', $data);

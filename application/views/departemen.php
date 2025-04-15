@@ -7,8 +7,7 @@
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
                     <h3 class="box-title">Master Departemen</h3>
-                    <button class="btn btn-success" onclick="openModal()">Tambah Departemen</button>
-                </div>
+                                </div>
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="example1" class="table table-bordered table-striped">
@@ -37,8 +36,7 @@
                                         </td>
                                         <td><?= date('d-m-Y H:i:s', strtotime($row['sysdate'])); ?></td>
                                         <td>
-                                                <button class="btn btn-warning btn-sm" onclick="editdepartemen(<?= $row['id']; ?>)">Edit</button>
-                                                <button class="btn btn-danger btn-sm" onclick="deletedepartemen(<?= $row['id']; ?>)">Delete</button>
+                                                
                                               
                                         </td>
                                     </tr>

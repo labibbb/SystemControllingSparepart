@@ -4,11 +4,34 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User extends CI_Controller {
     public function __construct() {
         parent::__construct();
+        $this->load->library('session');
         $this->load->model('User_model'); // Ganti Users_Model menjadi User_model
     }
     
+    private function check_session_timeout() {
+        $timeout = 8 * 60 * 60; // 8 jam dalam detik
+        
+        if ($this->session->userdata('logged_in')) {
+            $last_login_time = $this->session->userdata('last_login_time');
+
+            if ((time() - $last_login_time) > $timeout) {
+                $this->session->sess_destroy(); // Hapus sesi
+                redirect('login'); // Redirect ke halaman login
+                exit();
+            } else {
+                // Perbarui waktu login agar tidak logout saat masih aktif
+                $this->session->set_userdata('last_login_time', time());
+            }
+        } else {
+            redirect('login'); // Jika belum login, redirect ke halaman login
+            exit();
+        }
+    }
+
     public function index() {
-        $data['users'] = $this->User_model->get_all_users();
+        $data['users'] = $this->User_model->get_all_userz();
+        $data['departemen'] = $this->User_model->get_all_dept();
+       // $data['users'] = $this->User_model->get_all_users();
         $this->load->view('user', $data);
     }
 
@@ -20,7 +43,7 @@ class User extends CI_Controller {
             'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
             'dipname'  => $this->input->post('dipname'),
             'level'    => $this->input->post('level'),
-            'role'     => $this->input->post('role'),
+            'id'     => $this->input->post('id'),
             'plant'    => $this->input->post('plant'),
             'status' => 1,
             'active' => 1,
@@ -43,7 +66,7 @@ class User extends CI_Controller {
             'username' => $this->input->post('username'),
             'dipname'  => $this->input->post('dipname'),
             'level'    => $this->input->post('level'),
-            'role'     => $this->input->post('role'),
+            'id'     => $this->input->post('id'),
             'plant'    => $this->input->post('plant'),
             'status' => 1,
             'active' => 1,

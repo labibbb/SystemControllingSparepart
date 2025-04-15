@@ -27,7 +27,7 @@
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td><?= $row['username']; ?></td>
-                                        <td><?= $row['role']; ?></td>
+                                        <td><?= $row['id']; ?></td>
                                         <td>
                                             <?php if ($row['active'] == 1): ?>
                                                 <span class="badge bg-success">Aktif</span>
@@ -79,8 +79,12 @@
                         <input type="text" id="level" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Role</label>
-                        <input type="text" id="role" class="form-control" required>
+                        <label>Departemen</label>
+                        <select id="id" class="form-control" required>
+                            <?php foreach ($departemen as $l): ?>
+                                <option value="<?= $l['id']; ?>"><?= $l['dept']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Plant</label>
@@ -108,12 +112,12 @@ $('#formUsers').submit(function(e) {
     let password = $('#password').val();
     let dipname = $('#dipname').val();
     let level = $('#level').val();
-    let role = $('#role').val();
+    let role = $('#id').val();
     let plant = $('#plant').val();
     let url = id ? '<?= site_url("user/update"); ?>' : '<?= site_url("user/add"); ?>';
 
     // Kirim data ke server
-    $.post(url, { id_users: id, username: username, password: password, dipname: dipname, level: level, role: role, plant: plant  }, function(response) {
+    $.post(url, { id_users: id, username: username, password: password, dipname: dipname, level: level, id: role, plant: plant  }, function(response) {
         console.log(response);
         $('#modalUsers').modal('hide');
         Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
@@ -131,7 +135,7 @@ function editUser(id) {
         $('#password').val(''); // Tidak menampilkan password saat edit
         $('#dipname').val(data.dipname);
         $('#level').val(data.level);
-        $('#role').val(data.role);
+        $('#id').val(data.role);
         $('#plant').val(data.plant);
         $('#modal-title').text('Edit User');
     }, 'json');
