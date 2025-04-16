@@ -191,7 +191,7 @@
                                             <!-- Keterangan (Muncul jika NG) -->
                                             <td>
                                                 <div id="keterangan_container_<?= $index; ?>" class="keterangan-container" style="display: flex; gap: 5px;">
-                                                    <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" disabled style="flex: 1; min-width: 200px;">
+                                                <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" style="flex: 1; min-width: 200px;">
                                                     <input id="keterangan_file_<?= $index; ?>" type="file" class="form-control keterangan-file" style="width: 18%;" capture="environment">
                                                     
                                                     <?php if (!empty($row['gambar'])): ?>
