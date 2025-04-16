@@ -192,8 +192,8 @@
 
                                             <!-- Keterangan (Muncul jika NG) -->
                                             <td>
-                                                <div id="keterangan_container_<?= $index; ?>" class="keterangan-container" style="display: flex; gap: 5px; <?= ($row['aktual'] == 'NG') ? '' : 'visibility:hidden;' ?>">
-                                                    <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" disabled style="flex: 1; min-width: 200px;">
+                                            <div id="keterangan_container_<?= $index; ?>" class="keterangan-container" style="display: flex; gap: 5px; <?= ($row['aktual'] == 'NG' || !empty($row['keterangan'])) ? '' : 'visibility:hidden;' ?>">
+                                            <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" disabled style="flex: 1; min-width: 200px;">
                                                     
                                                     <?php if (!empty($row['gambar'])): ?>
                                                         <a href="<?= base_url('uploads/pengerjaan/' . $row['gambar']); ?>" class="btn btn-primary btn-sm" target="_blank">Show</a>
@@ -270,6 +270,17 @@
         } else if (selectElement.value === "NG") {
             selectElement.style.backgroundColor = "red";
             selectElement.style.color = "white";
+        }
+    }
+    // Function to check and show keterangan if there's data
+    function checkAndShowKeterangan(index) {
+        const keteranganInput = document.getElementById(`keterangan_input_${index}`);
+        const keteranganContainer = document.getElementById(`keterangan_container_${index}`);
+        
+        if (keteranganInput && keteranganInput.value.trim() !== '') {
+            keteranganContainer.style.visibility = 'visible';
+        } else {
+            keteranganContainer.style.visibility = 'hidden';
         }
     }
 
