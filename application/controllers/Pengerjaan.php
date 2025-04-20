@@ -104,7 +104,8 @@ class Pengerjaan extends CI_Controller {
                 'hasil'      => isset($data['hasil']) ? trim($data['hasil']) : null, 
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
-                'status'     => isset($data['status']) ? (int)$data['status'] : 1,
+                'status'     => isset($data['status']) ? (int)$data['status'] : 1, 
+                'isRevisi'     => 0,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
@@ -189,6 +190,7 @@ class Pengerjaan extends CI_Controller {
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1,
+                'isRevisi'     => 0,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));

@@ -82,8 +82,12 @@ class Pengerjaan_model extends CI_Model {
     }
 
     public function deleteById($id_pmm) {
+        $data = [
+            'isRevisi' => 1,
+        ];
+    
         return $this->db->where('id_pmm', $id_pmm)
-                        ->delete('trs_pengerjaan_checksheet');
+                        ->update('trs_pengerjaan_checksheet', $data);
     }
 
     public function get_all_pmmonthly_monitoring() {
@@ -114,7 +118,8 @@ class Pengerjaan_model extends CI_Model {
         $this->db->join('data_checksheet', 'trs_pengerjaan_checksheet.id_ck = data_checksheet.id_ck');
         
         $this->db->where('trs_pengerjaan_checksheet.id_pmm', $id_pmm);
-        
+        $this->db->where('trs_pengerjaan_checksheet.isRevisi', 0);
+
         return $this->db->get()->result_array();
     }
 
@@ -133,6 +138,7 @@ class Pengerjaan_model extends CI_Model {
         $this->db->join('data_checksheet', 'trs_pengerjaan_checksheet.id_ck = data_checksheet.id_ck');
         
         $this->db->where('trs_pengerjaan_checksheet.id_pmm', $id_pmm);
+        $this->db->where('trs_pengerjaan_checksheet.isRevisi', 0);
         
         return $this->db->get()->result_array();
     } 
