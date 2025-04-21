@@ -68,14 +68,29 @@ class PmMonthly extends CI_Controller {
 
     public function update_tanggal3() {
         $id_pmm = $this->input->post('id_pmm');
-        $data = [
-            'tanggal' => $this->input->post('tanggal'),
-            'catatan' => $this->input->post('catatan'),
-            'status' => 3
-        ];
-        $this->PmMonthly_model->update_tanggal_catatan($id_pmm, $data);
+        $tanggal_baru = $this->input->post('tanggal');
+    
+        $pmmonthly = $this->PmMonthly_model->get_pmm($id_pmm); // ambil data lama
+    
+        if ($pmmonthly) {
+            $data = [
+                'id_pmy'   => $pmmonthly->id_pmy,
+                'id_lini'   => $pmmonthly->id_lini,
+                'id_area'   => $pmmonthly->id_area,
+                'id_mesin'  => $pmmonthly->id_mesin,
+                'bulan'     => $pmmonthly->bulan,
+                'tahun'     => $pmmonthly->tahun,
+                'id_users'  => $pmmonthly->id_users,
+                'tanggal'   => $tanggal_baru,
+                'status'    => 3,
+                'pmBefore'  => $id_pmm
+            ];
+    
+            $this->db->insert('pm_monthly', $data); // insert data baru
+        }
+    
         redirect('PmMonthly');
-    }
+    }    
 
     public function update_mp() {
         $id_pmm = $this->input->post('id_pmm');

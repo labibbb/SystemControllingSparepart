@@ -62,5 +62,8 @@ class PmMonthly_model extends CI_Model {
     public function update_mp($id_pmm, $data) {
         return $this->db->where('id_pmm', $id_pmm)->update('pm_monthly', $data);
     }
+    public function get_pmm($id_pmm){
+        return $this->db->get_where('pm_monthly', ['id_pmm' => $id_pmm])->row();
+    }    
 }
 ?>

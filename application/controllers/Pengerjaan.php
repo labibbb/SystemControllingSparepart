@@ -105,7 +105,6 @@ class Pengerjaan extends CI_Controller {
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1, 
-                'isRevisi'     => 0,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
@@ -159,8 +158,6 @@ class Pengerjaan extends CI_Controller {
         
         $uniquePmmIds = array_unique(array_column($dataList, 'id_pmm'));
 
-        $delete = $this->Pengerjaan_model->deleteById($id_pmm2);
-
         foreach ($dataList as $index => $data) {
             $image_name = null;
     
@@ -190,7 +187,6 @@ class Pengerjaan extends CI_Controller {
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1,
-                'isRevisi'     => 0,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
@@ -235,12 +231,13 @@ class Pengerjaan extends CI_Controller {
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
+        $pmBefore = $this->input->post('pmBefore');
 
         $singlechecksheet = $this->Pengerjaan_model->get_singlecheckseet($id_mesin); 
-        $checksheet = $this->Pengerjaan_model->get_checkseetres($id_pmm); 
-        $catatan = $this->Pengerjaan_model->get_catatan($id_pmm);
+        $checksheet = $this->Pengerjaan_model->get_checkseetres($pmBefore); 
+        $catatan = $this->Pengerjaan_model->get_catatan($pmBefore);
         $wi = $this->Pengerjaan_model->get_wi($id_mesin); 
-        $pmm = $this->Pengerjaan_model->get_diverifikasi($id_pmm); 
+        $pmm = $this->Pengerjaan_model->get_diverifikasi($pmBefore); 
     
         $data = [
             'singleChecksheet' => $singlechecksheet,

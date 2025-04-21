@@ -138,7 +138,6 @@ class Approval_model extends CI_Model {
         $this->db->join('data_checksheet', 'trs_pengerjaan_checksheet.id_ck = data_checksheet.id_ck');
         
         $this->db->where('trs_pengerjaan_checksheet.id_pmm', $id_pmm);
-        $this->db->where('trs_pengerjaan_checksheet.isRevisi', 0);
         
         return $this->db->get()->result_array();
     } 

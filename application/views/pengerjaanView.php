@@ -38,11 +38,12 @@
                                                 <td><?= $row['nama_area']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                <?php if (in_array($row['status'], [3, 4]) && $row['statusReject'] == 1): ?>
+                                                    <?php if ($row['pmBefore'] != null): ?>
                                                         <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
                                                             <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                            <input type="hidden" name="pmBefore" value="<?= $row['pmBefore']; ?>">
                                                             <button type="submit" class="btn btn-warning btn-sm">Ubah</button>
                                                         </form>
                                                     <?php elseif (in_array($row['status'], [3, 4])): ?>
