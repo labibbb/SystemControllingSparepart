@@ -205,7 +205,7 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Plan and Actual Schedule Painting 1</h3>
+                    <h3 class="box-title">Plan and Actual Schedule Painting 2</h3>
                 </div>
             </div>
             <div class="box-body">

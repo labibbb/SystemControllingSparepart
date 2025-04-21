@@ -171,7 +171,7 @@
 
                                             <!-- Tindakan (Muncul jika NG) -->
                                             <td>
-                                                <select id="tindakan_<?= $index; ?>" class="form-select tindakan-dropdown" <?= ($row['aktual'] == 'NG') ? '' : 'style="visibility:hidden;"' ?> disabled>
+                                                <select id="tindakan_<?= $index; ?>" class="form-select tindakan-dropdown" <?= ($row['aktual'] == 'NG') ? '' : 'style="visibility:hidden;"' ?> >
                                                     <option value="1" <?= ($row['tindakan'] == 1) ? 'selected' : ''; ?>>Dibersihkan/Dirapikan/Pelumas</option>
                                                     <option value="2" <?= ($row['tindakan'] == 2) ? 'selected' : ''; ?>>Disetting/Dikencangkan</option>
                                                     <option value="3" <?= ($row['tindakan'] == 3) ? 'selected' : ''; ?>>Direpair</option>
@@ -181,7 +181,7 @@
 
                                             <!-- Hasil (Muncul jika NG) -->
                                             <td>
-                                                <select id="hasil_<?= $index; ?>" class="form-select hasil-dropdown" <?= ($row['aktual'] == 'NG') ? '' : 'style="visibility:hidden;"' ?> disabled>
+                                                <select id="hasil_<?= $index; ?>" class="form-select hasil-dropdown" <?= ($row['aktual'] == 'NG') ? '' : 'style="visibility:hidden;"' ?> >
                                                     <option value="1" <?= ($row['hasil'] == 1) ? 'selected' : ''; ?>>✅ OK & Mesin jalan</option>
                                                     <option value="2" <?= ($row['hasil'] == 2) ? 'selected' : ''; ?>>⚠️ Abnormal & Mesin jalan</option>
                                                     <option value="3" <?= ($row['hasil'] == 3) ? 'selected' : ''; ?>>❌ Mesin Stop</option>
