@@ -30,6 +30,76 @@
         height: 50px;
     }
 </style>
+<style>
+    /* Style default untuk laptop/desktop (tetap besar seperti semula) */
+    #tbCheckSheet th, 
+    #tbCheckSheet td {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .form-select, .form-control {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    /* Style khusus untuk tablet/mobile */
+    @media only screen and (max-width: 1024px) {
+        #tbCheckSheet th, 
+        #tbCheckSheet td {
+            font-size: 10px !important;
+            padding: 4px 6px !important;
+            white-space: normal !important;
+            word-wrap: break-word;
+        }
+        
+        .form-select {
+            font-size: 10px !important;
+            padding: 4px 6px !important;
+        }
+        
+        .form-control {
+            font-size: 10px !important;
+            padding: 4px 6px !important;
+        }
+        
+        /* Lebar kolom untuk tablet */
+        #tbCheckSheet th:nth-child(1), #tbCheckSheet td:nth-child(1) { width: 5% !important; }
+        #tbCheckSheet th:nth-child(2), #tbCheckSheet td:nth-child(2) { width: 12% !important; }
+        #tbCheckSheet th:nth-child(3), #tbCheckSheet td:nth-child(3) { width: 12% !important; }
+        #tbCheckSheet th:nth-child(4), #tbCheckSheet td:nth-child(4) { width: 12% !important; }
+        #tbCheckSheet th:nth-child(5), #tbCheckSheet td:nth-child(5) { width: 12% !important; }
+        #tbCheckSheet th:nth-child(6), #tbCheckSheet td:nth-child(6) { width: 8% !important; }
+        #tbCheckSheet th:nth-child(7), #tbCheckSheet td:nth-child(7) { width: 10% !important; }
+        #tbCheckSheet th:nth-child(8), #tbCheckSheet td:nth-child(8) { width: 10% !important; }
+        #tbCheckSheet th:nth-child(9), #tbCheckSheet td:nth-child(9) { width: 15% !important; }
+        
+        .keterangan-container {
+            flex-wrap: wrap;
+            gap: 2px !important;
+        }
+        
+        .keterangan-input {
+            font-size: 10px !important;
+            min-width: 120px !important;
+        }
+        
+        .keterangan-file {
+            font-size: 8px !important;
+            width: 20% !important;
+        }
+    }
+    
+    /* Style umum untuk semua device */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #tbCheckSheet {
+        width: 100% !important;
+    }
+</style>
 
 <div class="content-wrapper">
     <div class="container-full">
