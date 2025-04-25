@@ -38,7 +38,7 @@
                                                 <td><?= $row['nama_area']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                    <?php if ($row['pmBefore'] != null): ?>
+                                                    <?php if ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9)): ?>
                                                         <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
@@ -59,6 +59,8 @@
                                                             <button class="btn btn-danger btn-sm" disabled>Rejected</button>
                                                     <?php elseif ($row['status'] == 8): ?>
                                                         <button class="btn btn-primary btn-sm" disabled>Complete All</button>
+                                                    <?php elseif ($row['status'] == 9): ?>
+                                                        <button class="btn btn-danger btn-sm" disabled>Rejected</button>    
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
