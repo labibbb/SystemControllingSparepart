@@ -92,6 +92,21 @@ class Pengerjaan extends CI_Controller {
                 }
             }
     
+            $image_name2 = null;
+    
+            // Cek apakah ada file gambar yang dikirim
+            if (!empty($_FILES["gambarPm_{$index}"]['name'])) {
+                $file_ext = pathinfo($_FILES["gambarPm_{$index}"]['name'], PATHINFO_EXTENSION);
+                $image_name2 = 'pengerjaan_' . time() . "_$index." . $file_ext; // Nama unik
+                $target_file = $upload_path . $image_name2;
+    
+                // Pindahkan file ke folder uploads
+                if (!move_uploaded_file($_FILES["gambarPm_{$index}"]['tmp_name'], $target_file)) {
+                    echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar']);
+                    return;
+                }
+            }
+    
             $insertData = [
                 'id_users'   => isset($user_id) ? trim($user_id) : null,
                 'id_pmm'     => isset($data['id_pmm']) ? (int)$data['id_pmm'] : null,
@@ -104,7 +119,8 @@ class Pengerjaan extends CI_Controller {
                 'hasil'      => isset($data['hasil']) ? trim($data['hasil']) : null, 
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
-                'status'     => isset($data['status']) ? (int)$data['status'] : 1, 
+                'status'     => isset($data['status']) ? (int)$data['status'] : 1,
+                'gambarPm'   => $image_name2, 
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
@@ -173,6 +189,21 @@ class Pengerjaan extends CI_Controller {
                     return;
                 }
             }
+
+            $image_name2 = null;
+    
+            // Cek apakah ada file gambar yang dikirim
+            if (!empty($_FILES["gambarPm_{$index}"]['name'])) {
+                $file_ext = pathinfo($_FILES["gambarPm_{$index}"]['name'], PATHINFO_EXTENSION);
+                $image_name2 = 'pengerjaan_' . time() . "_$index." . $file_ext; // Nama unik
+                $target_file = $upload_path . $image_name2;
+    
+                // Pindahkan file ke folder uploads
+                if (!move_uploaded_file($_FILES["gambarPm_{$index}"]['tmp_name'], $target_file)) {
+                    echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar']);
+                    return;
+                }
+            }
     
             $insertData = [
                 'id_users'   => isset($user_id) ? trim($user_id) : null,
@@ -187,6 +218,7 @@ class Pengerjaan extends CI_Controller {
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1,
+                'gambarPm'   => $image_name2, 
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));

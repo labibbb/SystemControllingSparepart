@@ -4,17 +4,22 @@
 <style>
     .note-container {
         display: flex;
-        justify-content: flex-start; /* Posisi kiri */
+        justify-content: flex-start;
+        /* Posisi kiri */
         align-items: start;
     }
+
     .note-box {
         border: 2px solid black;
         width: 250px;
         min-height: 100px;
     }
+
     .tindakan-box {
-        width: 300px; /* Dibuat lebih besar */
+        width: 300px;
+        /* Dibuat lebih besar */
     }
+
     .upload-box {
         width: 100%;
         display: flex;
@@ -25,6 +30,7 @@
         padding: 10px;
         cursor: pointer;
     }
+
     .upload-box img {
         width: 50px;
         height: 50px;
@@ -32,70 +38,107 @@
 </style>
 <style>
     /* Style default untuk laptop/desktop (tetap besar seperti semula) */
-    #tbCheckSheet th, 
+    #tbCheckSheet th,
     #tbCheckSheet td {
         font-size: 14px;
         padding: 8px 12px;
     }
-    
-    .form-select, .form-control {
+
+    .form-select,
+    .form-control {
         font-size: 14px;
         padding: 8px 12px;
     }
-    
+
     /* Style khusus untuk tablet/mobile */
     @media only screen and (max-width: 1024px) {
-        #tbCheckSheet th, 
+
+        #tbCheckSheet th,
         #tbCheckSheet td {
             font-size: 10px !important;
             padding: 4px 6px !important;
             white-space: normal !important;
             word-wrap: break-word;
         }
-        
+
         .form-select {
             font-size: 10px !important;
             padding: 4px 6px !important;
         }
-        
+
         .form-control {
             font-size: 10px !important;
             padding: 4px 6px !important;
         }
-        
+
         /* Lebar kolom untuk tablet */
-        #tbCheckSheet th:nth-child(1), #tbCheckSheet td:nth-child(1) { width: 5% !important; }
-        #tbCheckSheet th:nth-child(2), #tbCheckSheet td:nth-child(2) { width: 12% !important; }
-        #tbCheckSheet th:nth-child(3), #tbCheckSheet td:nth-child(3) { width: 12% !important; }
-        #tbCheckSheet th:nth-child(4), #tbCheckSheet td:nth-child(4) { width: 12% !important; }
-        #tbCheckSheet th:nth-child(5), #tbCheckSheet td:nth-child(5) { width: 12% !important; }
-        #tbCheckSheet th:nth-child(6), #tbCheckSheet td:nth-child(6) { width: 8% !important; }
-        #tbCheckSheet th:nth-child(7), #tbCheckSheet td:nth-child(7) { width: 10% !important; }
-        #tbCheckSheet th:nth-child(8), #tbCheckSheet td:nth-child(8) { width: 10% !important; }
-        #tbCheckSheet th:nth-child(9), #tbCheckSheet td:nth-child(9) { width: 15% !important; }
-        
+        #tbCheckSheet th:nth-child(1),
+        #tbCheckSheet td:nth-child(1) {
+            width: 5% !important;
+        }
+
+        #tbCheckSheet th:nth-child(2),
+        #tbCheckSheet td:nth-child(2) {
+            width: 12% !important;
+        }
+
+        #tbCheckSheet th:nth-child(3),
+        #tbCheckSheet td:nth-child(3) {
+            width: 12% !important;
+        }
+
+        #tbCheckSheet th:nth-child(4),
+        #tbCheckSheet td:nth-child(4) {
+            width: 12% !important;
+        }
+
+        #tbCheckSheet th:nth-child(5),
+        #tbCheckSheet td:nth-child(5) {
+            width: 12% !important;
+        }
+
+        #tbCheckSheet th:nth-child(6),
+        #tbCheckSheet td:nth-child(6) {
+            width: 8% !important;
+        }
+
+        #tbCheckSheet th:nth-child(7),
+        #tbCheckSheet td:nth-child(7) {
+            width: 10% !important;
+        }
+
+        #tbCheckSheet th:nth-child(8),
+        #tbCheckSheet td:nth-child(8) {
+            width: 10% !important;
+        }
+
+        #tbCheckSheet th:nth-child(9),
+        #tbCheckSheet td:nth-child(9) {
+            width: 15% !important;
+        }
+
         .keterangan-container {
             flex-wrap: wrap;
             gap: 2px !important;
         }
-        
+
         .keterangan-input {
             font-size: 10px !important;
             min-width: 120px !important;
         }
-        
+
         .keterangan-file {
             font-size: 8px !important;
             width: 20% !important;
         }
     }
-    
+
     /* Style umum untuk semua device */
     .table-responsive {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-    
+
     #tbCheckSheet {
         width: 100% !important;
     }
@@ -109,7 +152,7 @@
                     <h3 class="box-title text-center"><?= isset($singleChecksheet['nama_doc']) ? $singleChecksheet['nama_doc'] : '-'; ?></h3>
                 </div>
                 <div class="box-body">
-                <div class="form-group">
+                    <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
                                 <table class="table table-borderless" style="width: auto;">
@@ -175,27 +218,27 @@
                                         </tr>
                                         <tr>
                                             <td>Status Checksheet :</td>
-                                            <?php 
-                                                if ($pmm['yearStatus'] == 1) {
-                                                    $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
-                                                    $statusText = 'Menunggu Approval';
-                                                } elseif ($pmm['yearStatus'] == 2) {
-                                                    $class = 'bg-success text-white'; // Finish on Time (Hijau)
-                                                    $statusText = 'Finish on Time';
-                                                } elseif ($pmm['yearStatus'] == 3) {
-                                                    $class = 'bg-danger text-white'; // Finish on Delay (Merah)
-                                                    $statusText = 'Finish on Delay';
-                                                } else {
-                                                    $class = 'bg-secondary text-white'; // Default (Abu-abu)
-                                                    $statusText = 'Unknown Status';
-                                                }
+                                            <?php
+                                            if ($pmm['yearStatus'] == 1) {
+                                                $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
+                                                $statusText = 'Menunggu Approval';
+                                            } elseif ($pmm['yearStatus'] == 2) {
+                                                $class = 'bg-success text-white'; // Finish on Time (Hijau)
+                                                $statusText = 'Finish on Time';
+                                            } elseif ($pmm['yearStatus'] == 3) {
+                                                $class = 'bg-danger text-white'; // Finish on Delay (Merah)
+                                                $statusText = 'Finish on Delay';
+                                            } else {
+                                                $class = 'bg-secondary text-white'; // Default (Abu-abu)
+                                                $statusText = 'Unknown Status';
+                                            }
                                             ?>
                                             <td colspan="2" class="fw-bold <?= $class; ?>"><?= $statusText; ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </div>    
+                        </div>
                         <input type="hidden" id="id_pmm" value="<?= isset($id_pmm) ? $id_pmm : '-'; ?>">
                         <input type="hidden" id="id_lini" value="<?= isset($singleChecksheet['id_lini']) ? $singleChecksheet['id_lini'] : '-'; ?>">
                         <input type="hidden" id="id_area" value="<?= isset($singleChecksheet['id_area']) ? $singleChecksheet['id_area'] : '-'; ?>">
@@ -219,7 +262,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $no = 1; foreach ($checksheet as $index => $row): ?>
+                                    <?php $no = 1;
+                                    foreach ($checksheet as $index => $row): ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
                                             <td id="item_cek_<?= $index; ?>"><?= $row['item_cek']; ?></td>
@@ -261,7 +305,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="d-flex align-items-start mt-3">
                         <div class="note-container d-flex gap-3 flex-wrap">
                             <!-- Box Tindakan (Diperbesar) -->
@@ -297,13 +341,22 @@
                                         <label for="uploadFile">
                                             <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid" disabled>
                                         </label>
-                                        <input type="file" id="uploadFile" hidden>
+                                        <input id="uploadFile" type="file" class="form-control keterangan-file" style="width: 18%;" capture="environment">
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="note-box p-3 rounded shadow-sm">
+                                <div class="mb-2">
+                                    <strong>Preview:</strong>
+                                </div>
+                                <div id="previewContainer" style="display: none;">
+                                    <img id="previewImage" class="img-thumbnail" style="width: 120px; height: 120px; object-fit: cover;" alt="Preview">
                                 </div>
                             </div>
                         </div>
                     </div>
-             
+
                     <div class="d-flex justify-content-center align-items-center mt-3">
                         <button class="btn btn-success px-5 py-2" id="btnSelesai" style="width: 200px; font-size: 1.2rem;">
                             Selesai
@@ -336,64 +389,82 @@
 
 <script>
     $(document).ready(function() {
-        $("#btnSelesai").click(function () {
+        document.getElementById('uploadFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const previewContainer = document.getElementById('previewContainer');
+            const previewImage = document.getElementById('previewImage');
+
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+                previewImage.src = '';
+            }
+        });
+
+        $("#btnSelesai").click(function() {
             simpanChecksheet();
         });
-        
+
         function simpanChecksheet() {
-           // Validasi semua dropdown Aktual harus terisi
-    let allFilled = true;
-    let ngWithoutPhoto = false;
-    let errorMessage = "";
-    
-    $(".status-dropdown").each(function() {
-        const index = $(this).attr('id').split('_')[1];
-        if ($(this).val() === "") {
-            allFilled = false;
-            $(this).addClass("is-invalid");
-            errorMessage = "Semua kolom Aktual harus terisi!";
-            return false; // Keluar dari loop each
-        } else {
-            $(this).removeClass("is-invalid");
-            
-            // Validasi khusus untuk status NG
-            if ($(this).val() === "NG") {
-                const fileInput = $(`#keterangan_file_${index}`)[0];
-                if (!fileInput.files || fileInput.files.length === 0) {
-                    ngWithoutPhoto = true;
-                    $(`#keterangan_container_${index}`).addClass("border border-danger");
-                    $(`#keterangan_file_${index}`).addClass("is-invalid");
-                    errorMessage = "Harap unggah foto untuk item dengan status NG!";
-                    return false;
+            // Validasi semua dropdown Aktual harus terisi
+            let allFilled = true;
+            let ngWithoutPhoto = false;
+            let errorMessage = "";
+
+            $(".status-dropdown").each(function() {
+                const index = $(this).attr('id').split('_')[1];
+                if ($(this).val() === "") {
+                    allFilled = false;
+                    $(this).addClass("is-invalid");
+                    errorMessage = "Semua kolom Aktual harus terisi!";
+                    return false; // Keluar dari loop each
                 } else {
-                    $(`#keterangan_container_${index}`).removeClass("border border-danger");
-                    $(`#keterangan_file_${index}`).removeClass("is-invalid");
+                    $(this).removeClass("is-invalid");
+
+                    // Validasi khusus untuk status NG
+                    if ($(this).val() === "NG") {
+                        const fileInput = $(`#keterangan_file_${index}`)[0];
+                        if (!fileInput.files || fileInput.files.length === 0) {
+                            ngWithoutPhoto = true;
+                            $(`#keterangan_container_${index}`).addClass("border border-danger");
+                            $(`#keterangan_file_${index}`).addClass("is-invalid");
+                            errorMessage = "Harap unggah foto untuk item dengan status NG!";
+                            return false;
+                        } else {
+                            $(`#keterangan_container_${index}`).removeClass("border border-danger");
+                            $(`#keterangan_file_${index}`).removeClass("is-invalid");
+                        }
+                    }
                 }
+            });
+
+            if (!allFilled) {
+                Swal.fire({
+                    title: "Perhatian!",
+                    text: errorMessage || "Semua kolom Aktual harus terisi!",
+                    icon: "warning",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK"
+                });
+                return;
             }
-        }
-    });
 
-    if (!allFilled) {
-        Swal.fire({
-            title: "Perhatian!",
-            text: errorMessage || "Semua kolom Aktual harus terisi!",
-            icon: "warning",
-            confirmButtonColor: "#3085d6",
-            confirmButtonText: "OK"
-        });
-        return;
-    }
-
-    if (ngWithoutPhoto) {
-        Swal.fire({
-            title: "Perhatian!",
-            text: errorMessage || "Harap unggah foto untuk item dengan status NG!",
-            icon: "warning",
-            confirmButtonColor: "#3085d6",
-            confirmButtonText: "OK"
-        });
-        return;
-    }
+            if (ngWithoutPhoto) {
+                Swal.fire({
+                    title: "Perhatian!",
+                    text: errorMessage || "Harap unggah foto untuk item dengan status NG!",
+                    icon: "warning",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK"
+                });
+                return;
+            }
             Swal.fire({
                 title: "Apakah Anda yakin?",
                 text: "Data yang dimasukkan akan disimpan!",
@@ -412,16 +483,18 @@
                     let idMesin = $("#id_mesin").val();
                     let idPmm = $("#id_pmm").val();
                     let index = 0;
+                    let gambarPm = document.getElementById("uploadFile").files[0];
+                    console.log(gambarPm);
 
                     // Iterasi tabel untuk mengambil data
-                    $("#tbCheckSheet tbody tr").each(function () {
+                    $("#tbCheckSheet tbody tr").each(function() {
                         let idCk = $(this).find(`#idCk_${index}`).text().trim();
                         let aktual = $(this).find(`#status_${index}`).val();
                         let tindakan = $(this).find(`#tindakan_${index}`).val();
                         let hasil = $(this).find(`#hasil_${index}`).val();
                         let keterangan = $(this).find(`#keterangan_input_${index}`).val();
                         let gambar = $(this).find(`#keterangan_file_${index}`)[0].files[0];
-
+                        console.log(gambar);
                         // Tambahkan data ke formData
                         formData.append(`data[${index}][id_pmm]`, idPmm);
                         formData.append(`data[${index}][id_ck]`, idCk);
@@ -433,6 +506,7 @@
                         formData.append(`data[${index}][hasil]`, hasil);
                         formData.append(`data[${index}][keterangan]`, keterangan);
                         formData.append(`data[${index}][status]`, "1");
+                        formData.append(`gambarPm_${index}`, gambarPm);
 
                         // Jika ada gambar, tambahkan ke formData
                         if (gambar) {
@@ -450,7 +524,7 @@
                         processData: false,
                         contentType: false,
                         dataType: "json",
-                        success: function (response) {
+                        success: function(response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
                                     window.location.href = "<?= site_url('pengerjaan'); ?>";
@@ -459,58 +533,58 @@
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
                         }
                     });
                 }
             });
-        } 
+        }
     });
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         var myModal = new bootstrap.Modal(document.getElementById('wiModal'), {
             backdrop: 'static', // Tidak bisa ditutup dengan klik di luar modal
-            keyboard: false     // Tidak bisa ditutup dengan tombol ESC
+            keyboard: false // Tidak bisa ditutup dengan tombol ESC
         });
         myModal.show();
     });
 </script>
 
 <script>
-   function changeColor(select) {
-    let row = select.closest("tr");
-    let tindakanDropdown = row.querySelector(".tindakan-dropdown");
-    let hasilDropdown = row.querySelector(".hasil-dropdown");
-    let keteranganInput = row.querySelector(".keterangan-input");
-    let keteranganFile = row.querySelector(".keterangan-file");
+    function changeColor(select) {
+        let row = select.closest("tr");
+        let tindakanDropdown = row.querySelector(".tindakan-dropdown");
+        let hasilDropdown = row.querySelector(".hasil-dropdown");
+        let keteranganInput = row.querySelector(".keterangan-input");
+        let keteranganFile = row.querySelector(".keterangan-file");
 
-    // Reset semua style terlebih dahulu
-    select.style.backgroundColor = "";
-    select.style.color = "";
+        // Reset semua style terlebih dahulu
+        select.style.backgroundColor = "";
+        select.style.color = "";
 
-    if (select.value === "OK") {
-        select.style.backgroundColor = "green";
-        select.style.color = "white";
-        
-        // Sembunyikan elemen
-        tindakanDropdown.style.visibility = "hidden";
-        hasilDropdown.style.visibility = "hidden";
-        keteranganInput.style.visibility = "visible";
-        keteranganFile.style.visibility = "hidden";
-        
-    } else if (select.value === "NG") {
-        select.style.backgroundColor = "red";
-        select.style.color = "white";
-        
-        // Tampilkan elemen
-        tindakanDropdown.style.visibility = "visible";
-        hasilDropdown.style.visibility = "visible";
-        keteranganInput.style.visibility = "visible";
-        keteranganFile.style.visibility = "visible";
+        if (select.value === "OK") {
+            select.style.backgroundColor = "green";
+            select.style.color = "white";
+
+            // Sembunyikan elemen
+            tindakanDropdown.style.visibility = "hidden";
+            hasilDropdown.style.visibility = "hidden";
+            keteranganInput.style.visibility = "visible";
+            keteranganFile.style.visibility = "hidden";
+
+        } else if (select.value === "NG") {
+            select.style.backgroundColor = "red";
+            select.style.color = "white";
+
+            // Tampilkan elemen
+            tindakanDropdown.style.visibility = "visible";
+            hasilDropdown.style.visibility = "visible";
+            keteranganInput.style.visibility = "visible";
+            keteranganFile.style.visibility = "visible";
+        }
     }
-}
 </script>
 <?php $this->load->view('layouts/footer'); ?>
