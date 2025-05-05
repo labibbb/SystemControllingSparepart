@@ -237,13 +237,11 @@
                                     <input type="text" class="form-control mt-1" style="border-radius: 20px;">
                                 </div>
                                 <div>
-                                    <strong>Masukkan Foto:</strong>
-                                    <div class="upload-box mt-2">
-                                        <label for="uploadFile">
-                                            <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid">
-                                        </label>
-                                        <input type="file" id="uploadFile" hidden>
-                                    </div>
+                                    <strong>Foto:</strong>
+                                    <?php if ($gambarPm): ?>
+                                        <a href="<?= base_url('uploads/pengerjaan/' . $gambarPm); ?>" class="btn btn-primary btn-sm" target="_blank">Show</a>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
                         </div>

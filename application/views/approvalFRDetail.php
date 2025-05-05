@@ -4,17 +4,22 @@
 <style>
     .note-container {
         display: flex;
-        justify-content: flex-start; /* Posisi kiri */
+        justify-content: flex-start;
+        /* Posisi kiri */
         align-items: start;
     }
+
     .note-box {
         border: 2px solid black;
         width: 250px;
         min-height: 100px;
     }
+
     .tindakan-box {
-        width: 300px; /* Dibuat lebih besar */
+        width: 300px;
+        /* Dibuat lebih besar */
     }
+
     .upload-box {
         width: 100%;
         display: flex;
@@ -25,6 +30,7 @@
         padding: 10px;
         cursor: pointer;
     }
+
     .upload-box img {
         width: 50px;
         height: 50px;
@@ -105,27 +111,27 @@
                                         </tr>
                                         <tr>
                                             <td>Status Checksheet :</td>
-                                            <?php 
-                                                if ($pmm['yearStatus'] == 1) {
-                                                    $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
-                                                    $statusText = 'Menunggu Approval';
-                                                } elseif ($pmm['yearStatus'] == 2) {
-                                                    $class = 'bg-success text-white'; // Finish on Time (Hijau)
-                                                    $statusText = 'Finish on Time';
-                                                } elseif ($pmm['yearStatus'] == 3) {
-                                                    $class = 'bg-danger text-white'; // Finish on Delay (Merah)
-                                                    $statusText = 'Finish on Delay';
-                                                } else {
-                                                    $class = 'bg-secondary text-white'; // Default (Abu-abu)
-                                                    $statusText = 'Unknown Status';
-                                                }
+                                            <?php
+                                            if ($pmm['yearStatus'] == 1) {
+                                                $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
+                                                $statusText = 'Menunggu Approval';
+                                            } elseif ($pmm['yearStatus'] == 2) {
+                                                $class = 'bg-success text-white'; // Finish on Time (Hijau)
+                                                $statusText = 'Finish on Time';
+                                            } elseif ($pmm['yearStatus'] == 3) {
+                                                $class = 'bg-danger text-white'; // Finish on Delay (Merah)
+                                                $statusText = 'Finish on Delay';
+                                            } else {
+                                                $class = 'bg-secondary text-white'; // Default (Abu-abu)
+                                                $statusText = 'Unknown Status';
+                                            }
                                             ?>
                                             <td colspan="2" class="fw-bold <?= $class; ?>"><?= $statusText; ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </div>    
+                        </div>
                         <input type="hidden" id="id_pmm" value="<?= isset($id_pmm) ? $id_pmm : '-'; ?>">
                         <input type="hidden" id="id_lini" value="<?= isset($singleChecksheet['id_lini']) ? $singleChecksheet['id_lini'] : '-'; ?>">
                         <input type="hidden" id="id_area" value="<?= isset($singleChecksheet['id_area']) ? $singleChecksheet['id_area'] : '-'; ?>">
@@ -149,7 +155,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $no = 1; foreach ($checksheet as $index => $row): ?>
+                                    <?php $no = 1;
+                                    foreach ($checksheet as $index => $row): ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
                                             <td id="item_cek_<?= $index; ?>"><?= $row['item_cek']; ?></td>
@@ -187,9 +194,9 @@
 
                                             <!-- Keterangan (Muncul jika NG) -->
                                             <td>
-                                            <div id="keterangan_container_<?= $index; ?>" class="keterangan-container" style="display: flex; gap: 5px; <?= ($row['aktual'] == 'NG' || !empty($row['keterangan'])) ? '' : 'visibility:hidden;' ?>">
-                                            <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" disabled style="flex: 1; min-width: 200px;">
-                                                    
+                                                <div id="keterangan_container_<?= $index; ?>" class="keterangan-container" style="display: flex; gap: 5px; <?= ($row['aktual'] == 'NG' || !empty($row['keterangan'])) ? '' : 'visibility:hidden;' ?>">
+                                                    <input id="keterangan_input_<?= $index; ?>" type="text" class="form-control keterangan-input" value="<?= $row['keterangan']; ?>" disabled style="flex: 1; min-width: 200px;">
+
                                                     <?php if (!empty($row['gambar'])): ?>
                                                         <a href="<?= base_url('uploads/pengerjaan/' . $row['gambar']); ?>" class="btn btn-primary btn-sm" target="_blank">Show</a>
                                                     <?php endif; ?>
@@ -201,7 +208,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="d-flex align-items-start mt-3">
                         <div class="note-container d-flex gap-3 flex-wrap">
                             <!-- Box Tindakan (Diperbesar) -->
@@ -232,18 +239,16 @@
                                     <input type="text" class="form-control mt-1" style="border-radius: 20px;" disabled>
                                 </div>
                                 <div>
-                                    <strong>Masukkan Foto:</strong>
-                                    <div class="upload-box mt-2">
-                                        <label for="uploadFile">
-                                            <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid">
-                                        </label>
-                                        <input type="file" id="uploadFile" hidden disabled>
-                                    </div>
+                                    <strong>Foto:</strong>
+                                    <?php if ($gambarPm): ?>
+                                        <a href="<?= base_url('uploads/pengerjaan/' . $gambarPm); ?>" class="btn btn-primary btn-sm" target="_blank">Show</a>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-             
+
                     <div class="d-flex justify-content-center align-items-center mt-3">
                         <button class="btn btn-danger px-5 py-2 me-3" id="btnReject" style="width: 200px; font-size: 1.2rem;">
                             Reject
@@ -270,11 +275,11 @@
             selectElement.style.color = "white";
         }
     }
-     // Fungsi untuk mengecek dan menampilkan keterangan jika ada data
-     function checkAndShowKeterangan(index) {
+    // Fungsi untuk mengecek dan menampilkan keterangan jika ada data
+    function checkAndShowKeterangan(index) {
         const keteranganInput = document.getElementById(`keterangan_input_${index}`);
         const keteranganContainer = document.getElementById(`keterangan_container_${index}`);
-        
+
         if (keteranganInput && keteranganInput.value.trim() !== '') {
             keteranganContainer.style.visibility = 'visible';
         } else {
@@ -283,8 +288,8 @@
     }
 
     // Terapkan warna sesuai dengan nilai awal
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".status-dropdown").forEach(function (select) {
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".status-dropdown").forEach(function(select) {
             updateDropdownColor(select);
         });
     });
@@ -292,14 +297,14 @@
 
 <script>
     $(document).ready(function() {
-        $("#btnReject").click(function () {
+        $("#btnReject").click(function() {
             reject();
         });
 
-        $("#btnApprove").click(function () {
+        $("#btnApprove").click(function() {
             approve();
         });
-        
+
         function approve() {
             Swal.fire({
                 title: "Apakah Anda yakin?",
@@ -317,7 +322,7 @@
                         url: "<?= site_url('approvalFR/approveFr/') ?>" + id_pmm, // Kirim sebagai parameter URL
                         type: "POST", // Gunakan POST atau bisa juga GET
                         dataType: "json",
-                        success: function (response) {
+                        success: function(response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
                                     window.location.href = "<?= site_url('approval'); ?>";
@@ -326,20 +331,20 @@
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
                         }
                     });
                 }
             });
         }
-        
+
         function reject() {
             Swal.fire({
                 title: "Apakah Anda yakin?",
                 text: "Masukkan catatan sebelum menyimpan!",
                 icon: "warning",
-                input: "textarea",  // Tambahkan input textarea untuk catatan
+                input: "textarea", // Tambahkan input textarea untuk catatan
                 inputPlaceholder: "Tulis catatan di sini...",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -354,14 +359,16 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     let id_pmm = $("#id_pmm").val();
-                    let catatan = result.value;  // Ambil nilai dari textarea
+                    let catatan = result.value; // Ambil nilai dari textarea
 
                     $.ajax({
                         url: "<?= site_url('approvalFR/reject/') ?>" + id_pmm,
                         type: "POST",
-                        data: { catatan: catatan },  // Kirim catatan sebagai data
+                        data: {
+                            catatan: catatan
+                        }, // Kirim catatan sebagai data
                         dataType: "json",
-                        success: function (response) {
+                        success: function(response) {
                             if (response.status === "success") {
                                 Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
                                     window.location.href = "<?= site_url('approval'); ?>";
@@ -370,7 +377,7 @@
                                 Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
                         }
                     });

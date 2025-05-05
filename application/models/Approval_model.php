@@ -172,6 +172,15 @@ class Approval_model extends CI_Model {
         return $this->db->get()->row_array(); 
     }
 
+    public function get_gambarPm($id_pmm) {
+        $this->db->select('gambarPm');
+        $this->db->from('trs_pengerjaan_checksheet');
+        $this->db->where('id_pmm', $id_pmm);
+        $this->db->limit(1);
+        
+        return $this->db->get()->row_array();
+    }    
+
     public function get_wi($id_mesin) {
         $this->db->select('trs_settingfwm.*, data_wi.nama_wi, data_wi.nama_file');
         $this->db->from('trs_settingfwm');

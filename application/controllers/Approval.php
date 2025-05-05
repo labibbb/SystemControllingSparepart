@@ -109,6 +109,7 @@ class Approval extends CI_Controller {
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
+        $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
     
         $data = [
@@ -117,7 +118,8 @@ class Approval extends CI_Controller {
             'tanggal' => $tanggal,
             'wi' => $wi,
             'id_pmm' => $id_pmm,
-            'pmm' => $pmm
+            'pmm' => $pmm,
+            'gambarPm' => $gambarPm['gambarPm'] ?? null
         ];
     
         $this->load->view('approvalSPVDetail', $data);
@@ -133,6 +135,7 @@ class Approval extends CI_Controller {
         $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
+        $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
     
         $data = [
             'singleChecksheet' => $singlechecksheet,
@@ -141,7 +144,8 @@ class Approval extends CI_Controller {
             'tanggal' => $tanggal,
             'wi' => $wi,
             'id_pmm' => $id_pmm,
-            'pmm' => $pmm
+            'pmm' => $pmm,
+            'gambarPm' => $gambarPm['gambarPm'] ?? null
         ];
     
         $this->load->view('approvalSPVRead', $data);
@@ -156,14 +160,16 @@ class Approval extends CI_Controller {
         $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
         $wi = $this->Approval_model->get_wi($id_mesin); 
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
-    
+        $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
+        
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'checksheet' => $checksheet,
             'tanggal' => $tanggal,
             'wi' => $wi,
             'id_pmm' => $id_pmm,
-            'pmm' => $pmm
+            'pmm' => $pmm,
+            'gambarPm' => $gambarPm['gambarPm'] ?? null
         ];
     
         $this->load->view('approvalFRDetail', $data);
