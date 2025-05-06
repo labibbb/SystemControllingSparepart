@@ -337,12 +337,12 @@
                                 </div>
                                 <div>
                                     <strong>Masukkan Foto:</strong>
-                                    <div class="upload-box mt-2">
-                                        <label for="uploadFile">
-                                            <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid" disabled>
-                                        </label>
-                                        <input id="uploadFile" type="file" class="form-control keterangan-file" style="width: 18%;" capture="environment">
-                                    </div>
+                                    <div class="upload-box mt-2" id="uploadContainer">
+                                    <label for="uploadFile">
+                                        <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid" disabled>
+                                    </label>
+                                    <input id="uploadFile" type="file" class="form-control keterangan-file" style="width: 18%;" capture="environment" required>
+                                </div>
                                 </div>
                             </div>
 
@@ -412,10 +412,21 @@
         });
 
         function simpanChecksheet() {
-            // Validasi semua dropdown Aktual harus terisi
-            let allFilled = true;
-            let ngWithoutPhoto = false;
-            let errorMessage = "";
+           // Validasi semua dropdown Aktual harus terisi
+                let allFilled = true;
+                let ngWithoutPhoto = false;
+                let mainPhotoMissing = false;
+                let errorMessage = "";
+
+                // Validasi foto utama
+                const mainPhotoInput = document.getElementById('uploadFile');
+                if (!mainPhotoInput.files || mainPhotoInput.files.length === 0) {
+                    mainPhotoMissing = true;
+                    document.getElementById('uploadContainer').classList.add('border', 'border-danger');
+                    errorMessage = "Harap unggah foto utama checksheet!";
+                } else {
+                    document.getElementById('uploadContainer').classList.remove('border', 'border-danger');
+                }
 
             $(".status-dropdown").each(function() {
                 const index = $(this).attr('id').split('_')[1];
@@ -443,6 +454,16 @@
                     }
                 }
             });
+            if (mainPhotoMissing) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: errorMessage,
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
 
             if (!allFilled) {
                 Swal.fire({
