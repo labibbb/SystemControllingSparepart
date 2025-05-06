@@ -97,7 +97,7 @@ class Pengerjaan extends CI_Controller {
             // Cek apakah ada file gambar yang dikirim
             if (!empty($_FILES["gambarPm_{$index}"]['name'])) {
                 $file_ext = pathinfo($_FILES["gambarPm_{$index}"]['name'], PATHINFO_EXTENSION);
-                $image_name2 = 'pengerjaan_' . time() . "_$index." . $file_ext; // Nama unik
+                $image_name2 = 'pengerjaanPm_' . time() . "_$index." . $file_ext; // Nama unik
                 $target_file = $upload_path . $image_name2;
     
                 // Pindahkan file ke folder uploads
@@ -195,7 +195,7 @@ class Pengerjaan extends CI_Controller {
             // Cek apakah ada file gambar yang dikirim
             if (!empty($_FILES["gambarPm_{$index}"]['name'])) {
                 $file_ext = pathinfo($_FILES["gambarPm_{$index}"]['name'], PATHINFO_EXTENSION);
-                $image_name2 = 'pengerjaan_' . time() . "_$index." . $file_ext; // Nama unik
+                $image_name2 = 'pengerjaanPm_' . time() . "_$index." . $file_ext; // Nama unik
                 $target_file = $upload_path . $image_name2;
     
                 // Pindahkan file ke folder uploads
