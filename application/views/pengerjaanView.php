@@ -31,8 +31,8 @@
                                         </tr>
                                     </thead>
                                     <tbody id="table1-body">
-                                        <?php $no = 1;
-                                        foreach ($pmmonthly as $row): ?>
+                                        <?php $no = 1; ?>
+                                        <?php foreach ($pmmonthly as $row): ?>
                                             <?php
                                             // Hitung jumlah pmBefore yang sama dengan id_pmm saat ini
                                             $countSamePmBefore = 0;
@@ -48,7 +48,9 @@
                                                 <td><?= $row['nama_area']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                    <?php if ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9) && $countSamePmBefore < 2): ?>
+                                                    <?php if ($countSamePmBefore > 0): ?>
+                                                        <button class="btn btn-danger btn-sm" disabled>Rejected</button>
+                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9)): ?>
                                                         <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
@@ -56,8 +58,6 @@
                                                             <input type="hidden" name="pmBefore" value="<?= $row['pmBefore']; ?>">
                                                             <button type="submit" class="btn btn-warning btn-sm">Ubah</button>
                                                         </form>
-                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9) && $countSamePmBefore >= 2): ?>
-                                                        <button class="btn btn-danger btn-sm" disabled>Rejected</button>
                                                     <?php elseif (in_array($row['status'], [3, 4])): ?>
                                                         <form action="<?= site_url('pengerjaan/Detail'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
@@ -97,19 +97,31 @@
                                         </tr>
                                     </thead>
                                     <tbody id="table2-body">
-                                        <?php $no = 1;
-                                        foreach ($pmmonthly2 as $row): ?>
+                                        <?php $no = 1; ?>
+                                        <?php foreach ($pmmonthly2 as $row): ?>
+                                            <?php
+                                            // Hitung jumlah pmBefore yang sama dengan id_pmm saat ini
+                                            $countSamePmBefore = 0;
+                                            foreach ($pmmonthly as $checkRow) {
+                                                if ($checkRow['pmBefore'] == $row['id_pmm']) {
+                                                    $countSamePmBefore++;
+                                                }
+                                            }
+                                            ?>
                                             <tr>
                                                 <td><?= $no++; ?></td>
                                                 <td class="tanggal"><?= date('Y-m-d', strtotime($row['tanggal'])); ?></td>
                                                 <td><?= $row['nama_area']; ?></td>
                                                 <td><?= $row['nama_mesin']; ?></td>
                                                 <td>
-                                                    <?php if (in_array($row['status'], [3, 4]) && $row['statusReject'] == 1): ?>
+                                                    <?php if ($countSamePmBefore > 0): ?>
+                                                        <button class="btn btn-danger btn-sm" disabled>Rejected</button>
+                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9)): ?>
                                                         <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
                                                             <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                            <input type="hidden" name="pmBefore" value="<?= $row['pmBefore']; ?>">
                                                             <button type="submit" class="btn btn-warning btn-sm">Ubah</button>
                                                         </form>
                                                     <?php elseif (in_array($row['status'], [3, 4])): ?>
@@ -125,6 +137,8 @@
                                                         <button class="btn btn-danger btn-sm" disabled>Rejected</button>
                                                     <?php elseif ($row['status'] == 8): ?>
                                                         <button class="btn btn-primary btn-sm" disabled>Complete All</button>
+                                                    <?php elseif ($row['status'] == 9): ?>
+                                                        <button class="btn btn-danger btn-sm" disabled>Rejected</button>
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
