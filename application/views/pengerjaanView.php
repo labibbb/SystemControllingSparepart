@@ -50,7 +50,7 @@
                                                 <td>
                                                     <?php if ($countSamePmBefore > 0): ?>
                                                         <button class="btn btn-danger btn-sm" disabled>Rejected</button>
-                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9)): ?>
+                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 3 || $row['status'] == 4)): ?>
                                                         <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
@@ -116,7 +116,7 @@
                                                 <td>
                                                     <?php if ($countSamePmBefore > 0): ?>
                                                         <button class="btn btn-danger btn-sm" disabled>Rejected</button>
-                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 7 || $row['status'] == 9)): ?>
+                                                    <?php elseif ($row['pmBefore'] != null && ($row['status'] == 3 || $row['status'] == 4)): ?>
                                                         <form action="<?= site_url('pengerjaan/DetailRes'); ?>" method="post">
                                                             <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
                                                             <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
