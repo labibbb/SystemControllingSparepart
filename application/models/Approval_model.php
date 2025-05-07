@@ -179,7 +179,16 @@ class Approval_model extends CI_Model {
         $this->db->limit(1);
         
         return $this->db->get()->row_array();
-    }    
+    }
+    
+    public function get_catatancs($id_pmm) {
+        // Jika catatan disimpan di trs_pengerjaan_checksheet
+        $this->db->select('catatan');
+        $this->db->from('trs_pengerjaan_checksheet');
+        $this->db->where('id_pmm', $id_pmm);
+        $this->db->limit(1);
+        return $this->db->get()->row_array();
+    }
 
     public function get_wi($id_mesin) {
         $this->db->select('trs_settingfwm.*, data_wi.nama_wi, data_wi.nama_file');

@@ -331,10 +331,10 @@
 
                             <!-- Box Catatan & Upload Foto -->
                             <div class="note-box p-3 rounded shadow-sm">
-                                <div class="mb-2">
-                                    <strong>Catatan:</strong>
-                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;" disabled>
-                                </div>
+                            <div class="mb-2">
+                                <strong>Catatan:</strong>
+                                <input type="text" id="catatan" name="catatan" class="form-control mt-1" style="border-radius: 20px;">
+                            </div>
                                 <div>
                                     <strong>Masukkan Foto:</strong>
                                     <div class="upload-box mt-2" id="uploadContainer">
@@ -505,6 +505,7 @@
                     let idPmm = $("#id_pmm").val();
                     let index = 0;
                     let gambarPm = document.getElementById("uploadFile").files[0];
+                    let catatan = $("#catatan").val(); // Ambil nilai catatan
                     console.log(gambarPm);
 
                     // Iterasi tabel untuk mengambil data
@@ -528,6 +529,7 @@
                         formData.append(`data[${index}][keterangan]`, keterangan);
                         formData.append(`data[${index}][status]`, "1");
                         formData.append(`gambarPm_${index}`, gambarPm);
+                        formData.append(`data[${index}][catatan]`, catatan);
 
                         // Jika ada gambar, tambahkan ke formData
                         if (gambar) {

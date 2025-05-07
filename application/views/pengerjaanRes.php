@@ -346,10 +346,10 @@
 
                             <!-- Box Catatan & Upload Foto -->
                             <div class="note-box p-3 rounded shadow-sm">
-                                <div class="mb-2">
-                                    <strong>Catatan:</strong>
-                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;" disabled>
-                                </div>
+                            <div class="mb-2">
+                                <strong>Catatan:</strong>
+                                <input type="text" id="catatans" name="catatans" class="form-control mt-1" style="border-radius: 20px;">
+                            </div>
                                 <div>
                                     <strong>Masukkan Foto:</strong>
                                     <div class="upload-box mt-2" id="uploadContainer">
@@ -431,7 +431,18 @@
             // Validasi semua dropdown Aktual harus terisi
             let allFilled = true;
             let ngWithoutPhoto = false;
+            let mainPhotoMissing = false;
             let errorMessage = "";
+
+             // Validasi foto utama
+             const mainPhotoInput = document.getElementById('uploadFile');
+                if (!mainPhotoInput.files || mainPhotoInput.files.length === 0) {
+                    mainPhotoMissing = true;
+                    document.getElementById('uploadContainer').classList.add('border', 'border-danger');
+                    errorMessage = "Harap unggah foto utama checksheet!";
+                } else {
+                    document.getElementById('uploadContainer').classList.remove('border', 'border-danger');
+                }
 
             $(".status-dropdown").each(function() {
                 const index = $(this).attr('id').split('_')[1];
@@ -459,6 +470,16 @@
                     }
                 }
             });
+            if (mainPhotoMissing) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: errorMessage,
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
 
             if (!allFilled) {
                 Swal.fire({
@@ -500,6 +521,8 @@
                     let idPmm = $("#id_pmm").val();
                     let gambarPm = document.getElementById("uploadFile").files[0];
                     let index = 0;
+                    let catatan = $("#catatans").val(); // Ambil nilai catatan
+
 
                     // Iterasi tabel untuk mengambil data
                     $("#tbCheckSheet tbody tr").each(function() {
@@ -522,6 +545,7 @@
                         formData.append(`data[${index}][keterangan]`, keterangan);
                         formData.append(`data[${index}][status]`, "1");
                         formData.append(`gambarPm_${index}`, gambarPm);
+                        formData.append(`data[${index}][catatan]`, catatan);
 
                         // Jika ada gambar, tambahkan ke formData
                         if (gambar) {

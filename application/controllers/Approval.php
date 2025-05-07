@@ -161,7 +161,8 @@ class Approval extends CI_Controller {
         $wi = $this->Approval_model->get_wi($id_mesin); 
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
         $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
-        
+        $catatan = $this->Approval_model->get_catatancs($id_pmm);
+
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'checksheet' => $checksheet,
@@ -169,7 +170,8 @@ class Approval extends CI_Controller {
             'wi' => $wi,
             'id_pmm' => $id_pmm,
             'pmm' => $pmm,
-            'gambarPm' => $gambarPm['gambarPm'] ?? null
+            'gambarPm' => $gambarPm['gambarPm'] ?? null,
+            'catatan' => $catatan['catatan'] ?? null
         ];
     
         $this->load->view('approvalFRDetail', $data);

@@ -234,7 +234,7 @@
                             <div class="note-box p-3 rounded shadow-sm">
                                 <div class="mb-2">
                                     <strong>Catatan:</strong>
-                                    <input type="text" class="form-control mt-1" style="border-radius: 20px;">
+                                    <p><?= !empty($row['catatan']) ? htmlspecialchars($row['catatan']) : '' ?></p>
                                 </div>
                                 <div>
                                     <strong>Foto:</strong>

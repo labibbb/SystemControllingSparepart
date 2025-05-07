@@ -53,7 +53,6 @@ class Pengerjaan extends CI_Controller {
         $singlechecksheet = $this->Pengerjaan_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Pengerjaan_model->get_checkseet($id_mesin); 
         $wi = $this->Pengerjaan_model->get_wi($id_mesin); 
-        
         $pmm = $this->Pengerjaan_model->get_diverifikasi($id_pmm);
         $data = [
             'singleChecksheet' => $singlechecksheet,
@@ -120,7 +119,8 @@ class Pengerjaan extends CI_Controller {
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1,
-                'gambarPm'   => $image_name2, 
+                'gambarPm'   => $image_name2,
+                'catatan'    => isset($data['catatan']) ? trim($data['catatan']) : null,
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
@@ -218,7 +218,9 @@ class Pengerjaan extends CI_Controller {
                 'keterangan' => isset($data['keterangan']) ? trim($data['keterangan']) : null,
                 'gambar'     => $image_name, 
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1,
-                'gambarPm'   => $image_name2, 
+                'gambarPm'   => $image_name2,
+                'catatan'    => isset($data['catatan']) ? trim($data['catatan']) : null,
+ 
             ];
     
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
