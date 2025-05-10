@@ -1,9 +1,11 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Approval extends CI_Controller {
-    
-    public function __construct() {
+class Approval extends CI_Controller
+{
+
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('Approval_model');
         $this->load->library('session');
@@ -11,9 +13,10 @@ class Approval extends CI_Controller {
         $this->check_session_timeout();
     }
 
-    private function check_session_timeout() {
+    private function check_session_timeout()
+    {
         $timeout = 8 * 60 * 60; // 8 jam dalam detik
-        
+
         if ($this->session->userdata('logged_in')) {
             $last_login_time = $this->session->userdata('last_login_time');
 
@@ -31,87 +34,94 @@ class Approval extends CI_Controller {
         }
     }
 
-    public function monitoringPlan() {
+    public function monitoringPlan()
+    {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly_planaktual();
-        
+
         $data = [
             'pmmonthly' => $pmmonthly
         ];
-    
+
         $this->load->view('actualPlanView', $data);
     }
-    
-    public function monitoringPlan2() {
+
+    public function monitoringPlan2()
+    {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly_planaktual2();
-        
+
         $data = [
             'pmmonthly' => $pmmonthly
         ];
-    
+
         $this->load->view('actualPlanViews', $data);
     }
 
-    public function monitoring() {
+    public function monitoring()
+    {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly_monitoring();
-        
+
         $data = [
             'pmmonthly' => $pmmonthly
         ];
-    
+
         $this->load->view('monitoringApproval', $data);
     }
 
-    public function monitorings() {
+    public function monitorings()
+    {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly_monitoring();
-        
+
         $data = [
             'pmmonthly' => $pmmonthly
         ];
-    
+
         $this->load->view('monitoringSchedule', $data);
     }
 
-    public function index() {
+    public function index()
+    {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly();
         $lini = $this->Approval_model->get_lini();
-        
+
         $data = [
             'pmmonthly' => $pmmonthly,
             'lini' => $lini
         ];
-    
+
         $this->load->view('approvalFRView', $data);
     }
 
-    public function index2() {
+    public function index2()
+    {
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly2();
         $lini = $this->Approval_model->get_lini();
-        
+
         $data = [
             'pmmonthly' => $pmmonthly,
             'lini' => $lini
         ];
-    
+
         $this->load->view('approvalSPVView', $data);
     }
 
-    public function detail2() {    
+    public function detail2()
+    {
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
 
-        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
-        $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
-        $wi = $this->Approval_model->get_wi($id_mesin); 
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm);
+        $wi = $this->Approval_model->get_wi($id_mesin);
         $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
-        $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
-    
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
+
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'checksheet' => $checksheet,
@@ -121,22 +131,23 @@ class Approval extends CI_Controller {
             'pmm' => $pmm,
             'gambarPm' => $gambarPm['gambarPm'] ?? null
         ];
-    
+
         $this->load->view('approvalSPVDetail', $data);
     }
 
-    public function detail3() {    
+    public function detail3()
+    {
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
 
-        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
-        $catatan = $this->Approval_model->get_catatan($id_pmm); 
-        $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
-        $wi = $this->Approval_model->get_wi($id_mesin); 
-        $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
+        $catatan = $this->Approval_model->get_catatan($id_pmm);
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm);
+        $wi = $this->Approval_model->get_wi($id_mesin);
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
         $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
-    
+
         $data = [
             'singleChecksheet' => $singlechecksheet,
             'catatan' => $catatan,
@@ -147,19 +158,20 @@ class Approval extends CI_Controller {
             'pmm' => $pmm,
             'gambarPm' => $gambarPm['gambarPm'] ?? null
         ];
-    
+
         $this->load->view('approvalSPVRead', $data);
     }
 
-    public function detail() {    
+    public function detail()
+    {
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
 
-        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin); 
-        $checksheet = $this->Approval_model->get_checkseet($id_pmm); 
-        $wi = $this->Approval_model->get_wi($id_mesin); 
-        $pmm = $this->Approval_model->get_diverifikasi($id_pmm); 
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm);
+        $wi = $this->Approval_model->get_wi($id_mesin);
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
         $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
         $catatan = $this->Approval_model->get_catatancs($id_pmm);
 
@@ -173,11 +185,12 @@ class Approval extends CI_Controller {
             'gambarPm' => $gambarPm['gambarPm'] ?? null,
             'catatan' => $catatan['catatan'] ?? null
         ];
-    
+
         $this->load->view('approvalFRDetail', $data);
     }
 
-    public function approveFr($id_pmm) {
+    public function approveFr($id_pmm)
+    {
         $user_id = $this->session->userdata('user_id');
 
         if (empty($id_pmm)) {
@@ -193,34 +206,36 @@ class Approval extends CI_Controller {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data']);
         }
     }
-    
-    public function rejectFr($id_pmm) {
+
+    public function rejectFr($id_pmm)
+    {
         $user_id = $this->session->userdata('user_id');
         $catatan = $this->input->post('catatan'); // Ambil catatan dari POST request
-    
+
         // Validasi ID PMM tidak boleh kosong
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
             return;
         }
-    
+
         // Validasi catatan tidak boleh kosong
         if (empty($catatan)) {
             echo json_encode(['status' => 'error', 'message' => 'Catatan tidak boleh kosong']);
             return;
         }
-    
+
         // Update status dan catatan di model
         $update = $this->Approval_model->rejectFr($id_pmm, $user_id, $catatan);
-    
+
         if ($update) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data']);
         }
-    }    
+    }
 
-    public function approveSpv($id_pmm) {
+    public function approveSpv($id_pmm)
+    {
         $user_id = $this->session->userdata('user_id');
 
         if (empty($id_pmm)) {
@@ -237,26 +252,27 @@ class Approval extends CI_Controller {
         }
     }
 
-    
-    public function rejectSpv($id_pmm) {
+
+    public function rejectSpv($id_pmm)
+    {
         $user_id = $this->session->userdata('user_id');
         $catatan = $this->input->post('catatan'); // Ambil catatan dari POST request
-    
+
         // Validasi ID PMM tidak boleh kosong
         if (empty($id_pmm)) {
             echo json_encode(['status' => 'error', 'message' => 'ID PMM tidak boleh kosong']);
             return;
         }
-    
+
         // Validasi catatan tidak boleh kosong
         if (empty($catatan)) {
             echo json_encode(['status' => 'error', 'message' => 'Catatan tidak boleh kosong']);
             return;
         }
-    
+
         // Update status dan catatan di model
         $update = $this->Approval_model->rejectSpv($id_pmm, $user_id, $catatan);
-    
+
         if ($update) {
             echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
         } else {
@@ -264,82 +280,94 @@ class Approval extends CI_Controller {
         }
     }
 
-public function exportPdf() {
-    $this->load->library('pdf');
-    
-    // Menentukan ukuran halaman A2 landscape
-    $pdf = new Pdf(array(594, 420), 'mm', '', true, 'UTF-8', false); // A2 landscape
+    public function exportPdf()
+    {
+        $id_mesin = $this->input->post('id_mesin');
+        $tanggal = $this->input->post('tanggal');
+        $id_pmm = $this->input->post('id_pmm');
 
-    // Menambahkan halaman dengan ukuran yang telah ditentukan
-    $pdf->AddPage('L', array(594, 420)); // A2 landscape
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm);
+        $wi = $this->Approval_model->get_wi($id_mesin);
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
 
-    $logoPath = FCPATH . './uploads/logo.png'; // Ganti dengan path sesuai gambar Anda
-    $pdf->Image($logoPath, 10, 10, 30);
+        $this->load->library('pdf');
 
-    // Header judul
-    $pdf->SetFont('helvetica', 'B', 14);
-    $pdf->Cell(0, 10, 'CHECK SHEET PERAWATAN PIPA MAIN LINE HOT WATER', 0, 1, 'C');
+        // Menentukan ukuran halaman A2 landscape
+        $pdf = new Pdf(array(594, 420), 'mm', '', true, 'UTF-8', false); // A2 landscape
 
-    // =====================
-    // Kolom Kiri (Informasi Detail)
-    // =====================
-    $pdf->SetFont('helvetica', '', 12);
+        // Menambahkan halaman dengan ukuran yang telah ditentukan
+        $pdf->AddPage('L', array(594, 420)); // A2 landscape
 
-    // Koordinat kiri atas
-    $pdf->SetXY(10, 15);
-    $pdf->Cell(30, 6, 'No Form', 0, 0);
-    $pdf->Cell(60, 6, ': QF.01.QMS.02.07', 0, 1);
+        $logoPath = FCPATH . './uploads/logo.jpg'; // Ganti dengan path sesuai gambar Anda
+        $pdf->Image($logoPath, 10, 20, 60, 30);
 
-    $pdf->SetX(10);
-    $pdf->Cell(30, 6, 'Pemilik Doc', 0, 0);
-    $pdf->Cell(60, 6, ': MAINTENANCE DEPT', 0, 1);
+        // Header judul
+        $pdf->SetFont('helvetica', 'B', 20);
+        $pdf->Cell(0, 10, $singlechecksheet['nama_doc'], 0, 1, 'C');
 
-    $pdf->SetX(10);
-    $pdf->Cell(30, 6, 'No Doc', 0, 0);
-    $pdf->Cell(60, 6, ': QF.12.CS.MTCS.17', 0, 1);
+        // =====================
+        // Kolom Kiri (Informasi Detail)
+        // =====================
+        $pdf->SetFont('helvetica', '', 12);
 
-    $pdf->SetX(10);
-    $pdf->Cell(30, 6, 'Tanggal', 0, 0);
-    $pdf->Cell(60, 6, ': 27-01-2025', 0, 1);
+        // Koordinat kiri atas
+        // Set posisi awal (misal lebih turun ke bawah)
+        $pdf->SetXY(10, 60);
+        $pdf->setCellPadding(2);
+        // Lebar kolom
+        $labelWidth = 35;
+        $dataWidth = 80;
+        $cellHeight = 6;
 
-    $pdf->SetX(10);
-    $pdf->Cell(30, 6, 'Lini', 0, 0);
-    $pdf->Cell(60, 6, ': PAINTING 2', 0, 1);
+        // Data tabel
+        $rows = [
+            ['No Form', ': ' . $singlechecksheet['no_doc']],
+            ['Pemilik Doc', ': MAINTENANCE DEPT'],
+            ['No Doc', ': ' . $singlechecksheet['no_doc']],
+            ['Lini', ': ' . $singlechecksheet['nama_lini']],
+            ['Area', ': ' . $singlechecksheet['nama_area']],
+            ['Mesin', ': ' . $singlechecksheet['nama_mesin']],
+        ];
 
-    $pdf->SetX(10);
-    $pdf->Cell(30, 6, 'Area', 0, 0);
-    $pdf->Cell(60, 6, ': PRE TREATMENT', 0, 1);
+        // Loop untuk buat tabel
+        foreach ($rows as $row) {
+            $pdf->SetX(10);
+            $pdf->Cell($labelWidth, $cellHeight, $row[0], 1, 0); // Kolom label
+            $pdf->Cell($dataWidth, $cellHeight, $row[1], 1, 1);   // Kolom data
+        }
 
-    $pdf->SetX(10);
-    $pdf->Cell(30, 6, 'Mesin', 0, 0);
-    $pdf->Cell(60, 6, ': PIPA MAINLINE HOT WATER', 0, 1);
-    // =====================
-    // Kolom Kanan (Tabel Verifikasi)
-    // =====================
-    // Atur koordinat pojok kanan atas manual (misal di pojok kanan halaman)
-    $pdf->SetXY(464, 15); // Ubah posisi sesuai kebutuhan layout
+        // =====================
+        // Kolom Kanan (Tabel Verifikasi)
+        // =====================
+        // Atur koordinat pojok kanan atas manual (misal di pojok kanan halaman)
+        $pdf->SetXY(464, 37); // Ubah posisi sesuai kebutuhan layout
 
-    $pdf->SetFont('', 'B');
-    $pdf->Cell(120, 7, 'Diverifikasi oleh System', 1, 1, 'C');
+        $pdf->SetFont('', 'B');
+        $pdf->Cell(120, 7, 'Diverifikasi oleh System', 1, 1, 'C');
 
-    $pdf->SetXY(464, 22);
-    $pdf->Cell(40, 7, 'Prepared By', 1, 0, 'C');
-    $pdf->Cell(40, 7, 'Checked By', 1, 0, 'C');
-    $pdf->Cell(40, 7, 'Approved By', 1, 1, 'C');
+        $pdf->SetXY(464, 44);
+        $pdf->Cell(40, 7, 'Prepared By', 1, 0, 'C');
+        $pdf->Cell(40, 7, 'Checked By', 1, 0, 'C');
+        $pdf->Cell(40, 7, 'Approved By', 1, 1, 'C');
 
-    $pdf->SetFont('', '');
-    $pdf->SetXY(464, 29);
-    $pdf->Cell(40, 21, 'op', 1, 0, 'C');
-    $pdf->Cell(40, 21, 'foreman foreman', 1, 0, 'C');
-    $pdf->Cell(40, 21, '-', 1, 1, 'C');
+        $pdf->SetFont('', '');
+        $pdf->SetXY(464, 51);
+        $pdf->Cell(40, 21, $pmm['prepared'], 1, 0, 'C');
+        $pdf->Cell(40, 21, $pmm['checked'], 1, 0, 'C');
+        $pdf->Cell(40, 21, $pmm['approve'], 1, 1, 'C');
 
-    $pdf->SetXY(464, 50);
-    $pdf->Cell(40, 7, '2025-04-11', 1, 0, 'C');
-    $pdf->Cell(40, 7, '2025-04-11', 1, 0, 'C');
-    $pdf->Cell(40, 7, '-', 1, 1, 'C');
-    $pdf->Ln(5);
-    // Buat tabel
-    $tbl = '
+        $pdf->SetXY(464, 72);
+        $pdf->Cell(40, 7, date('d/m/Y', strtotime($pmm['preparedDate'])), 1, 0, 'C');
+        $pdf->Cell(40, 7, date('d/m/Y', strtotime($pmm['checkedDate'])), 1, 0, 'C');
+        $pdf->Cell(40, 7, date('d/m/Y', strtotime($pmm['approveDate'])), 1, 1, 'C');
+
+        $pdf->SetXY(464, 100);
+        $pdf->Cell(40, 7, 'Tanggal', 1, 0, 'C');
+        $pdf->Cell(40, 6, date('d/m/Y', strtotime($tanggal)), 1, 0, 'C');
+        $pdf->Ln(30);
+        // Buat tabel
+        $tbl = '
 <style>
     table, th, td {
         border: 1px solid #000;
@@ -354,81 +382,106 @@ public function exportPdf() {
         <th rowspan="2" width="70mm" style="text-align: center; vertical-align: middle;">Standard</th>
         <th colspan="2" width="50mm" style="text-align: center; vertical-align: middle;">Aktual</th>
         <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Tindakan</th>
-        <th colspan="4" width="50mm" style="text-align: center; vertical-align: middle;">Hasil</th>
+        <th colspan="3" width="50mm" style="text-align: center; vertical-align: middle;">Hasil</th>
         <th rowspan="2" width="165mm" style="text-align: center; vertical-align: middle;">Keterangan</th>
     </tr>
     <tr>
         <th style="text-align: center; vertical-align: middle;">OK</th><th style="text-align: center; vertical-align: middle;">NG</th>
         <th style="text-align: center; vertical-align: middle;">1</th><th style="text-align: center; vertical-align: middle;">2</th><th style="text-align: center; vertical-align: middle;">3</th><th style="text-align: center; vertical-align: middle;">4</th>
-        <th style="text-align: center; vertical-align: middle;">✓</th><th style="text-align: center; vertical-align: middle;">△</th><th style="text-align: center; vertical-align: middle;">×</th><th style="text-align: center; vertical-align: middle;">-</th>
+        <th style="text-align: center; vertical-align: middle;">v</th><th style="text-align: center; vertical-align: middle;">△</th><th style="text-align: center; vertical-align: middle;">×</th>
     </tr>';
 
-// Dummy data
-$data = [];
-for ($i = 1; $i <= 10; $i++) {
-    $data[] = [
-        'no' => $i,
-        'item_check' => 'HOT WATER',
-        'point_check' => 'KEBERSIHAN PIPA OUT POMPA',
-        'metode' => 'VISUAL',
-        'standard' => 'TIDAK MAMPET',
-        'aktual_ok' => 'OK',
-        'aktual_ng' => '',
-        'tindakan' => ['✓', '', '', ''],
-        'hasil' => ['✓', '', '', ''],
-        'keterangan' => ''
-    ];
-}
+        // Dummy data
+        $data = [];
+        $i = 1;
+        foreach ($checksheet as $row) {
+            $aktual = strtolower($row['aktual']);
 
-// Grouping untuk rowspan
-$lastItemCheck = '';
-$rowspanCount = 0;
-$itemCheckIndex = 0;
+            // Inisialisasi array tindakan default
+            $tindakan_array = ['', '', '', ''];
+            if (isset($row['tindakan']) && is_numeric($row['tindakan'])) {
+                $index = (int)$row['tindakan'] - 1;
+                if ($index >= 0 && $index < 4) {
+                    $tindakan_array[$index] = 'v';
+                }
+            }
 
-// Hitung rowspan
-foreach ($data as $i => $row) {
-    if ($row['item_check'] !== $lastItemCheck) {
-        $lastItemCheck = $row['item_check'];
-        $rowspanCount = 1;
-        $itemCheckIndex = $i;
-    } else {
-        $rowspanCount++;
-    }
-    $data[$itemCheckIndex]['rowspan'] = $rowspanCount;
-    $data[$i]['show_item_check'] = ($i === $itemCheckIndex);
-}
+            // Inisialisasi array hasil default
+            $hasil_array = ['', '', ''];
+            if (isset($row['tindakan']) && is_numeric($row['tindakan'])) {
+                $index = (int)$row['tindakan'] - 1;
+                if ($row['tindakan'] == "OK") {
+                    // Kalau tindakan "OK", beri tanda pada index pertama di hasil
+                    $hasil_array[0] = 'v';
+                } elseif ($index >= 0 && $index < 3) {
+                    // Untuk tindakan yang bukan "OK", beri tanda pada index sesuai
+                    $hasil_array[$index] = 'v';
+                }
+            }
 
-// Render table rows
-foreach ($data as $i => $row) {
-    $tbl .= '<tr>';
-    $tbl .= '<td style="text-align: center; vertical-align: middle;">'.$row['no'].'</td>';
+            $data[] = [
+                'no' => $i,
+                'item_check' => $row['item_cek'],
+                'point_check' => $row['point_cek'],
+                'metode' => $row['metode_cek'],
+                'standard' => $row['standard'],
+                'aktual_ok' => $aktual === 'ok' ? 'OK' : '',
+                'aktual_ng' => $aktual === 'ng' ? 'NG' : '',
+                'tindakan' => $tindakan_array,
+                'hasil' => $hasil_array, // Hasil disesuaikan dengan logika tindakan
+                'keterangan' => isset($row['keterangan']) ? $row['keterangan'] : ''
+            ];
+            $i++;
+        }
 
-    // Merge "Item Check" jika perlu
-    if ($row['show_item_check']) {
-        $tbl .= '<td rowspan="'.$row['rowspan'].'" style="text-align: center; vertical-align: middle;">'.$row['item_check'].'</td>';
-    }
+        // Grouping untuk rowspan
+        $lastItemCheck = '';
+        $rowspanCount = 0;
+        $itemCheckIndex = 0;
 
-    $tbl .= '
-        <td style="text-align: center; vertical-align: middle;">'.$row['point_check'].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['metode'].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['standard'].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['aktual_ok'].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['aktual_ng'].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][0].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][1].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][2].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['tindakan'][3].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][0].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][1].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][2].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['hasil'][3].'</td>
-        <td style="text-align: center; vertical-align: middle;">'.$row['keterangan'].'</td>
+        // Hitung rowspan
+        foreach ($data as $i => $row) {
+            if ($row['item_check'] !== $lastItemCheck) {
+                $lastItemCheck = $row['item_check'];
+                $rowspanCount = 1;
+                $itemCheckIndex = $i;
+            } else {
+                $rowspanCount++;
+            }
+            $data[$itemCheckIndex]['rowspan'] = $rowspanCount;
+            $data[$i]['show_item_check'] = ($i === $itemCheckIndex);
+        }
+
+        // Render table rows
+        foreach ($data as $i => $row) {
+            $tbl .= '<tr>';
+            $tbl .= '<td style="text-align: center; vertical-align: middle;">' . $row['no'] . '</td>';
+
+            // Merge "Item Check" jika perlu
+            if ($row['show_item_check']) {
+                $tbl .= '<td rowspan="' . $row['rowspan'] . '" style="text-align: center; vertical-align: middle;">' . $row['item_check'] . '</td>';
+            }
+
+            $tbl .= '
+        <td style="text-align: center; vertical-align: middle;">' . $row['point_check'] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['metode'] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['standard'] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['aktual_ok'] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['aktual_ng'] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['tindakan'][0] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['tindakan'][1] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['tindakan'][2] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['tindakan'][3] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['hasil'][0] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['hasil'][1] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['hasil'][2] . '</td>
+        <td style="text-align: center; vertical-align: middle;">' . $row['keterangan'] . '</td>
     ';
-    $tbl .= '</tr>';
-}
+            $tbl .= '</tr>';
+        }
 
-$tbl .= '</table>';
-    $tbl .= '
+        $tbl .= '</table>';
+        $tbl .= '
         <table cellspacing="0" cellpadding="4" style="border:1px solid #000;" width="180mm">
             <tr>
                 <td width="140mm" style="border-right:1px solid #000;">
@@ -440,7 +493,7 @@ $tbl .= '</table>';
                 </td>
                 <td width="50mm" style="border-right:1px solid #000;">
                     <b>HASIL :</b><br>
-                    ✓ : OK & Mesin Jalan<br>
+                    v : OK & Mesin Jalan<br>
                     △ : Abnormal<br>
                     × : Mesin Stop
                 </td>
@@ -450,12 +503,9 @@ $tbl .= '</table>';
             </tr>
         </table>';
 
-    $pdf->writeHTML($tbl, true, false, false, false, '');
+        $pdf->writeHTML($tbl, true, false, false, false, '');
 
-    // Output PDF
-    $pdf->Output('checksheet.pdf', 'I');
+        // Output PDF
+        $pdf->Output('checksheet.pdf', 'I');
+    }
 }
-
-    
-}
-?>
