@@ -143,7 +143,7 @@ class Approval_model extends CI_Model {
     } 
 
     public function get_singlecheckseet($id_mesin) {
-        $this->db->select('data_checksheet.*, lini.nama_lini, area.nama_area, mesin.nama_mesin');
+        $this->db->select('data_checksheet.*, lini.nama_lini, area.nama_area, mesin.nama_mesin, data_checksheet.tanggal_doc');
         $this->db->from('data_checksheet');
         $this->db->join('lini', 'data_checksheet.id_lini = lini.id_lini');
         $this->db->join('area', 'data_checksheet.id_area = area.id_area');

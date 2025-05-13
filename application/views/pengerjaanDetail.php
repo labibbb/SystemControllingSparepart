@@ -288,9 +288,9 @@
                                             </td>
                                             <td>
                                                 <select id="hasil_<?= $index; ?>" class="form-select hasil-dropdown" style="visibility: hidden;">
-                                                    <option value="OK">✅ OK & Mesin jalan</option>
-                                                    <option value="Abnormal">⚠️ Abnormal & Mesin jalan</option>
-                                                    <option value="Stop">❌ Mesin Stop</option>
+                                                     <option value="1"  ?>✅ OK & Mesin jalan</option>
+                                                    <option value="2" ?>⚠️ Abnormal & Mesin jalan</option>
+                                                    <option value="3" ?>❌ Mesin Stop</option>
                                                 </select>
                                             </td>
                                             <td>

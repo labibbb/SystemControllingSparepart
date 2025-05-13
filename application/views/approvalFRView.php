@@ -114,11 +114,44 @@
                                                         <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
                                                         <button type="submit" class="btn btn-primary btn-sm">Check</button>
                                                     </form>
-                                                <?php endif; ?>
+                                               <?php elseif ($row['status'] == 7): ?>
+                                                    <form action="<?= site_url('approvalFR/read'); ?>" method="post" class="me-2">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-warning btn-sm">Detail</button>
+                                                    </form>
+                                                    <form action="<?= site_url('approvalFR/exportPdf'); ?>" method="post">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                            <i class="fas fa-print"></i> Print
+                                                        </button>
+                                                    </form>
+                                                     <?php elseif ($row['status'] == 9): ?>
+                                                    <form action="<?= site_url('approvalFR/read'); ?>" method="post" class="me-2">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-warning btn-sm">Detail</button>
+                                                    </form>
+                                                    <form action="<?= site_url('approvalFR/exportPdf'); ?>" method="post">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                            <i class="fas fa-print"></i> Print
+                                                        </button>
+                                                    </form>
 
-                                                <?php if ($row['status'] == 8): ?>  
-                                                    <button class="btn btn-success btn-sm" onclick="printDocument(<?= $row['id_pmm']; ?>)">
-                                                        <i class="fas fa-print"></i> Print
+                                                <?php elseif ($row['status'] == 8): ?>  
+                                                    <form action="<?= site_url('approvalFR/exportPdf'); ?>" method="post" class="me-2">
+                                                        <input type="hidden" name="id_mesin" value="<?= $row['id_mesin']; ?>">
+                                                        <input type="hidden" name="tanggal" value="<?= $row['tanggal']; ?>">
+                                                        <input type="hidden" name="id_pmm" value="<?= $row['id_pmm']; ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-print"></i> Print</button>
+                                                    </form>  
                                                     </button>  
                                                 <?php endif; ?>
                                             </div>

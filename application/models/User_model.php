@@ -8,19 +8,31 @@ class User_model extends CI_Model {
     }
 
     public function check_login($username, $password) {
-        // Query untuk memeriksa username, password, status, dan active
-        $this->db->where('username', $username);
-   //     $this->db->where('password', md5($password)); // Bisa diganti dengan password_hash
-        $this->db->where('status', 1);
-        $this->db->where('active', 1);
-        $query = $this->db->get('users');
-
-        // Jika ada hasil, return data pengguna
-        if ($query->num_rows() > 0) {
-            return $query->row(); // Mengembalikan satu baris data user
-        }
+    // Ambil user berdasarkan username
+    $user = $this->db->where('username', $username)
+                     ->where('status', 1)
+                     ->where('active', 1)
+                     ->get('users')
+                     ->row();
+    
+    if (!$user) {
         return false;
     }
+    
+    // Verifikasi password dengan dua metode
+    if (password_verify($password, $user->password)) {
+        // Jika password cocok dengan hash modern
+        return $user;
+    } elseif (md5($password) === $user->password) {
+        // Jika password cocok dengan MD5 (legacy)
+        // Optionally: update ke hash modern
+        $this->db->where('id_users', $user->id_users)
+                 ->update('users', ['password' => password_hash($password, PASSWORD_DEFAULT)]);
+        return $user;
+    }
+    
+    return false;
+}
 
     public function get_all_users() {
         return $this->db->get('users')->result_array();

@@ -73,6 +73,12 @@
 							<span>Plan Actual painting 2</span>
 						</a>
 					</li>
+					<li>
+						<a href="<?= site_url('historymesin'); ?>">
+							<i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+							<span>History Kondisi Mesin</span>
+						</a>
+					</li>
 				<?php elseif ($this->session->userdata('level') == 2): ?>
 					<li>
 						<a href="<?= site_url('pmmonthly'); ?>">

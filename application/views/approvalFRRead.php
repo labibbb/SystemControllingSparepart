@@ -248,7 +248,7 @@
                     </div>
              
                     <div class="d-flex justify-content-center align-items-center mt-3">
-                        <button class="btn btn-secondary px-5 py-2" id="btnBack" style="width: 200px; font-size: 1.2rem;" onclick="window.location.href='<?= site_url('approvalSPV'); ?>'">
+                        <button class="btn btn-secondary px-5 py-2" id="btnBack" style="width: 200px; font-size: 1.2rem;" onclick="window.location.href='<?= site_url('approvalFR'); ?>'">
                             Back
                         </button>
                     </div>

@@ -162,6 +162,33 @@ class Approval extends CI_Controller
         $this->load->view('approvalSPVRead', $data);
     }
 
+    public function detail4()
+    {
+        $id_mesin = $this->input->post('id_mesin');
+        $tanggal = $this->input->post('tanggal');
+        $id_pmm = $this->input->post('id_pmm');
+
+        $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
+        $catatan = $this->Approval_model->get_catatan($id_pmm);
+        $checksheet = $this->Approval_model->get_checkseet($id_pmm);
+        $wi = $this->Approval_model->get_wi($id_mesin);
+        $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
+        $gambarPm = $this->Approval_model->get_gambarPm($id_pmm);
+
+        $data = [
+            'singleChecksheet' => $singlechecksheet,
+            'catatan' => $catatan,
+            'checksheet' => $checksheet,
+            'tanggal' => $tanggal,
+            'wi' => $wi,
+            'id_pmm' => $id_pmm,
+            'pmm' => $pmm,
+            'gambarPm' => $gambarPm['gambarPm'] ?? null
+        ];
+
+        $this->load->view('approvalFRRead', $data);
+    }
+
     public function detail()
     {
         $id_mesin = $this->input->post('id_mesin');
@@ -283,7 +310,6 @@ class Approval extends CI_Controller
     public function exportPdf()
     {
         $id_mesin = $this->input->post('id_mesin');
-        $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
 
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
@@ -292,6 +318,7 @@ class Approval extends CI_Controller
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
 
         $this->load->library('pdf');
+        $tanggal = $this->input->post('tanggal_doc') ?? $singlechecksheet['tanggal_doc'] ?? date('Y-m-d');
 
         // Menentukan ukuran halaman A2 landscape
         $pdf = new Pdf(array(594, 420), 'mm', '', true, 'UTF-8', false); // A2 landscape
@@ -344,6 +371,7 @@ class Approval extends CI_Controller
         $pdf->SetXY(464, 37); // Ubah posisi sesuai kebutuhan layout
 
         $pdf->SetFont('', 'B');
+        $pdf->SetFont('dejavusans', '', 10);
         $pdf->Cell(120, 7, 'Diverifikasi oleh System', 1, 1, 'C');
 
         $pdf->SetXY(464, 44);
@@ -358,15 +386,15 @@ class Approval extends CI_Controller
         $pdf->Cell(40, 21, $pmm['approve'], 1, 1, 'C');
 
         $pdf->SetXY(464, 72);
-        $pdf->Cell(40, 7, date('d/m/Y', strtotime($pmm['preparedDate'])), 1, 0, 'C');
-        $pdf->Cell(40, 7, date('d/m/Y', strtotime($pmm['checkedDate'])), 1, 0, 'C');
-        $pdf->Cell(40, 7, date('d/m/Y', strtotime($pmm['approveDate'])), 1, 1, 'C');
+        $pdf->Cell(40, 7, !empty($pmm['preparedDate']) ? date('d/m/Y H:i', strtotime($pmm['preparedDate'])) : '', 1, 0, 'C'); 
+        $pdf->Cell(40, 7, !empty($pmm['checkedDate']) ? date('d/m/Y H:i', strtotime($pmm['checkedDate'])) : '', 1, 0, 'C');
+        $pdf->Cell(40, 7, !empty($pmm['approveDate']) ? date('d/m/Y H:i', strtotime($pmm['approveDate'])) : '', 1, 1, 'C');
 
         $pdf->SetXY(464, 100);
         $pdf->Cell(40, 7, 'Tanggal', 1, 0, 'C');
         $pdf->Cell(40, 6, date('d/m/Y', strtotime($tanggal)), 1, 0, 'C');
         $pdf->Ln(30);
-        // Buat tabel
+        // Buat tabelm
         $tbl = '
 <style>
     table, th, td {
@@ -397,28 +425,32 @@ class Approval extends CI_Controller
         foreach ($checksheet as $row) {
             $aktual = strtolower($row['aktual']);
 
-            // Inisialisasi array tindakan default
-            $tindakan_array = ['', '', '', ''];
-            if (isset($row['tindakan']) && is_numeric($row['tindakan'])) {
-                $index = (int)$row['tindakan'] - 1;
-                if ($index >= 0 && $index < 4) {
-                    $tindakan_array[$index] = 'v';
-                }
-            }
+           // Tindakan - kosongkan jika OK
+    $tindakan_array = ['', '', '', ''];
+    if ($aktual === 'ng' && isset($row['tindakan']) && is_numeric($row['tindakan'])) {
+        $index = (int)$row['tindakan'] - 1;
+        if ($index >= 0 && $index < 4) {
+            $tindakan_array[$index] = 'v';
+        }
+    }
 
-            // Inisialisasi array hasil default
-            $hasil_array = ['', '', ''];
-            if (isset($row['tindakan']) && is_numeric($row['tindakan'])) {
-                $index = (int)$row['tindakan'] - 1;
-                if ($row['tindakan'] == "OK") {
-                    // Kalau tindakan "OK", beri tanda pada index pertama di hasil
-                    $hasil_array[0] = 'v';
-                } elseif ($index >= 0 && $index < 3) {
-                    // Untuk tindakan yang bukan "OK", beri tanda pada index sesuai
-                    $hasil_array[$index] = 'v';
-                }
+    // Hasil - hanya isi jika NG
+    $hasil_array = ['', '', ''];
+    if ($aktual === 'ng') {
+        if (isset($row['hasil'])) {
+            switch (strtoupper($row['hasil'])) {
+                case '1':
+                    $hasil_array[0] = 'v ';
+                    break;
+                case '2':
+                    $hasil_array[1] = '△';
+                    break;
+                case '3':
+                    $hasil_array[2] = '×';
+                    break;
             }
-
+        }
+    }
             $data[] = [
                 'no' => $i,
                 'item_check' => $row['item_cek'],
@@ -429,7 +461,9 @@ class Approval extends CI_Controller
                 'aktual_ng' => $aktual === 'ng' ? 'NG' : '',
                 'tindakan' => $tindakan_array,
                 'hasil' => $hasil_array, // Hasil disesuaikan dengan logika tindakan
-                'keterangan' => isset($row['keterangan']) ? $row['keterangan'] : ''
+                'keterangan' => isset($row['keterangan']) ? $row['keterangan'] : '',
+                'catatan' => isset($row['catatan']) ? $row['catatan'] : ''
+
             ];
             $i++;
         }
@@ -498,8 +532,8 @@ class Approval extends CI_Controller
                     × : Mesin Stop
                 </td>
                 <td width="70mm">
-                    <b>CATATAN:</b><br><br><br><br><br>
-                </td>
+            <b>CATATAN:</b> ' . $row['catatan'] . '
+        </td>
             </tr>
         </table>';
 
