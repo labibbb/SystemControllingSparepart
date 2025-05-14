@@ -50,24 +50,48 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: <?= json_encode(array_map(function ($row) {
-                return [
-                    "title" => "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
-                    "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
-                    "allDay" => true,
-                    "backgroundColor" => 
-                    ($row["status"] == 4 || $row["status"] == 5) ? "blue" :  
-                    ($row["status"] == 6 ? "darkcyan" :  
-                    ($row["status"] == 7 ? "red" :  
-                    ($row["status"] == 8 ? "lightseagreen" : "gray"))),
-                    "id_mesin" => $row["id_mesin"],
-                    "tanggal" => $row["tanggal"],
-                    "id_pmm" => $row["id_pmm"]
-                ];
-            }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: <?= json_encode(array_map(function ($row) {
+            // Tentukan warna berdasarkan status dan statusresc
+            $color = '';
+            if (($row["status"] == 7 || $row["status"] == 9) && $row["statusresc"] == 10) {
+                // Gradient untuk setengah merah setengah oranye
+                $color = 'linear-gradient(90deg, red 50%, orange 50%)';
+            } else if ($row["status"] == 7 || $row["status"] == 9) {
+                $color = 'red';
+            } else if ($row["status"] == 3||$row["status"] == 4 || $row["status"] == 5) {
+                $color = 'blue';
+            } else if ($row["status"] == 6) {
+                $color = 'darkcyan';
+            } else if ($row["status"] == 8) {
+                $color = 'lightseagreen';
+            } else {
+                $color = 'gray';
+            }
+
+            return [
+                "title" => "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
+                "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
+                "allDay" => true,
+                "backgroundColor" => $color,
+                "id_mesin" => $row["id_mesin"],
+                "tanggal" => $row["tanggal"],
+                "id_pmm" => $row["id_pmm"],
+                "status" => $row["status"],
+                "statusresc" => $row["statusresc"] ?? null
+            ];
+        }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+        
+        eventDidMount: function(info) {
+            // Jika menggunakan gradient, atur style tambahan
+            if (info.event.backgroundColor.includes('gradient')) {
+                info.el.style.backgroundImage = info.event.backgroundColor;
+                info.el.style.backgroundSize = '100% 100%';
+                info.el.style.backgroundColor = 'transparent';
+            }
+        },
 
             eventClick: function(info) {
                 // Cek level user dari PHP session

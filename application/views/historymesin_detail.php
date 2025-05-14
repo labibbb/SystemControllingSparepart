@@ -164,9 +164,9 @@
                                             <?php if ($row && $row['aktual'] != 'OK'): ?>
                                                 <?php 
                                                 $hasilOptions = [
-                                                    'OK' => '✅ OK & Mesin jalan',
-                                                    'Abnormal' => '⚠️ Abnormal & Mesin jalan',
-                                                    'Stop' => '❌ Mesin Stop'
+                                                    '1' => '✅ OK & Mesin jalan',
+                                                    '2' => '⚠️ Abnormal & Mesin jalan',
+                                                    '3' => '❌ Mesin Stop'
                                                 ];
                                                 echo isset($hasilOptions[$row['hasil']]) ? $hasilOptions[$row['hasil']] : '-';
                                                 ?>

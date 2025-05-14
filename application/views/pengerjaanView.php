@@ -1,6 +1,48 @@
 <?php $this->load->view('layouts/header'); ?>
 <?php $this->load->view('layouts/sidebar'); ?>
+<style>
+    /* CSS untuk DataTables controls */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        display: inline-block;
+        margin-bottom: 10px;
+    }
 
+    .dataTables_wrapper .dataTables_length {
+        margin-right: 30px; /* Jarak antara Show Entries dan Search */
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        margin-left: 15px;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        margin-left: 10px;
+        width: 180px; /* Lebar input search */
+    }
+
+    /* Responsive untuk tablet */
+    @media (max-width: 991px) {
+        .dataTables_wrapper .dataTables_length {
+            margin-right: 20px; /* Jarak lebih kecil di tablet */
+        }
+        
+        .dataTables_wrapper .dataTables_filter input {
+            width: 140px; /* Lebar lebih kecil di tablet */
+        }
+    }
+
+    /* Untuk mobile sangat kecil */
+    @media (max-width: 576px) {
+        .dataTables_wrapper .dataTables_length {
+            margin-right: 15px;
+        }
+        
+        .dataTables_wrapper .dataTables_filter input {
+            width: 120px;
+        }
+    }
+</style>
 <div class="content-wrapper">
     <div class="container-full">
         <section class="content">
@@ -203,7 +245,7 @@
                             "title" => "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
                             "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
                             "allDay" => true,
-                            "backgroundColor" => ($row["status"] == 3) ? "blue" : (($row["status"] == 4 || $row["status"] == 5) ? "blue" : (($row["status"] == 6) ? "darkcyan" : (($row["status"] == 7) ? "red" : (($row["status"] == 8) ? "lightseagreen" : "gray")))),
+                            "backgroundColor" => ($row["status"] == 3) ? "blue" : (($row["status"] == 4 || $row["status"] == 5) ? "blue" : (($row["status"] == 6) ? "darkcyan": (($row["status"] == 9) ? "red" : (($row["status"] == 7) ? "red" : (($row["status"] == 8) ? "lightseagreen" : "gray"))))),
                             "id_mesin" => $row["id_mesin"],
                             "tanggal" => $row["tanggal"],
                             "id_pmm" => $row["id_pmm"]
@@ -243,8 +285,38 @@
 
 <script>
     $(document).ready(function() {
-        var table1 = $('#table1').DataTable();
-        var table2 = $('#table2').DataTable();
+        var table1 = $('#table1').DataTable({
+        "dom": '<"top"lf>rt<"bottom"ip>',
+        "language": {
+            "lengthMenu": "Show _MENU_ entries",
+            "search": "Search:",
+            "searchPlaceholder": "..."
+        },
+        "initComplete": function() {
+            // Menyesuaikan margin untuk tablet
+            if ($(window).width() <= 991) {
+                $('.dataTables_length').css('margin-right', '20px');
+                $('.dataTables_filter input').css('width', '140px');
+            }
+        }
+    });
+    
+    var table2 = $('#table2').DataTable({
+        "dom": '<"top"lf>rt<"bottom"ip>',
+        
+        "language": {
+            "lengthMenu": "Show _MENU_ entries",
+            "search": "Search:",
+            "searchPlaceholder": "..."
+        },
+        "initComplete": function() {
+            // Menyesuaikan margin untuk tablet
+            if ($(window).width() <= 991) {
+                $('.dataTables_length').css('margin-right', '20px');
+                $('.dataTables_filter input').css('width', '140px');
+            }
+        }
+    })
 
         // Fungsi filter berdasarkan range tanggal
         function filterByDateRange() {

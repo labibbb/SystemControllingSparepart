@@ -390,9 +390,11 @@ class Approval extends CI_Controller
         $pdf->Cell(40, 7, !empty($pmm['checkedDate']) ? date('d/m/Y H:i', strtotime($pmm['checkedDate'])) : '', 1, 0, 'C');
         $pdf->Cell(40, 7, !empty($pmm['approveDate']) ? date('d/m/Y H:i', strtotime($pmm['approveDate'])) : '', 1, 1, 'C');
 
+                // Menjadi:
         $pdf->SetXY(464, 100);
-        $pdf->Cell(40, 7, 'Tanggal', 1, 0, 'C');
-        $pdf->Cell(40, 6, date('d/m/Y', strtotime($tanggal)), 1, 0, 'C');
+        // Perbesar tinggi sel menjadi 10mm (bukan 7mm) dan lebarnya disesuaikan
+        $pdf->Cell(80, 10, 'Tanggal Pembuatan Checksheet', 1, 0, 'C');
+        $pdf->Cell(40, 10, date('d/m/Y', strtotime($tanggal)), 1, 0, 'C');
         $pdf->Ln(30);
         // Buat tabelm
         $tbl = '
@@ -522,7 +524,7 @@ class Approval extends CI_Controller
                     <b>TINDAKAN :</b><br>
                     1 : Dibersihkan/Dirapikan/Pelumasan<br>
                     2 : Disetting/Disencangkan<br>
-                    3 : Dicopot<br>
+                    3 : Direpair<br>
                     4 : Diganti
                 </td>
                 <td width="50mm" style="border-right:1px solid #000;">

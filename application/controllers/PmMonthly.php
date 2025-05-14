@@ -67,30 +67,34 @@ class PmMonthly extends CI_Controller {
     }
 
     public function update_tanggal3() {
-        $id_pmm = $this->input->post('id_pmm');
-        $tanggal_baru = $this->input->post('tanggal');
-    
-        $pmmonthly = $this->PmMonthly_model->get_pmm($id_pmm); // ambil data lama
-    
-        if ($pmmonthly) {
-            $data = [
-                'id_pmy'   => $pmmonthly->id_pmy,
-                'id_lini'   => $pmmonthly->id_lini,
-                'id_area'   => $pmmonthly->id_area,
-                'id_mesin'  => $pmmonthly->id_mesin,
-                'bulan'     => $pmmonthly->bulan,
-                'tahun'     => $pmmonthly->tahun,
-                'id_users'  => $pmmonthly->id_users,
-                'tanggal'   => $tanggal_baru,
-                'status'    => 3,
-                'pmBefore'  => $id_pmm
-            ];
-    
-            $this->db->insert('pm_monthly', $data); // insert data baru
-        }
-    
-        redirect('PmMonthly');
-    }    
+    $id_pmm = $this->input->post('id_pmm');
+    $tanggal_baru = $this->input->post('tanggal');
+
+    $pmmonthly = $this->PmMonthly_model->get_pmm($id_pmm);
+
+    if ($pmmonthly) {
+        // Update status record lama menjadi 10 (atau status khusus untuk "telah direschedule")
+        $this->db->where('id_pmm', $id_pmm)->update('pm_monthly', ['statusresc' => 10]);
+        
+        // Insert data baru
+        $data = [
+            'id_pmy'   => $pmmonthly->id_pmy,
+            'id_lini'   => $pmmonthly->id_lini,
+            'id_area'   => $pmmonthly->id_area,
+            'id_mesin'  => $pmmonthly->id_mesin,
+            'bulan'     => $pmmonthly->bulan,
+            'tahun'     => $pmmonthly->tahun,
+            'id_users'  => $pmmonthly->id_users,
+            'tanggal'   => $tanggal_baru,
+            'status'    => 3,
+            'pmBefore'  => $id_pmm
+        ];
+
+        $this->db->insert('pm_monthly', $data);
+    }
+
+    redirect('PmMonthly');
+}
 
     public function update_mp() {
         $id_pmm = $this->input->post('id_pmm');

@@ -266,7 +266,8 @@ class Pengerjaan extends CI_Controller {
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
         $pmBefore = $this->input->post('pmBefore');
-
+        
+        $update = $this->Pengerjaan_model->updateStatus($id_pmm);
         $singlechecksheet = $this->Pengerjaan_model->get_singlecheckseet($id_mesin); 
         $checksheet = $this->Pengerjaan_model->get_checkseetres($pmBefore); 
         $catatan = $this->Pengerjaan_model->get_catatan($pmBefore);

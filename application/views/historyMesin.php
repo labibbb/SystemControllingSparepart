@@ -83,7 +83,7 @@
                                                     </td>
                                                     <td>
                                                         <?php if ($row['status'] == 1): ?>
-                                                            <button class="btn btn-warning btn-sm" onclick="editMesin(<?= $row['id_mesin']; ?>)">Check</button>
+                                                             <a href="<?= site_url('historymesin/detail/'.$row['id_mesin']) ?>" class="btn btn-warning btn-sm">Check</a>
                                                         <?php endif; ?>
                                                     </td>
                                                 </tr>

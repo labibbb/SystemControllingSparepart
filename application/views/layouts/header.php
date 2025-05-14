@@ -39,9 +39,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<a href="index.html" class="logo">
   <!-- logo-->
   <div class="logo-lg">
-      <!-- <span class="light-logo">
+      <span class="light-logo">
           <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo" style="width: 15000px; height: 40px;">
-      </span> -->
+      </span>
   </div>
 </a>
 	</div>  

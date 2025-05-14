@@ -116,8 +116,12 @@
                                             </td>
                                         <?php elseif (in_array($row['status'], [7, 9])): ?>
                                             <td>
-                                                <button class="btn btn-warning btn-sm" onclick="editTanggal2(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
-                                            </td>    
+                                        <?php if($row['statusresc'] != 10): ?>
+                                            <button class="btn btn-warning btn-sm" onclick="editTanggal2(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary">Telah Direschedule</span>
+                                        <?php endif; ?>
+                                    </td>   
                                         <?php else: ?>
                                             <td class="bg-secondary text-white text-center">No Action</td>
                                         <?php endif; ?>
@@ -357,12 +361,66 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function editTanggal2(id, tanggal, catatan, bulan, tahun) {
-        document.getElementById("id_pmm_tgl2").value = id;
-        document.getElementById("tanggal_tgllama2").value = tanggal;
-        document.getElementById("bulanU2").value = bulan;
-        document.getElementById("tahunU2").value = tahun;
-        $('#modalTanggal2').modal('show');
-    }
+    document.getElementById("id_pmm_tgl2").value = id;
+    document.getElementById("tanggal_tgllama2").value = tanggal;
+    document.getElementById("bulanU2").value = bulan;
+    document.getElementById("tahunU2").value = tahun;
+
+    $('#modalTanggal2 form').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        
+        let tanggalInput = document.getElementById("tanggal_tgl2");
+        if (!tanggalInput.value) {
+            Swal.fire({
+                icon: "warning",
+                title: "Isi Semua Data",
+                text: "Tanggal tidak boleh kosong!",
+            });
+            return;
+        }
+
+        let selectedDate = new Date(tanggalInput.value);
+        let selectedMonth = selectedDate.getMonth() + 1; // JS bulan dari 0
+        let selectedYear = selectedDate.getFullYear();
+
+        if (selectedYear != tahun || selectedMonth != bulan) {
+            Swal.fire({
+                icon: "warning",
+                title: "Error",
+                text: "Tanggal harus berada pada bulan dan tahun yang dipilih!",
+            });
+            return;
+        }
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#modalTanggal2').modal('hide');
+                
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Penjadwalan ulang berhasil dilakukan!",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Gagal",
+                    text: "Terjadi kesalahan saat menyimpan data",
+                });
+            }
+        });
+    }); 
+    
+    $('#modalTanggal2').modal('show');
+}
 
     function editMP(id) {
         document.getElementById("id_pmm_mp").value = id;
@@ -379,118 +437,129 @@ document.addEventListener("DOMContentLoaded", function () {
     $('#id_lini').on('change', filterData);
 
     function filterData() {
-        $.post("<?= base_url('pmmonthly/filter'); ?>", {
-            lini: $('#id_lini').val()
-        }, function (data) {
-            let rows = '';
-            let result = JSON.parse(data);
+    $.post("<?= base_url('pmmonthly/filter'); ?>", {
+        lini: $('#id_lini').val()
+    }, function (data) {
+        let rows = '';
+        let result = JSON.parse(data);
 
-            if (result.length === 0) {
-                rows = `<tr>
-                    <td colspan="12" class="text-center text-danger">Data Not Found</td>
-                </tr>`;
-            } else {
-                result.forEach((row, index) => {
-
-                    // Memastikan bulan dan status tidak null atau undefined
-                    let bulan = '';
-                    if (row.bulan !== undefined && row.bulan !== null) {
-                        switch (parseInt(row.bulan)) {
-                            case 1: bulan = "Januari"; break;
-                            case 2: bulan = "Februari"; break;
-                            case 3: bulan = "Maret"; break;
-                            case 4: bulan = "April"; break;
-                            case 5: bulan = "Mei"; break;
-                            case 6: bulan = "Juni"; break;
-                            case 7: bulan = "Juli"; break;
-                            case 8: bulan = "Agustus"; break;
-                            case 9: bulan = "September"; break;
-                            case 10: bulan = "Oktober"; break;
-                            case 11: bulan = "November"; break;
-                            case 12: bulan = "Desember"; break;
-                            default: bulan = "Bulan tidak valid"; break;
-                        }
-                    } else {
-                        bulan = "Bulan tidak valid";
+        if (result.length === 0) {
+            rows = `<tr>
+                <td colspan="12" class="text-center text-danger">Data Not Found</td>
+            </tr>`;
+        } else {
+            result.forEach((row, index) => {
+                // Format bulan
+                let bulan = '';
+                if (row.bulan !== undefined && row.bulan !== null) {
+                    switch (parseInt(row.bulan)) {
+                        case 1: bulan = "Januari"; break;
+                        case 2: bulan = "Februari"; break;
+                        case 3: bulan = "Maret"; break;
+                        case 4: bulan = "April"; break;
+                        case 5: bulan = "Mei"; break;
+                        case 6: bulan = "Juni"; break;
+                        case 7: bulan = "Juli"; break;
+                        case 8: bulan = "Agustus"; break;
+                        case 9: bulan = "September"; break;
+                        case 10: bulan = "Oktober"; break;
+                        case 11: bulan = "November"; break;
+                        case 12: bulan = "Desember"; break;
+                        default: bulan = "Bulan tidak valid"; break;
                     }
+                } else {
+                    bulan = "Bulan tidak valid";
+                }
 
-                    let status = '';
+                // Format status
+                let status = '';
                 if (row.status !== undefined && row.status !== null) {
                     switch (parseInt(row.status)) {
-                        case 1:
-                            status = '<span class="badge bg-info">Terjadwal Tahunan</span>';
-                            break;
-                        case 2:
-                            status = '<span class="badge bg-warning">Sudah Terjadwal</span>';
-                            break;
-                        case 3:
-                            status = '<span class="badge bg-success">Sudah Terjadwal</span>';
-                            break;
-                        case 4:
-                            status = '<span class="badge bg-warning">On Progress Checking</span>';
-                            break;
-                        case 5:
-                            status = '<span class="badge bg-warning">Waiting Approval Foreman</span>';
-                            break;
-                        case 6:
-                            status = '<span class="badge bg-success">Waiting Approval Supervisor</span>';
-                            break;
-                        case 7:
-                            status = '<span class="badge bg-danger">Rejected by Foreman</span>';
-                            break;
-                        case 8:
-                            status = '<span class="badge bg-success">Complete All</span>';
-                            break;
-                        case 9:
-                            status = '<span class="badge bg-danger">Rejected by Supervisor</span>';
-                            break;
-                        default:
-                            status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
-                            break;
+                        case 1: status = '<span class="badge bg-info">Terjadwal Tahunan</span>'; break;
+                        case 2: status = '<span class="badge bg-warning">Sudah Terjadwal</span>'; break;
+                        case 3: status = '<span class="badge bg-success">Sudah Terjadwal</span>'; break;
+                        case 4: status = '<span class="badge bg-warning">On Progress Checking</span>'; break;
+                        case 5: status = '<span class="badge bg-warning">Waiting Approval Foreman</span>'; break;
+                        case 6: status = '<span class="badge bg-success">Waiting Approval Supervisor</span>'; break;
+                        case 7: status = '<span class="badge bg-danger">Rejected by Foreman</span>'; break;
+                        case 8: status = '<span class="badge bg-success">Complete All</span>'; break;
+                        case 9: status = '<span class="badge bg-danger">Rejected by Supervisor</span>'; break;
+                        default: status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>'; break;
                     }
                 } else {
                     status = '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
                 }
 
+                // Format tanggal untuk tampilan di tabel
+                let formattedDate = 'No Set';
+                if (row.tanggal) {
+                    let dateObj = new Date(row.tanggal);
+                    formattedDate = dateObj.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                }
 
-                    // Menambahkan baris ke table
-                    rows += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${row.tanggal ? new Date(row.tanggal).toLocaleDateString('id-ID') : 'No Set'}</td>
-                            <td>${bulan}</td>
-                            <td>${row.tahun}</td>
-                            <td>${row.user_name ? row.user_name : ''}</td>
-                            <td>${row.nama_lini}</td>
-                            <td>${row.nama_area}</td>
-                            <td>${row.nama_mesin}</td>
-                            <td>${status}</td>
-                            <td>${row.foreman_name ? row.foreman_name : ''}</td>
-                            <td>${row.supervisor_name ? row.supervisor_name : ''}</td>
-                            ${row.status == 1 ? `
-                                <td>
-                                    <button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm}, ${row.bulan}, ${row.tahun})">Setting</button>
-                                </td>
-                            ` : row.status == 2 || row.status == 3 ? `
-                                <td>
-                                    <button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '${row.catatan ? row.catatan : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>
-                                </td>
-                            ` : row.status == 7 ? `
-                                <td>
-                                    <button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '${row.catatan ? row.catatan : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
-                                </td>    
-                            ` : `
-                                <td class="bg-secondary text-white text-center">No Action</td>
-                            `}
-                        </tr>
+                // Format tanggal untuk modal (YYYY-MM-DD)
+                let modalDate = row.tanggal ? new Date(row.tanggal).toISOString().split('T')[0] : '';
+
+                // Menentukan aksi yang tersedia
+                let actionCell = '';
+                if (row.status == 1) {
+                    actionCell = `
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="editTanggalStatus(${row.id_pmm}, ${row.bulan}, ${row.tahun})">Setting</button>
+                        </td>
                     `;
-                });
-            }
+                } else if (row.status == 2 || row.status == 3) {
+                    actionCell = `
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editTanggal(${row.id_pmm}, '${modalDate}', '${row.catatan ? row.catatan.replace(/'/g, "\\'") : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
+                            <button class="btn btn-warning btn-sm" onclick="editMP(${row.id_pmm})">MP</button>
+                        </td>
+                    `;
+                } else if (row.status == 7 || row.status == 9) {
+                    if (row.statusresc != 10) {
+                        actionCell = `
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editTanggal2(${row.id_pmm}, '${modalDate}', '${row.catatan ? row.catatan.replace(/'/g, "\\'") : ''}', ${row.bulan}, ${row.tahun})">Tgl</button>
+                            </td>
+                        `;
+                    } else {
+                        actionCell = `
+                            <td><span class="badge bg-secondary">Telah Direschedule</span></td>
+                        `;
+                    }
+                } else {
+                    actionCell = `
+                        <td class="bg-secondary text-white text-center">No Action</td>
+                    `;
+                }
 
-            $('#table1-body').html(rows); // UPDATE HANYA TABLE1
-        });
-    }
+                // Membuat baris tabel
+                rows += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${formattedDate}</td>
+                        <td>${bulan}</td>
+                        <td>${row.tahun}</td>
+                        <td>${row.user_name ? row.user_name : ''}</td>
+                        <td>${row.nama_lini}</td>
+                        <td>${row.nama_area}</td>
+                        <td>${row.nama_mesin}</td>
+                        <td>${status}</td>
+                        <td>${row.foreman_name ? row.foreman_name : ''}</td>
+                        <td>${row.supervisor_name ? row.supervisor_name : ''}</td>
+                        ${actionCell}
+                    </tr>
+                `;
+            });
+        }
+
+        $('#table1-body').html(rows);
+    });
+}
 </script>
 
 <?php $this->load->view('layouts/footer'); ?>
