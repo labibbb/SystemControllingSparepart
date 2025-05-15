@@ -23,7 +23,10 @@
                                     <span class="status-box" style="background-color: red;"></span> ⚠️ / Abnormality
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
-                                    <span class="status-box" style="background-color: orange;"></span> Delay / Reschedule
+                                    <span class="status-box" style="background-color: orange;"></span> Pengerjaan Delay
+                                </li>
+                                <li class="d-flex align-items-center mb-2">
+                                    <span style="font-size: 1.2em;">⏳</span> Delay sudah dikerjakan
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
                                     <span class="status-box" style="background-color: lightseagreen;"></span> Complete All
@@ -54,57 +57,64 @@
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: <?= json_encode(array_map(function ($row) {
-            // Tentukan warna berdasarkan status dan statusresc
-            $color = '';
-            if (($row["status"] == 7 || $row["status"] == 9) && $row["statusresc"] == 10) {
-                // Gradient untuk setengah merah setengah oranye
-                $color = 'linear-gradient(90deg, red 50%, orange 50%)';
-            } else if ($row["status"] == 7 || $row["status"] == 9) {
-                $color = 'red';
-            } else if ($row["status"] == 3||$row["status"] == 4 || $row["status"] == 5) {
-                $color = 'blue';
-            } else if ($row["status"] == 6) {
-                $color = 'darkcyan';
-            } else if ($row["status"] == 8) {
-                $color = 'lightseagreen';
+            $today = date("Y-m-d");
+            $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
+            $status = $row["status"];
+            
+            // Cek kondisi delay
+            $isDelayed = (in_array($status, [4, 7, 9, 5, 6]) && $eventDate < $today);
+            $isAbnormal = (in_array($status, [7, 9]) && $eventDate < $today);
+            $isRegularDelay = (in_array($status, [3, 4, 5, 6]) && $eventDate < $today);
+
+            // Tentukan warna berdasarkan status
+            if ($isRegularDelay) {
+                $color = "orange"; // Warna untuk delay biasa (status 3,4)
+            } elseif ($isAbnormal || $status == 9) {
+                $color = "red"; // Warna untuk abnormality (status 7,9)
+            } elseif ($status == 8) {
+                $color = "lightseagreen";
             } else {
-                $color = 'gray';
+                $color = "blue"; // Default warna biru
             }
 
             return [
-                "title" => "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
+                "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
                 "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
                 "allDay" => true,
                 "backgroundColor" => $color,
+                "borderColor" => $isDelayed ? "red" : $color,
+                "textColor" => "white",
                 "id_mesin" => $row["id_mesin"],
                 "tanggal" => $row["tanggal"],
                 "id_pmm" => $row["id_pmm"],
-                "status" => $row["status"],
-                "statusresc" => $row["statusresc"] ?? null
+                "extendedProps" => [
+                    "isDelayed" => $isDelayed,
+                    "isAbnormal" => $isAbnormal
+                ]
             ];
         }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
         
         eventDidMount: function(info) {
-            // Jika menggunakan gradient, atur style tambahan
-            if (info.event.backgroundColor.includes('gradient')) {
-                info.el.style.backgroundImage = info.event.backgroundColor;
-                info.el.style.backgroundSize = '100% 100%';
-                info.el.style.backgroundColor = 'transparent';
+            // Tambahkan tooltip khusus untuk yang delay
+            if (info.event.extendedProps.isDelayed) {
+                info.el.setAttribute('title', 'Tugas ini delay (melewati tanggal seharusnya)');
+                info.el.classList.add('delayed-event');
+                
+                // Tambahkan class khusus untuk abnormality
+                if (info.event.extendedProps.isAbnormal) {
+                    info.el.classList.add('abnormal-event');
+                }
             }
         },
-
-            eventClick: function(info) {
-                // Cek level user dari PHP session
-                <?php if ($this->session->userdata('level') == 2): ?>
-                    // Jika level 2, tidak melakukan apa-apa (nonaktifkan klik)
-                    return false;
-                <?php else: ?>
-                // Buat form secara dinamis
+        
+        eventClick: function(info) {
+            <?php if ($this->session->userdata('level') == 2): ?>
+                return false;
+            <?php else: ?>
                 var form = document.createElement("form");
                 form.action = "<?= site_url('approvalSPV/read'); ?>";
                 form.method = "POST";
 
-                // Tambahkan input hidden untuk data yang dikirim
                 var id_mesin = document.createElement("input");
                 id_mesin.type = "hidden";
                 id_mesin.name = "id_mesin";
@@ -123,15 +133,14 @@
                 id_pmm.value = info.event.extendedProps.id_pmm;
                 form.appendChild(id_pmm);
 
-                // Tambahkan form ke body dan submit
                 document.body.appendChild(form);
                 form.submit();
-                <?php endif; ?>
-            }
-        });
-
-        calendar.render();
+            <?php endif; ?>
+        }
     });
+
+    calendar.render();
+});
 </script>
 
 

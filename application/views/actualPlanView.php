@@ -7,6 +7,30 @@
         overflow-x: auto;
         position: relative;
     }
+    .summary-box {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 16px;
+    min-width: 220px;
+    text-align: center;
+}
+
+.plan-box {
+    background-color: #3498db; /* Biru */
+}
+
+.actual-box {
+    background-color: #e74c3c; /* Merah */
+}
+
+.summary-box .value {
+    margin-left: 5px;
+    font-size: 18px;
+}
+
     
     table {
         width: 100%;
@@ -222,6 +246,15 @@
                         </table>
                     </div>
                     <!-- Legend Section -->
+                     <div class="d-flex justify-content-center gap-4 mt-4">
+                    <div class="summary-box plan-box">
+                        Total Plan Item PM: <span id="totalPlan" class="value"></span>
+                    </div>
+                    <div class="summary-box actual-box">
+                        Total Actual Item PM: <span id="totalActual" class="value"></span>
+                    </div>
+                </div>
+
                     <div class="legend">
                         <div class="legend-item">
                             <div class="legend-color plan"></div>
@@ -340,6 +373,20 @@
         });
         document.getElementById("ganttBody").innerHTML = bodyHtml;
         addAchievementRow(achievementData);
+        // Hitung total plan dan actual
+            let totalPlanCount = 0;
+            let totalActualCount = 0;
+
+            tasks.forEach(task => {
+                totalPlanCount += task.planDates.length;
+                totalActualCount += task.actualDates.length;
+            });
+
+            // Tampilkan ke dalam kotak
+            document.getElementById("totalPlan").textContent = totalPlanCount;
+            document.getElementById("totalActual").textContent = totalActualCount;
+
+
     }
     
 
@@ -417,6 +464,17 @@ function getWeeksInMonth(year, month) {
     }
     
     return weeks;
+}
+function calculateTotalPlanAndActual() {
+    let totalPlan = 0;
+    let totalActual = 0;
+
+    tasks.forEach(task => {
+        totalPlan += task.planDates.length;
+        totalActual += task.actualDates.length;
+    });
+
+    return { totalPlan, totalActual };
 }
 
 // Tambahkan baris achievement ke tabel

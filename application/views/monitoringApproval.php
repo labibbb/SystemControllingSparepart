@@ -58,28 +58,23 @@
             initialView: 'dayGridMonth',
             events: <?= json_encode(array_map(function ($row) {
                   // Skip events with status 3
-                if ($row["status"] == 3) {
-                    return null;
-                }
                 return [
                     "title" => "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
                     "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
                     "allDay" => true,
-                    "backgroundColor" =>
-                        $row["status"] == 4 ? "black" : 
+                    "backgroundColor" => 
+                        $row["status"] == 4 ? "black" :
+                        ($row["status"] == 3 ? "black" :  
                         ($row["status"] == 5 ? "blue" : 
                         ($row["status"] == 6 ? "darkcyan" : 
                         ($row["status"] == 7 ? "red" :
-                        ($row["status"] == 9 ? "red" :  
-                        ($row["status"] == 8 ? "lightseagreen" : "gray"))))),
+                        ($row["status"] == 9 ? "red" :   
+                        ($row["status"] == 8 ? "lightseagreen" : "gray")))))),
                     "id_mesin" => $row["id_mesin"],
                     "tanggal" => $row["tanggal"],
                     "id_pmm" => $row["id_pmm"]
                 ];
-              }, array_filter($pmmonthly, function($row) {
-                // Filter out status 3 at the array level
-                return $row["status"] != 3;
-            })), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+            }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
 
                 eventClick: function(info) {
                 // Cek level user dari PHP session

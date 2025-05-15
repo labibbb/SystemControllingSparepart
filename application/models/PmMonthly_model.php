@@ -22,7 +22,13 @@ class PmMonthly_model extends CI_Model {
         $this->db->where('pm_monthly.id_lini', 1);
         
         return $this->db->get()->result_array();
-    }    
+    }
+    public function get_rescheduled_date($original_id) {
+    $this->db->select('tanggal');
+    $this->db->where('pmBefore', $original_id);
+    $query = $this->db->get('pm_monthly');
+    return $query->row() ? $query->row()->tanggal : null;
+}    
     
     public function getFilteredData($id_lini) {
         $this->db->select('

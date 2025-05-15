@@ -119,8 +119,14 @@
                                         <?php if($row['statusresc'] != 10): ?>
                                             <button class="btn btn-warning btn-sm" onclick="editTanggal2(<?= $row['id_pmm']; ?>, '<?= date('Y-m-d', strtotime($row['tanggal'])); ?>', '<?= $row['catatan']; ?>', <?= $row['bulan']; ?>, <?= $row['tahun']; ?>)">Tgl</button>
                                         <?php else: ?>
-                                            <span class="badge bg-secondary">Telah Direschedule</span>
-                                        <?php endif; ?>
+                                            <?php
+                                        $rescheduled_date = $this->PmMonthly_model->get_rescheduled_date($row['id_pmm']);
+                                        ?>
+                                        <span class="badge bg-secondary">
+                                            Telah Direschedule
+                                            <?= $rescheduled_date ? "(" . date('d M Y', strtotime($rescheduled_date)) . ")" : "" ?>
+                                        </span>
+                                    <?php endif; ?>
                                     </td>   
                                         <?php else: ?>
                                             <td class="bg-secondary text-white text-center">No Action</td>
@@ -159,10 +165,6 @@
                         <input type="date" name="tanggal" id="tanggal_tgl" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_tgl" class="form-control">
-                    </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -194,10 +196,6 @@
                         <input type="date" name="tanggal" id="tanggal_tgl2" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_tgl2" class="form-control">
-                    </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -224,10 +222,6 @@
                         <input type="date" name="tanggal" id="tanggal" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_mp" class="form-control">
-                    </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -257,10 +251,6 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="catatan_mp">Catatan</label>
-                        <input type="text" name="catatan" id="catatan_mp" class="form-control">
-                    </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -527,8 +517,20 @@ document.addEventListener("DOMContentLoaded", function () {
                             </td>
                         `;
                     } else {
+                         // Format tanggal reschedule
+                        let rescheduleDate = row.rescheduled_date ? 
+                            new Date(row.rescheduled_date).toLocaleDateString('id-ID', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric'
+                            }) : '';
+                            
                         actionCell = `
-                            <td><span class="badge bg-secondary">Telah Direschedule</span></td>
+                            <td>
+                                <span class="badge bg-secondary reschedule-badge" data-id="${row.id_pmm}">
+                                    Telah Direschedule ${rescheduleDate ? '('+rescheduleDate+')' : ''}
+                                </span>
+                            </td>
                         `;
                     }
                 } else {

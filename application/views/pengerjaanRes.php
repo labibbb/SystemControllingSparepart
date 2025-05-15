@@ -192,11 +192,11 @@
                                         <td>:</td>
                                         <td id="nama_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
                                     </tr>
-                                    <tr>
-                                        <td class="fw-bold">Catatan</td>
-                                        <td>:</td>
-                                        <td id="catatan"><?= isset($catatan) ? $catatan : '-'; ?></td>
-                                    </tr>
+                                  <tr style="background-color: #ffebee; border-bottom: 2px solid #ff5252;">
+                                <td class="fw-bold">Catatan</td>
+                                <td>:</td>
+                                <td id="catatan"><?= isset($catatan) ? $catatan : '-'; ?></td>
+                            </tr>
                                 </table>
                             </div>
                             <div class="col-md-6">

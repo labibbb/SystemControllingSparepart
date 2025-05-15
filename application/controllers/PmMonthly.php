@@ -111,6 +111,12 @@ class PmMonthly extends CI_Controller {
         $id_lini = $this->input->post('lini');
 
         $filteredData = $this->PmMonthly_model->getFilteredData($id_lini);
+        foreach ($filteredData  as &$row) {
+        if ($row['statusresc'] == 10) {
+            $rescheduled = $this->PmMonthly_model->get_rescheduled_date($row['id_pmm']);
+            $row['rescheduled_date'] = $rescheduled;
+        }
+    }
         echo json_encode($filteredData);
     }
 }

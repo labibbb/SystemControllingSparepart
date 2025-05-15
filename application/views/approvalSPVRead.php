@@ -78,11 +78,11 @@
                                         <td>:</td>
                                         <td id="nama_mesin"><?= isset($singleChecksheet['nama_mesin']) ? $singleChecksheet['nama_mesin'] : '-'; ?></td>
                                     </tr>
-                                    <tr>
-                                        <td class="fw-bold">Catatan</td>
-                                        <td>:</td>
-                                        <td id="catatan"><?= isset($catatan) ? $catatan : '-'; ?></td>
-                                    </tr>
+                                     <tr style="background-color: #ffebee; border-bottom: 2px solid #ff5252;">
+                                <td class="fw-bold">Catatan</td>
+                                <td>:</td>
+                                <td id="catatan"><?= isset($catatan) ? $catatan : '-'; ?></td>
+                            </tr>
                                 </table>
                             </div>
                             <div class="col-md-6">
@@ -111,19 +111,26 @@
                                         <tr>
                                             <td>Status Checksheet :</td>
                                             <?php 
-                                                if ($pmm['yearStatus'] == 1) {
-                                                    $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
-                                                    $statusText = 'Reject by foreman';
-                                                } elseif ($pmm['yearStatus'] == 2) {
-                                                    $class = 'bg-success text-white'; // Finish on Time (Hijau)
-                                                    $statusText = 'Finish on Time';
-                                                } elseif ($pmm['yearStatus'] == 3) {
-                                                    $class = 'bg-danger text-white'; // Finish on Delay (Merah)
-                                                    $statusText = 'Finish on Delay';
-                                                } else {
-                                                    $class = 'bg-secondary text-white'; // Default (Abu-abu)
-                                                    $statusText = 'Unknown Status';
-                                                }
+                                                // Logika status baru
+                                            if (!isset($pmm['checked'])) {
+                                                $class = 'bg-danger text-white';
+                                                $statusText = 'Reject by Foreman';
+                                            } elseif (!isset($pmm['approve']) && isset($pmm['checked'])) {
+                                                $class = 'bg-danger text-white';
+                                                $statusText = 'Reject by Supervisor';
+                                            } elseif ($pmm['yearStatus'] == 1) {
+                                                $class = 'bg-primary text-white';
+                                                $statusText = 'Reject by foreman';
+                                            } elseif ($pmm['yearStatus'] == 2) {
+                                                $class = 'bg-success text-white';
+                                                $statusText = 'Finish on Time';
+                                            } elseif ($pmm['yearStatus'] == 3) {
+                                                $class = 'bg-danger text-white';
+                                                $statusText = 'Finish on Delay';
+                                            } else {
+                                                $class = 'bg-secondary text-white';
+                                                $statusText = 'Unknown Status';
+                                            }
                                             ?>
                                             <td colspan="2" class="fw-bold <?= $class; ?>"><?= $statusText; ?></td>
                                         </tr>

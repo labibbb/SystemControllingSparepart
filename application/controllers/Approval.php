@@ -310,16 +310,19 @@ class Approval extends CI_Controller
     public function exportPdf()
     {
         $id_mesin = $this->input->post('id_mesin');
+        $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
 
         $singlechecksheet = $this->Approval_model->get_singlecheckseet($id_mesin);
         $checksheet = $this->Approval_model->get_checkseet($id_pmm);
         $wi = $this->Approval_model->get_wi($id_mesin);
         $pmm = $this->Approval_model->get_diverifikasi($id_pmm);
+        $tanggals = $this->input->post('tanggal_doc') ?? $singlechecksheet['tanggal_doc'] ?? date('Y-m-d');
+
 
         $this->load->library('pdf');
-        $tanggal = $this->input->post('tanggal_doc') ?? $singlechecksheet['tanggal_doc'] ?? date('Y-m-d');
 
+        
         // Menentukan ukuran halaman A2 landscape
         $pdf = new Pdf(array(594, 420), 'mm', '', true, 'UTF-8', false); // A2 landscape
 
@@ -355,6 +358,7 @@ class Approval extends CI_Controller
             ['Lini', ': ' . $singlechecksheet['nama_lini']],
             ['Area', ': ' . $singlechecksheet['nama_area']],
             ['Mesin', ': ' . $singlechecksheet['nama_mesin']],
+            ['Tanggal', ': ' . date('d/m/Y', strtotime($tanggal))], // Format tanggal diubah di sini
         ];
 
         // Loop untuk buat tabel
@@ -391,10 +395,27 @@ class Approval extends CI_Controller
         $pdf->Cell(40, 7, !empty($pmm['approveDate']) ? date('d/m/Y H:i', strtotime($pmm['approveDate'])) : '', 1, 1, 'C');
 
                 // Menjadi:
-        $pdf->SetXY(464, 100);
-        // Perbesar tinggi sel menjadi 10mm (bukan 7mm) dan lebarnya disesuaikan
-        $pdf->Cell(80, 10, 'Tanggal Pembuatan Checksheet', 1, 0, 'C');
-        $pdf->Cell(40, 10, date('d/m/Y', strtotime($tanggal)), 1, 0, 'C');
+        $pdf->SetXY(400, 100); // Posisi lebih ke kiri agar muat
+
+        // Lebar kolom disesuaikan
+        $colWidth = 35; // Lebar kolom tanggal/nomor
+        $labelWidth = 50; // Lebar kolom label
+
+        // Revision Issue Date row - dengan border penuh
+        $pdf->Cell($labelWidth, 10, 'Revision Issue Date', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, date('d/m/Y', strtotime($tanggals)), 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '', 1, 1, 'C'); // Line break setelah kolom terakhir
+
+        // Revision Number row - dengan border penuh
+        $pdf->SetX(400); // Kembali ke posisi X awal
+        $pdf->Cell($labelWidth, 10, 'Revision Number', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '1', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '2', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '3', 1, 0, 'C');
+        $pdf->Cell($colWidth, 10, '4', 1, 1, 'C'); // Line break setelah kolom terakhir
+
         $pdf->Ln(30);
         // Buat tabelm
         $tbl = '
