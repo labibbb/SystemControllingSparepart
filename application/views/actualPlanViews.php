@@ -7,19 +7,6 @@
         overflow-x: auto;
         position: relative;
     }
-    
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        white-space: nowrap;
-    }
-    
-    th, td {
-        border: 1px solid #ddd;
-        text-align: center;
-        padding: 12px;
-        min-width: 30px;
-    }
     .summary-box {
     padding: 10px 20px;
     border-radius: 8px;
@@ -36,13 +23,27 @@
 }
 
 .actual-box {
-    background-color: #e74c3c; /* Merah */
+    background-color:rgb(177, 60, 231); /* Merah */
 }
 
 .summary-box .value {
     margin-left: 5px;
     font-size: 18px;
 }
+
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        white-space: nowrap;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        text-align: center;
+        padding: 12px;
+        min-width: 30px;
+    }
     
     
     th {
@@ -220,6 +221,18 @@
         font-size: 12px;
         white-space: nowrap;
     }
+    /* Tambahkan di bagian CSS */
+.achievement-box {
+    background-color: #2ecc71; /* Warna hijau default */
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 16px;
+    min-width: 220px;
+    text-align: center;
+}
 </style>
 
 
@@ -244,15 +257,19 @@
                             <tbody id="ganttBody"></tbody>
                         </table>
                     </div>
-                      <div class="d-flex justify-content-center gap-4 mt-4">
+                    <!-- Legend Section -->
+                    <div class="d-flex justify-content-center gap-4 mt-4">
                     <div class="summary-box plan-box">
                         Total Plan Item PM: <span id="totalPlan" class="value"></span>
                     </div>
                     <div class="summary-box actual-box">
                         Total Actual Item PM: <span id="totalActual" class="value"></span>
                     </div>
+                    <div class="summary-box achievement-box" id="achievementBox">
+                        Achievement YTD: <span id="achievementPercent" class="value">0%</span>
+                    </div>
                 </div>
-                    <!-- Legend Section -->
+
                     <div class="legend">
                         <div class="legend-item">
                             <div class="legend-color plan"></div>
@@ -304,100 +321,159 @@
 
     // Fungsi untuk format tanggal menjadi "YYYY-MM-DD"
     function formatDate(dateString) {
-        if (!dateString) return null;
-        const date = new Date(dateString);
-        if (isNaN(date)) return null;
-        return date.toISOString().split('T')[0];
-    }
+    if (!dateString) return null;
+    
+    // Parse tanggal sebagai UTC+7 (WIB)
+    const date = new Date(dateString);
+    if (isNaN(date)) return null;
+    
+    // Tambah 7 jam untuk kompensasi UTC+7
+    date.setHours(date.getHours() + 7);
+    
+    return date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+}
 
     function generateGanttChart() {
-        currentYear = document.getElementById("yearFilter").value;
-        let headerHtml = `<tr><th>Mesin</th>`;
-        let weeks = {};
-        const achievementData = calculateAchievement();
-       
+    currentYear = parseInt(document.getElementById("yearFilter").value);
+    let headerHtml = `<tr><th>Mesin</th>`;
+    let weeks = {};
+    const achievementData = calculateAchievement();
 
-        // Mengelompokkan hari dalam minggu
+    // Hitung total plan dan actual untuk tahun yang dipilih
+    let totalPlanCount = 0;
+    let totalActualCount = 0;
+
+    tasks.forEach(task => {
+        // Hitung plan untuk tahun yang dipilih
+        task.planDates.forEach(dateStr => {
+            const date = new Date(dateStr);
+            if (date.getFullYear() === currentYear) {
+                totalPlanCount++;
+            }
+        });
+        
+        // Hitung actual untuk tahun yang dipilih
+        task.actualDates.forEach(dateStr => {
+            const date = new Date(dateStr);
+            if (date.getFullYear() === currentYear) {
+                totalActualCount++;
+            }
+        });
+    });
+
+    // Tampilkan ke dalam kotak
+    document.getElementById("totalPlan").textContent = totalPlanCount;
+    document.getElementById("totalActual").textContent = totalActualCount;
+
+    // Hitung dan tampilkan persentase achievement
+    const achievementPercent = totalPlanCount > 0 
+        ? Math.round((totalActualCount / totalPlanCount) * 100)
+        : 0;
+    
+    document.getElementById("achievementPercent").textContent = achievementPercent + '%';
+    
+    
+    // Update warna kotak achievement berdasarkan persentase
+    const achievementBox = document.getElementById("achievementBox");
+    achievementBox.style.backgroundColor = getAchievementColor(achievementPercent);
+
+    // Rest of your existing code...
+    // Mengelompokkan hari dalam minggu
+    for (let month = 0; month < 12; month++) {
+        let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+        let weekCounter = 1;
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            let weekLabel = `${new Date(currentYear, month, day).toLocaleString('id-ID', { month: 'long' })} W${weekCounter}`;
+            if (!weeks[weekLabel]) {
+                weeks[weekLabel] = [];
+            }
+            weeks[weekLabel].push(day);
+            if (new Date(currentYear, month, day).getDay() === 6) {
+                weekCounter++;
+            }
+        }
+    }
+
+    // Membuat header tabel
+    for (let week in weeks) {
+        headerHtml += `<th colspan="${weeks[week].length}">${week}</th>`;
+    }
+    headerHtml += `</tr><tr><th></th>`;
+    for (let week in weeks) {
+        weeks[week].forEach(day => {
+            headerHtml += `<th>${String(day).padStart(2, '0')}</th>`;
+        });
+    }
+    headerHtml += `</tr>`;
+    document.getElementById("ganttHeader").innerHTML = headerHtml;
+
+    let bodyHtml = "";
+    tasks.forEach(task => {
+        bodyHtml += `<tr><td><strong>${task.name}</strong> (Plan)</td>`;
         for (let month = 0; month < 12; month++) {
             let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-            let weekCounter = 1;
-
             for (let day = 1; day <= daysInMonth; day++) {
-                let weekLabel = `${new Date(currentYear, month, day).toLocaleString('id-ID', { month: 'long' })} W${weekCounter}`;
-                if (!weeks[weekLabel]) {
-                    weeks[weekLabel] = [];
-                }
-                weeks[weekLabel].push(day);
-                if (new Date(currentYear, month, day).getDay() === 6) {
-                    weekCounter++;
-                }
+                let dateString = `${currentYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                bodyHtml += (task.planDates.includes(dateString)) ? `<td class="gantt-bar plan"></td>` : `<td></td>`;
             }
         }
+        bodyHtml += `</tr>`;
 
-        // Membuat header tabel
-        for (let week in weeks) {
-            headerHtml += `<th colspan="${weeks[week].length}">${week}</th>`;
-        }
-        headerHtml += `</tr><tr><th></th>`;
-        for (let week in weeks) {
-            weeks[week].forEach(day => {
-                headerHtml += `<th>${String(day).padStart(2, '0')}</th>`;
-            });
-        }
-        headerHtml += `</tr>`;
-        document.getElementById("ganttHeader").innerHTML = headerHtml;
-
-        let bodyHtml = "";
-        tasks.forEach(task => {
-            bodyHtml += `<tr><td><strong>${task.name}</strong> (Plan)</td>`;
-            for (let month = 0; month < 12; month++) {
-                let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-                for (let day = 1; day <= daysInMonth; day++) {
-                    let dateString = `${currentYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    bodyHtml += (task.planDates.includes(dateString)) ? `<td class="gantt-bar plan"></td>` : `<td></td>`;
-                }
+        bodyHtml += `<tr><td><strong>${task.name}</strong> (Aktual)</td>`;
+        for (let month = 0; month < 12; month++) {
+            let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                let dateString = `${currentYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                bodyHtml += (task.actualDates.includes(dateString)) ? `<td class="gantt-bar actual"></td>` : `<td></td>`;
             }
-            bodyHtml += `</tr>`;
-
-            bodyHtml += `<tr><td><strong>${task.name}</strong> (Aktual)</td>`;
-            for (let month = 0; month < 12; month++) {
-                let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-                for (let day = 1; day <= daysInMonth; day++) {
-                    let dateString = `${currentYear}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    bodyHtml += (task.actualDates.includes(dateString)) ? `<td class="gantt-bar actual"></td>` : `<td></td>`;
-                }
-            }
-            bodyHtml += `</tr>`;
-        });
-        document.getElementById("ganttBody").innerHTML = bodyHtml;
-        addAchievementRow(achievementData);
-         // Hitung total plan dan actual
-            let totalPlanCount = 0;
-            let totalActualCount = 0;
-
-            tasks.forEach(task => {
-                totalPlanCount += task.planDates.length;
-                totalActualCount += task.actualDates.length;
-            });
-
-            // Tampilkan ke dalam kotak
-            document.getElementById("totalPlan").textContent = totalPlanCount;
-            document.getElementById("totalActual").textContent = totalActualCount;
-
-    }
-    
+        }
+        bodyHtml += `</tr>`;
+    });
+    document.getElementById("ganttBody").innerHTML = bodyHtml;
+    addAchievementRow(achievementData);
+}
+    function getAchievementColor(percentage) {
+    if (percentage >= 90) return '#2ecc71'; // Hijau untuk achievement tinggi
+    if (percentage >= 70) return '#f39c12'; // Oranye untuk achievement sedang
+    return '#e74c3c'; // Merah untuk achievement rendah
+}
 
     function populateYearDropdown() {
-        let yearDropdown = document.getElementById("yearFilter");
-        let currentYear = new Date().getFullYear();
-        for (let i = currentYear - 5; i <= currentYear + 5; i++) {
-            let option = document.createElement("option");
-            option.value = i;
-            option.text = i;
-            if (i === currentYear) option.selected = true;
-            yearDropdown.appendChild(option);
-        }
+    let yearDropdown = document.getElementById("yearFilter");
+    let currentYear = new Date().getFullYear();
+    
+    // Kosongkan dropdown terlebih dahulu
+    yearDropdown.innerHTML = '';
+    
+    // Cari tahun minimum dan maksimum dari data
+    let minYear = currentYear;
+    let maxYear = currentYear;
+    
+    tasks.forEach(task => {
+        task.planDates.concat(task.actualDates).forEach(dateStr => {
+            if (dateStr) {
+                const year = new Date(dateStr).getFullYear();
+                minYear = Math.min(minYear, year);
+                maxYear = Math.max(maxYear, year);
+            }
+        });
+    });
+    
+    // Buat opsi tahun dari minYear sampai maxYear
+    for (let i = minYear; i <= maxYear; i++) {
+        let option = document.createElement("option");
+        option.value = i;
+        option.text = i;
+        if (i === currentYear) option.selected = true;
+        yearDropdown.appendChild(option);
     }
+    
+    // Update event listener to regenerate chart
+    yearDropdown.addEventListener('change', function() {
+        generateGanttChart();
+    });
+}
     // Tambahkan fungsi untuk menghitung achievement
 function calculateAchievement() {
     const year = parseInt(document.getElementById("yearFilter").value);
@@ -461,6 +537,17 @@ function getWeeksInMonth(year, month) {
     }
     
     return weeks;
+}
+function calculateTotalPlanAndActual() {
+    let totalPlan = 0;
+    let totalActual = 0;
+
+    tasks.forEach(task => {
+        totalPlan += task.planDates.length;
+        totalActual += task.actualDates.length;
+    });
+
+    return { totalPlan, totalActual };
 }
 
 // Tambahkan baris achievement ke tabel

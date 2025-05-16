@@ -36,13 +36,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<span class="icon-Align-left"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span>
 		</a>	
 		<!-- Logo -->
-		<a href="index.html" class="logo">
+		<a href="dashboard" class="logo">
   <!-- logo-->
   <div class="logo-lg">
-      <span class="light-logo">
-          <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo" style="width: 15000px; height: 40px;">
-      </span>
-  </div>
+    <span class="light-logo" style="cursor: default; pointer-events: none;">
+        <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo"
+             style="width: 150px; height: 40px; pointer-events: none; user-select: none;" draggable="false">
+    </span>
+</div>
+
 </a>
 	</div>  
     <!-- Header Navbar -->

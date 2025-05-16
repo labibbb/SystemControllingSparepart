@@ -71,9 +71,9 @@
                                                 <?php if ($row['status'] == 1): ?>
                                                     <button class="btn btn-sm btn-primary">Belum Terlaksana</button>
                                                 <?php elseif ($row['status'] == 2): ?>
-                                                    <button class="btn btn-sm btn-success">Finish On Time</button>
-                                                <?php elseif ($row['status'] == 3): ?>
                                                     <button class="btn btn-sm btn-danger">Finish On Delay</button>
+                                                <?php elseif ($row['status'] == 3): ?>
+                                                    <button class="btn btn-sm btn-success">Finish On Time</button>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="bg-secondary text-white text-center">No Action</td>
@@ -142,9 +142,9 @@
                                                     <?php if ($row['status'] == 1): ?>
                                                         <button class="btn btn-sm btn-primary">Belum Terlaksana</button>
                                                     <?php elseif ($row['status'] == 2): ?>
-                                                        <button class="btn btn-sm btn-success">Finish On Time</button>
+                                                        <button class="btn btn-sm btn-success">Finish On Delay</button>
                                                     <?php elseif ($row['status'] == 3): ?>
-                                                        <button class="btn btn-sm btn-danger">Finish On Delay</button>
+                                                        <button class="btn btn-sm btn-danger">Finish On Time</button>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="bg-secondary text-white text-center">No Action</td>
@@ -294,38 +294,43 @@
         });
 
         function filterData() {
-            $.post("<?= base_url('pmyearly/filter'); ?>", {
-                tahun: $('#filterTahun1').val(),
-                bulan: $('#filterBulan1').val(),
-                area: $('#filterArea1').val()
-            }, function (data) {
-                let rows = '';
-                let result = JSON.parse(data);
+        $.post("<?= base_url('pmyearly/filter'); ?>", {
+            tahun: $('#filterTahun1').val(),
+            bulan: $('#filterBulan1').val(),
+            area: $('#filterArea1').val()
+        }, function (data) {
+            let rows = '';
+            let result = JSON.parse(data);
 
-                if (result.length === 0) {
-                    rows = `<tr>
-                        <td colspan="6" class="text-center text-danger">Data Not Found</td>
+            if (result.length === 0) {
+                rows = `<tr>
+                    <td colspan="6" class="text-center text-danger">Data Not Found</td>
+                </tr>`;
+            } else {
+                result.forEach((row, index) => {
+                    let statusButton = '';
+                    if (row.status == 1) {
+                        statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
+                    } else if (row.status == 2) {
+                        statusButton = `<button class="btn btn-sm btn-danger">Finish On Delay</button>`;
+                    } else if (row.status == 3) {
+                        statusButton = `<button class="btn btn-sm btn-success">Finish On Time</button>`;
+                    }
+
+                    rows += `<tr>
+                        <td>${index + 1}</td>
+                        <td>${row.tahun}</td>
+                        <td>${row.bulan}</td>
+                        <td>${row.nama_mesin}</td>
+                        <td>${statusButton}</td>
+                        <td class="bg-secondary text-white text-center">No Action</td>
                     </tr>`;
-                } else {
-                    result.forEach((row, index) => {
-                        let statusButton = row.status == 1
-                            ? `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`
-                            : `<button class="btn btn-sm btn-success">Sudah Terlaksana</button>`;
+                });
+            }
 
-                        rows += `<tr>
-                            <td>${index + 1}</td>
-                            <td>${row.tahun}</td>
-                            <td>${row.bulan}</td>
-                            <td>${row.nama_mesin}</td>
-                            <td>${statusButton}</td>
-                            <td class="bg-secondary text-white text-center">No Action</td>
-                        </tr>`;
-                    });
-                }
-
-                $('#table1-body').html(rows); // UPDATE HANYA TABLE1
-            });
-        }
+            $('#table1-body').html(rows);
+        });
+}
 
 
         // Event listener hanya untuk filter yang berkaitan dengan table1
@@ -346,9 +351,14 @@
                     </tr>`;
                 } else {
                     result.forEach((row, index) => {
-                        let statusButton = row.status == 1
-                            ? `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`
-                            : `<button class="btn btn-sm btn-success">Sudah Terlaksana</button>`;
+                        let statusButton = '';
+                        if (row.status == 1) {
+                            statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
+                        } else if (row.status == 2) {
+                            statusButton = `<button class="btn btn-sm btn-success">Finish On Delay</button>`;
+                        } else if (row.status == 3) {
+                            statusButton = `<button class="btn btn-sm btn-danger">Finish On Time</button>`;
+                        }
 
                         rows += `<tr>
                             <td>${index + 1}</td>

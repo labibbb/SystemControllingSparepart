@@ -62,7 +62,7 @@
             $status = $row["status"];
             
             // Cek kondisi delay
-            $isDelayed = (in_array($status, [4, 7, 9, 5, 6]) && $eventDate < $today);
+            $isDelayed = (in_array($status, [4, 7, 9, 5, 6, 8]) && $eventDate < $today);
             $isAbnormal = (in_array($status, [7, 9]) && $eventDate < $today);
             $isRegularDelay = (in_array($status, [3, 4, 5, 6]) && $eventDate < $today);
 

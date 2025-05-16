@@ -6,7 +6,7 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Master Setting FWM</h3>
+                    <h3 class="box-title">Setting FWM</h3>
                     <button class="btn btn-success" onclick="openModal()">Tambah Setting</button>
                 </div>
                 <div class="box-body">

@@ -15,7 +15,6 @@
 						</div>						  
 						<div class="box-body" style="text-align: right;">	
 							<h1 class="countnm fs-50 m-0"><?= $inProcess ?></h1>
-							<button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 						</div>
 					</a>
 				</div>					
@@ -26,7 +25,6 @@
 					</div>
 					<div class="box-body" style="text-align: right;">
 					  <h1 class="countnm fs-50 m-0" ><?= $waitingApproval ?></h1>
-					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
 				</div>
@@ -39,7 +37,6 @@
 					</div>
 					<div class="box-body" style="text-align: right;">
 					  <h1 class="countnm fs-50 m-0 text-danger"><?= $rejected ?></h1>
-					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-danger mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
 				</div>
@@ -52,7 +49,6 @@
 					</div>
 					<div class="box-body" style="text-align: right;">
 					  <h1 class="countnm fs-50 m-0"><?= $completeAll ?></h1>
-					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
 				</div>
@@ -63,7 +59,6 @@
 					</div>
 					<div class="box-body" style="text-align: right;">
 					  <h1 class="countnm fs-50 m-0" ><?= $total ?></h1>
-					  <button type="button" class="waves-effect waves-light btn btn-outline btn-rounded btn-primary mb-5 btn-sm" style="margin-top: 22px;">More Info<i class="fa fa-fw fa-arrow-circle-o-right"></i></button>
 					</div>
 				  </a>
 				</div>

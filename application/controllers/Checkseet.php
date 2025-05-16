@@ -133,55 +133,84 @@ class Checkseet extends CI_Controller {
     }
 
     public function editChecksheet() {
-        // Menerima data dalam format JSON
-        $jsonData = json_decode($this->input->raw_input_stream, true);
-        
-        if (!isset($jsonData['data']) || !is_array($jsonData['data'])) {
-            echo json_encode(['status' => 'error', 'message' => 'Data tidak valid']);
-            return;
-        }
+    $jsonData = json_decode($this->input->raw_input_stream, true);
     
-        $dataList = $jsonData['data'];
-        $user_id = $this->session->userdata('user_id');
-        $i = 0; // Perbaikan deklarasi variabel
-
-        foreach ($dataList as $data) {
-            if ($i == 0) { // Perbaikan kondisi
-                $this->Checkseet_model->delete_checkseet(
-                    isset($data['id_lini']) ? (int)$data['id_lini'] : null, 
-                    isset($data['id_area']) ? (int)$data['id_area'] : null, 
-                    isset($data['id_mesin']) ? (int)$data['id_mesin'] : null
-                );
-                $i = 1; // Set $i ke 1 agar delete hanya dilakukan sekali
-            }
-            $insertData = [
-                'id_lini'        => isset($data['id_lini']) ? (int)$data['id_lini'] : null, 
-                'id_area'        => isset($data['id_area']) ? (int)$data['id_area'] : null,
-                'id_mesin'       => isset($data['id_mesin']) ? (int)$data['id_mesin'] : null, 
-                'item_cek'       => isset($data['item_cek']) ? trim($data['item_cek']) : null, 
-                'point_cek'      => isset($data['point_cek']) ? trim($data['point_cek']) : null, 
-                'metode_cek'     => isset($data['metode_cek']) ? trim($data['metode_cek']) : null, 
-                'standard'       => isset($data['standard']) ? trim($data['standard']) : null, 
-                'status'         => isset($data['status']) ? (int)$data['status'] : 1, 
-                'no_form'        => isset($data['no_form']) ? trim($data['no_form']) : null, 
-                'no_doc'         => isset($data['no_doc']) ? trim($data['no_doc']) : null, 
-                'nama_doc'        => isset($data['nama']) ? trim($data['no_form']) : null, 
-                'no_doc'         => isset($data['no_doc']) ? trim($data['no_doc']) : null, 
-                'nama_doc'       => isset($data['nama_doc']) ? trim($data['nama_doc']) : null, 
-                'tanggal_doc'    => isset($data['tanggal_doc']) ? trim($data['tanggal_doc']) : null, 
-                'departemen'     => isset($data['id_departemen']) ? trim($data['id_departemen']) : null,
-            ];
-    
-            log_message('debug', 'Insert Data: ' . print_r($insertData, true));
-    
-            if (!$this->db->insert('data_checksheet', $insertData)) {
-                log_message('error', 'Failed to insert data');
-            }
-        }
-    
-        echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
+    if (!$jsonData || !isset($jsonData['data'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid data']);
+        return;
     }
 
+    $this->db->trans_start();
+    
+    try {
+        $id_mesin = $jsonData['data'][0]['id_mesin'] ?? null;
+        
+        if (!$id_mesin) {
+            throw new Exception('ID Mesin tidak valid');
+        }
+
+        // 1. Ambil semua data checksheet yang ada untuk mesin ini
+        $existingChecks = $this->db->select('id_ck, item_cek, point_cek')
+                                 ->from('data_checksheet')
+                                 ->where('id_mesin', $id_mesin)
+                                 ->get()
+                                 ->result_array();
+
+        // 2. Proses update atau insert data baru
+        foreach ($jsonData['data'] as $data) {
+            $checkData = [
+                'id_lini' => $data['id_lini'],
+                'id_area' => $data['id_area'],
+                'id_mesin' => $data['id_mesin'],
+                'item_cek' => $data['item_cek'],
+                'point_cek' => $data['point_cek'],
+                'metode_cek' => $data['metode_cek'],
+                'standard' => $data['standard'],
+                'status' => 1,
+                'no_form' => $data['no_form'],
+                'no_doc' => $data['no_doc'],
+                'nama_doc' => $data['nama_doc'],
+                'tanggal_doc' => $data['tanggal_doc'],
+                'departemen' => $data['id_departemen']
+            ];
+
+            // Cek apakah data sudah ada (berdasarkan item_cek dan point_cek)
+            $existing = array_filter($existingChecks, function($item) use ($data) {
+                return $item['item_cek'] == $data['item_cek'] && $item['point_cek'] == $data['point_cek'];
+            });
+
+            if (!empty($existing)) {
+                $existing = array_shift($existing);
+                // Update data yang sudah ada
+                $this->db->where('id_ck', $existing['id_ck'])
+                         ->update('data_checksheet', $checkData);
+            } else {
+                // Insert data baru
+                $this->db->insert('data_checksheet', $checkData);
+            }
+        }
+
+        // 3. Non-aktifkan data yang tidak ada di input baru (soft delete)
+        $newItems = array_map(function($item) {
+            return $item['item_cek'].'|'.$item['point_cek'];
+        }, $jsonData['data']);
+
+        foreach ($existingChecks as $existing) {
+            $key = $existing['item_cek'].'|'.$existing['point_cek'];
+            if (!in_array($key, $newItems)) {
+                $this->db->where('id_ck', $existing['id_ck'])
+                         ->update('data_checksheet', ['status' => 0]);
+            }
+        }
+
+        $this->db->trans_complete();
+        
+        echo json_encode(['status' => 'success', 'message' => 'Data berhasil diupdate']);
+    } catch (Exception $e) {
+        $this->db->trans_rollback();
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    }
+}
     public function insertChecksheet() {
         // Menerima data dalam format JSON
         $jsonData = json_decode($this->input->raw_input_stream, true);
