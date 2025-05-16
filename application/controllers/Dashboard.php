@@ -31,8 +31,8 @@ class Dashboard extends CI_Controller {
     }
 
     public function index() {
-        $pmmonthly = $this->Pengerjaan_model->getFilteredData();
-        $pmmonthly2 = $this->Pengerjaan_model->getFilteredData2();
+        $pmmonthly = $this->Pengerjaan_model->getFilteredDataDashboard();
+        $pmmonthly2 = $this->Pengerjaan_model->getFilteredDataDashboard2();
     
         $today = date('Y-m-d');
     

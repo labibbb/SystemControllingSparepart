@@ -40,8 +40,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <!-- logo-->
   <div class="logo-lg">
     <span class="light-logo" style="cursor: default; pointer-events: none;">
-        <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo"
-             style="width: 150px; height: 40px; pointer-events: none; user-select: none;" draggable="false">
+        <!-- <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo"
+             style="width: 150px; height: 40px; pointer-events: none; user-select: none;" draggable="false"> -->
     </span>
 </div>
 
