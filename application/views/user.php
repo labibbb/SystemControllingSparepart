@@ -16,7 +16,8 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Username</th>
-                                    <th>Role</th>
+                                    <th>Departemen</th>
+                                    <th>Level</th>
                                     <th>Status</th>
                                     <th>Tanggal Dibuat</th>
                                     <th>Aksi</th>
@@ -27,7 +28,8 @@
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td><?= $row['username']; ?></td>
-                                        <td><?= $row['id']; ?></td>
+                                        <td><?= $row['dept']; ?></td>
+                                        <td><?= $row['level']; ?></td>
                                         <td>
                                             <?php if ($row['active'] == 1): ?>
                                                 <span class="badge bg-success">Aktif</span>
@@ -76,7 +78,11 @@
                     </div>
                     <div class="form-group">
                         <label>Level</label>
-                        <input type="text" id="level" class="form-control" required>
+                        <select id="level" class="form-control" required>
+                            <option value="1">Supervisor</option>
+                            <option value="2">Foreman</option>
+                            <option value="3">Operator</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Departemen</label>

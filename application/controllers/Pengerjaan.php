@@ -53,6 +53,9 @@ class Pengerjaan extends CI_Controller
 
     public function detail()
     {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 3) {
+            show_404(); // Tampilkan halaman 404
+        }
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');
@@ -273,6 +276,9 @@ class Pengerjaan extends CI_Controller
 
     public function detailRes()
     {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 3) {
+            show_404(); // Tampilkan halaman 404
+        }
         $id_mesin = $this->input->post('id_mesin');
         $tanggal = $this->input->post('tanggal');
         $id_pmm = $this->input->post('id_pmm');

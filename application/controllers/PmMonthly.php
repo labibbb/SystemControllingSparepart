@@ -31,6 +31,9 @@ class PmMonthly extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 2) {
+            show_404(); // Tampilkan halaman 404
+        }
         // Ambil data sesuai filter awal
         $pmmonthly = $this->PmMonthly_model->get_all_pmmonthly();
         $manpower = $this->PmMonthly_model->get_manpower();

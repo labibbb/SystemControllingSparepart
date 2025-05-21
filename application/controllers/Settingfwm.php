@@ -31,6 +31,9 @@ class Settingfwm extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         $data['settings'] = $this->Settingfwm_model->get_all_settings();
         $data['lini'] = $this->Settingfwm_model->get_lini();
         $data['wi'] = $this->Settingfwm_model->get_wi();

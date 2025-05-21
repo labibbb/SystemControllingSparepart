@@ -43,6 +43,9 @@
         }
     }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="content-wrapper">
     <div class="container-full">
         <section class="content">
@@ -240,46 +243,53 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: <?= json_encode(array_map(function ($row) {
-                $today = date("Y-m-d");
-                $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
-                $status = $row["status"];
-                
-                // Cek kondisi delay
-                $isDelayed = (in_array($status, [4, 7, 9, 5, 6,8]) && $eventDate < $today);
-                $isAbnormal = (in_array($status, [7, 9]) && $eventDate < $today);
-                $isRegularDelay = (in_array($status, [3, 4, 5, 6]) && $eventDate < $today);
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: <?= json_encode(array_map(function ($row) {
+    $today = date("Y-m-d");
+    $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
+    $status = $row["status"];
+    $preparedDate = !empty($row["preparedDate"]) ? date("Y-m-d", strtotime($row["preparedDate"])) : null;
+    
+    // Cek apakah tugas dikerjakan terlambat (preparedDate > tanggal seharusnya)
+    $isDelayed = ($preparedDate && $preparedDate > $eventDate);
+    
+    // Cek kondisi status untuk warna
+    $isAbnormal = in_array($status, [7, 9]);
+    $isRegularDelay = in_array($status, [3, 4, 5, 6]);
+    $isComplete = ($status == 8);
+    $isPastDue = ($eventDate < $today); // Cek jika tanggal sudah lewat
 
-                // Tentukan warna berdasarkan status
-                if ($isRegularDelay) {
-                    $color = "orange"; // Warna untuk delay biasa (status 3,4)
-                } elseif ($isAbnormal || $status == 9) {
-                    $color = "red"; // Warna untuk abnormality (status 7,9)
-                } elseif ($status == 8) {
-                    $color = "lightseagreen";
-                } else {
-                    $color = "blue"; // Default warna biru
-                }
+    // Tentukan warna berdasarkan status
+    if ($isRegularDelay) {
+        $color = $isPastDue ? "orange" : "blue"; // Orange jika lewat tanggal, biru jika belum
+    } elseif ($isAbnormal) {
+        $color = "red"; // Warna untuk abnormality (status 7,9)
+    } elseif ($isComplete) {
+        $color = "lightseagreen"; // Warna untuk complete (status 8)
+    } else {
+        $color = "blue"; // Default (status lain/belum dikerjakan)
+    }
 
-                return [
-                    "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
-                    "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
-                    "allDay" => true,
-                    "backgroundColor" => $color,
-                    "borderColor" => $isDelayed ? "red" : $color,
-                    "textColor" => "white",
-                    "id_mesin" => $row["id_mesin"],
-                    "tanggal" => $row["tanggal"],
-                    "id_pmm" => $row["id_pmm"],
-                    "extendedProps" => [
-                        "isDelayed" => $isDelayed,
-                        "isAbnormal" => $isAbnormal
-                    ]
-                ];
-            }, $pmmonthly3), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+    return [
+        "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
+        "start" => $eventDate,
+        "allDay" => true,
+        "backgroundColor" => $color,
+        "borderColor" => $isDelayed ? "red" : $color,
+        "textColor" => "white",
+        "id_mesin" => $row["id_mesin"],
+        "tanggal" => $row["tanggal"],
+        "id_pmm" => $row["id_pmm"],
+        "extendedProps" => [
+            "isDelayed" => $isDelayed,
+            "isAbnormal" => $isAbnormal,
+            "preparedDate" => $preparedDate,
+            "isPastDue" => $isPastDue
+        ]
+    ];
+}, $pmmonthly3), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
             
             eventDidMount: function(info) {
                 // Tambahkan tooltip khusus untuk yang delay
@@ -294,36 +304,7 @@
                 }
             },
             
-            eventClick: function(info) {
-                <?php if ($this->session->userdata('level') == 2): ?>
-                    return false;
-                <?php else: ?>
-                    var form = document.createElement("form");
-                    form.action = "<?= site_url('approvalSPV/read'); ?>";
-                    form.method = "POST";
-
-                    var id_mesin = document.createElement("input");
-                    id_mesin.type = "hidden";
-                    id_mesin.name = "id_mesin";
-                    id_mesin.value = info.event.extendedProps.id_mesin;
-                    form.appendChild(id_mesin);
-
-                    var tanggal = document.createElement("input");
-                    tanggal.type = "hidden";
-                    tanggal.name = "tanggal";
-                    tanggal.value = info.event.extendedProps.tanggal;
-                    form.appendChild(tanggal);
-
-                    var id_pmm = document.createElement("input");
-                    id_pmm.type = "hidden";
-                    id_pmm.name = "id_pmm";
-                    id_pmm.value = info.event.extendedProps.id_pmm;
-                    form.appendChild(id_pmm);
-
-                    document.body.appendChild(form);
-                    form.submit();
-                <?php endif; ?>
-            }
+            
         });
 
         calendar.render();
@@ -390,6 +371,53 @@
             }
         }
     })
+     function checkTodaysWork() {
+            var today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+            var hasWorkToday1 = false;
+            var hasWorkToday2 = false;
+            
+            // Check Table 1 (Painting 1)
+            $('#table1 tbody tr').each(function() {
+                var rowDate = $(this).find('.tanggal').text().trim();
+                if (rowDate === today) {
+                    hasWorkToday1 = true;
+                    return false; // Break the loop
+                }
+            });
+            
+            // Check Table 2 (Painting 2)
+            $('#table2 tbody tr').each(function() {
+                var rowDate = $(this).find('.tanggal').text().trim();
+                if (rowDate === today) {
+                    hasWorkToday2 = true;
+                    return false; // Break the loop
+                }
+            });
+            
+            // Show notification if there's work today
+            if (hasWorkToday1 || hasWorkToday2) {
+                var message = 'Anda memiliki pekerjaan hari ini di:';
+                if (hasWorkToday1 && hasWorkToday2) {
+                    message += '\n- Painting 1\n- Painting 2';
+                } else if (hasWorkToday1) {
+                    message += '\n- Painting 1';
+                } else {
+                    message += '\n- Painting 2';
+                }
+                
+                Swal.fire({
+                    title: 'Pekerjaan Hari Ini!',
+                    text: message,
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    timer: 5000, // Auto close after 5 seconds
+                    timerProgressBar: true,
+                    toast: false,
+                    position: 'center',
+                    showConfirmButton: true
+                });
+            }
+        }
 
         // Fungsi filter berdasarkan range tanggal
         function filterByDateRange() {
@@ -429,6 +457,8 @@
 
         // Panggil filterByDateRange saat halaman dimuat
         filterByDateRange();
+                checkTodaysWork();
+
 
         // Event listener ketika tombol filter diklik
         $('#btnFilter').on('click', function() {

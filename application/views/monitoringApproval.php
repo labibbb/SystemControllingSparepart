@@ -26,7 +26,7 @@
                                     <span class="status-box" style="background-color: red;"></span> Data Reject / Waiting Revision
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
-                                    <span class="status-box" style="background-color: darkcyan;"></span> On Waiting Approve Supervisor
+                                    <span class="status-box" style="background-color: purple;"></span> On Waiting Approve Supervisor
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
                                     <span class="status-box" style="background-color: lightseagreen;"></span> Complete All
@@ -66,7 +66,7 @@
                         $row["status"] == 4 ? "black" :
                         ($row["status"] == 3 ? "black" :  
                         ($row["status"] == 5 ? "blue" : 
-                        ($row["status"] == 6 ? "darkcyan" : 
+                        ($row["status"] == 6 ? "purple" : 
                         ($row["status"] == 7 ? "red" :
                         ($row["status"] == 9 ? "red" :   
                         ($row["status"] == 8 ? "lightseagreen" : "gray")))))),

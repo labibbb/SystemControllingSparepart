@@ -31,6 +31,9 @@ class Checkseet extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         $checkseet = $this->Checkseet_model->get_all_checkseet();
         
         $data = [

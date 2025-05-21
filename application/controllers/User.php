@@ -29,6 +29,9 @@ class User extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         $data['users'] = $this->User_model->get_all_userz();
         $data['departemen'] = $this->User_model->get_all_dept();
        // $data['users'] = $this->User_model->get_all_users();

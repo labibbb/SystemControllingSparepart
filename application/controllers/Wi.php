@@ -30,6 +30,9 @@ class Wi extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         $data['wi'] = $this->Wi_model->get_all_wi();
         $this->load->view('wi', $data);
     }

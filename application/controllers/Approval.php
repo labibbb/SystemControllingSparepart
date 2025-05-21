@@ -84,6 +84,7 @@ class Approval extends CI_Controller
 
     public function index()
     {
+        
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly();
         $lini = $this->Approval_model->get_lini();
@@ -98,6 +99,7 @@ class Approval extends CI_Controller
 
     public function index2()
     {
+        
         // Ambil data sesuai filter awal
         $pmmonthly = $this->Approval_model->get_all_pmmonthly2();
         $lini = $this->Approval_model->get_lini();

@@ -142,9 +142,9 @@
                                                     <?php if ($row['status'] == 1): ?>
                                                         <button class="btn btn-sm btn-primary">Belum Terlaksana</button>
                                                     <?php elseif ($row['status'] == 2): ?>
-                                                        <button class="btn btn-sm btn-success">Finish On Delay</button>
+                                                        <button class="btn btn-sm btn-danger">Finish On Delay</button>
                                                     <?php elseif ($row['status'] == 3): ?>
-                                                        <button class="btn btn-sm btn-danger">Finish On Time</button>
+                                                        <button class="btn btn-sm btn-success">Finish On Time</button>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="bg-secondary text-white text-center">No Action</td>
@@ -167,7 +167,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Setting</h5>
+                <h5 class="modal-title">Tambah Schedule</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -355,9 +355,9 @@
                         if (row.status == 1) {
                             statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
                         } else if (row.status == 2) {
-                            statusButton = `<button class="btn btn-sm btn-success">Finish On Delay</button>`;
+                            statusButton = `<button class="btn btn-sm btn-danger">Finish On Delay</button>`;
                         } else if (row.status == 3) {
-                            statusButton = `<button class="btn btn-sm btn-danger">Finish On Time</button>`;
+                            statusButton = `<button class="btn btn-sm btn-success">Finish On Time</button>`;
                         }
 
                         rows += `<tr>

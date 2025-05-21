@@ -57,42 +57,49 @@
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: <?= json_encode(array_map(function ($row) {
-            $today = date("Y-m-d");
-            $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
-            $status = $row["status"];
-            
-            // Cek kondisi delay
-            $isDelayed = (in_array($status, [4, 7, 9, 5, 6, 8]) && $eventDate < $today);
-            $isAbnormal = (in_array($status, [7, 9]) && $eventDate < $today);
-            $isRegularDelay = (in_array($status, [3, 4, 5, 6]) && $eventDate < $today);
+        $today = date("Y-m-d");
+        $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
+        $status = $row["status"];
+        $preparedDate = !empty($row["preparedDate"]) ? date("Y-m-d", strtotime($row["preparedDate"])) : null;
+        
+        // Cek apakah tugas dikerjakan terlambat (preparedDate > tanggal seharusnya)
+        $isDelayed = ($preparedDate && $preparedDate > $eventDate);
+        
+        // Cek kondisi status untuk warna
+        $isAbnormal = in_array($status, [7, 9]);
+        $isRegularDelay = in_array($status, [3, 4, 5, 6]);
+        $isComplete = ($status == 8);
+        $isPastDue = ($eventDate < $today); // Cek jika tanggal sudah lewat
 
-            // Tentukan warna berdasarkan status
-            if ($isRegularDelay) {
-                $color = "orange"; // Warna untuk delay biasa (status 3,4)
-            } elseif ($isAbnormal || $status == 9) {
-                $color = "red"; // Warna untuk abnormality (status 7,9)
-            } elseif ($status == 8) {
-                $color = "lightseagreen";
-            } else {
-                $color = "blue"; // Default warna biru
-            }
+        // Tentukan warna berdasarkan status
+        if ($isRegularDelay) {
+            $color = $isPastDue ? "orange" : "blue"; // Orange jika lewat tanggal, biru jika belum
+        } elseif ($isAbnormal) {
+            $color = "red"; // Warna untuk abnormality (status 7,9)
+        } elseif ($isComplete) {
+            $color = "lightseagreen"; // Warna untuk complete (status 8)
+        } else {
+            $color = "blue"; // Default (status lain/belum dikerjakan)
+        }
 
-            return [
-                "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
-                "start" => date("Y-m-d\TH:i:s", strtotime($row["tanggal"])),
-                "allDay" => true,
-                "backgroundColor" => $color,
-                "borderColor" => $isDelayed ? "red" : $color,
-                "textColor" => "white",
-                "id_mesin" => $row["id_mesin"],
-                "tanggal" => $row["tanggal"],
-                "id_pmm" => $row["id_pmm"],
-                "extendedProps" => [
-                    "isDelayed" => $isDelayed,
-                    "isAbnormal" => $isAbnormal
-                ]
-            ];
-        }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+        return [
+            "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
+            "start" => $eventDate,
+            "allDay" => true,
+            "backgroundColor" => $color,
+            "borderColor" => $isDelayed ? "red" : $color,
+            "textColor" => "white",
+            "id_mesin" => $row["id_mesin"],
+            "tanggal" => $row["tanggal"],
+            "id_pmm" => $row["id_pmm"],
+            "extendedProps" => [
+                "isDelayed" => $isDelayed,
+                "isAbnormal" => $isAbnormal,
+                "preparedDate" => $preparedDate,
+                "isPastDue" => $isPastDue
+            ]
+        ];
+    }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
         
         eventDidMount: function(info) {
             // Tambahkan tooltip khusus untuk yang delay

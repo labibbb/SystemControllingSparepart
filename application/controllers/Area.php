@@ -30,6 +30,9 @@ class Area extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         $data['area'] = $this->Area_model->get_all_area();
         $data['lini'] = $this->Area_model->get_all_lini();
         $this->load->view('area', $data);

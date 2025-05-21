@@ -30,6 +30,9 @@ class Departemen extends CI_Controller {
     }
     
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         $data['departemen'] = $this->Departemen_Model->get_all_departemen();
         $this->load->view('departemen', $data);
     }

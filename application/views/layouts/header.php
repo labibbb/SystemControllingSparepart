@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <meta name="author" content="">
     <link rel="icon" href="<?= base_url() ?>public/images/favicon.ico">
 
-    <title>EduAdmin</title>
+    <title>CMMS - CW</title>
     
 	<!-- Vendors Style-->
 	<link rel="stylesheet" href="<?= base_url() ?>public/main/css/vendors_css.css">
@@ -71,10 +71,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<ul class="dropdown-menu animated flipInX">
 				  <li class="user-body">
 					 <a class="dropdown-item" href="#"><i class="ti-user text-muted me-2"></i> Profile</a>
-					 <a class="dropdown-item" href="#"><i class="ti-wallet text-muted me-2"></i> My Wallet</a>
-					 <a class="dropdown-item" href="#"><i class="ti-settings text-muted me-2"></i> Settings</a>
 					 <div class="dropdown-divider"></div>
-					 <a class="dropdown-item" href="#"><i class="ti-lock text-muted me-2"></i> Logout</a>
+					 <li>
+                        <a href="<?= site_url('login'); ?>">
+                            <i class="icon-Logout"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Logout</span>
+                        </a>
+                    </li> 
 				  </li>
 				</ul>
 			</li>	

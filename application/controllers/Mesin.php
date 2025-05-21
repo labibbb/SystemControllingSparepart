@@ -30,6 +30,9 @@ class Mesin extends CI_Controller {
     }
 
     public function index() {
+         if (!$this->session->userdata('logged_in') || $this->session->userdata('level') != 1) {
+            show_404(); // Tampilkan halaman 404
+        }
         // Ambil data mesin
         $data['mesin'] = $this->Mesin_model->get_all_mesin_with_area();  // Ambil mesin dengan nama area
         $data['areas'] = $this->Mesin_model->get_active_areas();  // Ambil daftar area aktif

@@ -6,7 +6,7 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Master Departemen</h3>
+                    <h3 class="box-title">Departemen</h3>
                                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
