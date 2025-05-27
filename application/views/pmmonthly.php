@@ -13,6 +13,13 @@
                                 <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <select id="id_area" class="form-control" required style="width: 200px;" disabled>
+            <option value="">Pilih Area</option>
+        </select>
+        
+        <select id="id_mesin" class="form-control" required style="width: 200px;" disabled>
+            <option value="">Pilih Mesin</option>
+        </select>
                     </div>
                 </div>
                 <div class="box-body">
@@ -424,11 +431,63 @@ document.addEventListener("DOMContentLoaded", function () {
         $('#modalTanggalStatus').modal('show'); // Menggunakan Bootstrap modal
     }
 
-    $('#id_lini').on('change', filterData);
+    $(document).ready(function() {
+    // Handle perubahan lini
+    $('#id_lini').on('change', function() {
+        let id_lini = $(this).val();
+        
+        // Reset dan disable area dan mesin
+        $('#id_area').val('').prop('disabled', !id_lini);
+        $('#id_mesin').val('').prop('disabled', true);
+        
+        if (id_lini) {
+            // Load area berdasarkan lini
+            $.post("<?= base_url('pmmonthly/get_area_options') ?>", {id_lini: id_lini}, function(data) {
+                let options = '<option value="">Pilih Area</option>';
+                $.each(JSON.parse(data), function(index, area) {
+                    options += `<option value="${area.id_area}">${area.nama_area}</option>`;
+                });
+                $('#id_area').html(options).prop('disabled', false);
+            });
+            
+            filterData();
+        } else {
+            filterData();
+        }
+    });
+    
+    // Handle perubahan area
+    $('#id_area').on('change', function() {
+        let id_area = $(this).val();
+        
+        // Reset dan disable mesin
+        $('#id_mesin').val('').prop('disabled', !id_area);
+        
+        if (id_area) {
+            // Load mesin berdasarkan area
+            $.post("<?= base_url('pmmonthly/get_mesin_options') ?>", {id_area: id_area}, function(data) {
+                let options = '<option value="">Pilih Mesin</option>';
+                $.each(JSON.parse(data), function(index, mesin) {
+                    options += `<option value="${mesin.id_mesin}">${mesin.nama_mesin}</option>`;
+                });
+                $('#id_mesin').html(options).prop('disabled', false);
+            });
+            
+            filterData();
+        } else {
+            filterData();
+        }
+    });
+    
+    // Handle perubahan mesin
+    $('#id_mesin').on('change', filterData);
+});
 
     function filterData() {
-    $.post("<?= base_url('pmmonthly/filter'); ?>", {
-        lini: $('#id_lini').val()
+    $.post("<?= base_url('pmmonthly/filter') ?>", {
+        lini: $('#id_lini').val(),
+        area: $('#id_area').val(),
+        mesin: $('#id_mesin').val()
     }, function (data) {
         let rows = '';
         let result = JSON.parse(data);

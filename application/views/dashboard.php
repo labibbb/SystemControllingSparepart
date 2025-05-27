@@ -206,4 +206,39 @@
         var table2 = $('#table2').DataTable();
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if ($this->session->userdata('level') == 3): ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var hasPainting1 = <?= count($pmmonthly) ?> > 0;
+            var hasPainting2 = <?= count($pmmonthly2) ?> > 0;
+
+            if (hasPainting1 || hasPainting2) {
+                var message = 'Anda memiliki pekerjaan hari ini di:';
+                if (hasPainting1 && hasPainting2) {
+                    message += '\n- Painting 1\n- Painting 2';
+                } else if (hasPainting1) {
+                    message += '\n- Painting 1';
+                } else {
+                    message += '\n- Painting 2';
+                }
+
+                Swal.fire({
+                    title: 'Pekerjaan Hari Ini!',
+                    text: message,
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    timer: 5000,
+                    timerProgressBar: true,
+                    toast: false,
+                    position: 'center',
+                    showConfirmButton: true
+                });
+            }
+        });
+    </script>
+<?php endif; ?>
+
+
 <?php $this->load->view('layouts/footer'); ?>

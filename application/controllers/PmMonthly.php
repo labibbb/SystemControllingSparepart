@@ -109,11 +109,24 @@ class PmMonthly extends CI_Controller {
         $this->PmMonthly_model->update_mp($id_pmm, $data);
         redirect('PmMonthly');
     }
+    public function get_area_options() {
+    $id_lini = $this->input->post('id_lini');
+    $areas = $this->PmMonthly_model->get_area_by_lini($id_lini);
+    echo json_encode($areas);
+}
+
+public function get_mesin_options() {
+    $id_area = $this->input->post('id_area');
+    $mesins = $this->PmMonthly_model->get_mesin_by_area($id_area);
+    echo json_encode($mesins);
+}
 
     public function filterData() {
-        $id_lini = $this->input->post('lini');
+       $id_lini = $this->input->post('lini');
+    $id_area = $this->input->post('area');
+    $id_mesin = $this->input->post('mesin');
 
-        $filteredData = $this->PmMonthly_model->getFilteredData($id_lini);
+    $filteredData = $this->PmMonthly_model->getFilteredData($id_lini, $id_area, $id_mesin);
         foreach ($filteredData  as &$row) {
         if ($row['statusresc'] == 10) {
             $rescheduled = $this->PmMonthly_model->get_rescheduled_date($row['id_pmm']);

@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <meta name="author" content="">
     <link rel="icon" href="<?= base_url() ?>public/images/favicon.ico">
 
-    <title>CMMS - CW</title>
+    <title>CMMS - 4W</title>
     
 	<!-- Vendors Style-->
 	<link rel="stylesheet" href="<?= base_url() ?>public/main/css/vendors_css.css">
@@ -40,8 +40,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <!-- logo-->
   <div class="logo-lg">
     <span class="light-logo" style="cursor: default; pointer-events: none;">
-        <!-- <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo"
-             style="width: 150px; height: 40px; pointer-events: none; user-select: none;" draggable="false"> -->
+        <img src="<?= base_url() ?>public/images/logo-hitam-pako.png" alt="logo"
+             style="width: 150px; height: 40px; pointer-events: none; user-select: none;" draggable="false"> 
     </span>
 </div>
 

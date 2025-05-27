@@ -30,7 +30,7 @@ class PmMonthly_model extends CI_Model {
     return $query->row() ? $query->row()->tanggal : null;
 }    
     
-    public function getFilteredData($id_lini) {
+    public function getFilteredData($id_lini, $id_area = null, $id_mesin = null) {
         $this->db->select('
             pm_monthly.*, 
             lini.nama_lini, 
@@ -49,9 +49,24 @@ class PmMonthly_model extends CI_Model {
         $this->db->join('users AS u3', 'pm_monthly.spv = u3.id_users', 'left'); // Supervisor
     
         $this->db->where('pm_monthly.id_lini', $id_lini);
+         if ($id_area) {
+        $this->db->where('pm_monthly.id_area', $id_area);
+    }
+    
+    if ($id_mesin) {
+        $this->db->where('pm_monthly.id_mesin', $id_mesin);
+    }
     
         return $this->db->get()->result_array();
-    }    
+    }
+    
+    public function get_area_by_lini($id_lini) {
+    return $this->db->get_where('area', ['id_lini' => $id_lini, 'status' => 1])->result_array();
+    }
+
+    public function get_mesin_by_area($id_area) {
+        return $this->db->get_where('mesin', ['id_area' => $id_area, 'status' => 1])->result_array();
+    }
 
     public function get_lini() {
         return $this->db->get_where('lini', ['status' => 1])->result_array();

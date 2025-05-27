@@ -121,10 +121,10 @@
                                             } elseif ($pmm['yearStatus'] == 1) {
                                                 $class = 'bg-primary text-white';
                                                 $statusText = 'Reject by foreman';
-                                            } elseif ($pmm['yearStatus'] == 2) {
+                                            } elseif ($pmm['yearStatus'] == 3) {
                                                 $class = 'bg-success text-white';
                                                 $statusText = 'Finish on Time';
-                                            } elseif ($pmm['yearStatus'] == 3) {
+                                            } elseif ($pmm['yearStatus'] == 2) {
                                                 $class = 'bg-danger text-white';
                                                 $statusText = 'Finish on Delay';
                                             } else {

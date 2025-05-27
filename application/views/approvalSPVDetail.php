@@ -109,10 +109,10 @@
                                                 if ($pmm['yearStatus'] == 1) {
                                                     $class = 'bg-primary text-white'; // Menunggu Approval (Biru)
                                                     $statusText = 'Menunggu Approval Supervisor';
-                                                } elseif ($pmm['yearStatus'] == 2) {
+                                                } elseif ($pmm['yearStatus'] == 3) {
                                                     $class = 'bg-success text-white'; // Finish on Time (Hijau)
                                                     $statusText = 'Finish on Time';
-                                                } elseif ($pmm['yearStatus'] == 3) {
+                                                } elseif ($pmm['yearStatus'] == 2) {
                                                     $class = 'bg-danger text-white'; // Finish on Delay (Merah)
                                                     $statusText = 'Finish on Delay';
                                                 } else {

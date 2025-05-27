@@ -248,81 +248,151 @@ class Approval_model extends CI_Model {
     }
 
     public function approveSpv($id_pmm, $id_user) {
-        $this->db->trans_start(); // Mulai transaksi database
+    $this->db->trans_start();
+    
+    // Update status pm_monthly
+    $data = [
+        'status' => 8,
+        'spv' => $id_user,
+        'approveBy' => $id_user,
+        'approveDate' => date('Y-m-d H:i:s')
+    ];
+    $this->db->where('id_pmm', $id_pmm)
+             ->update('pm_monthly', $data);
+    
+    // Ambil data pm_monthly
+    $pmMonthly = $this->db->where('id_pmm', $id_pmm)
+                  ->get('pm_monthly')
+                  ->row();
+    
+    if ($pmMonthly) {
+        $tanggal_pmm = strtotime($pmMonthly->tanggal);
+        $tanggal_sekarang = strtotime(date('Y-m-d'));
+        $status_pm_yearly = ($tanggal_pmm < $tanggal_sekarang) ? 2 : 3;
+
+        // Update status pm_yearly
+        $this->db->where('id_pmy', $pmMonthly->id_pmy)
+                 ->update('pm_yearly', ['status' => $status_pm_yearly]);
+
+        $id_mesin = $pmMonthly->id_mesin;
+        $freq = $this->db->where('id_mesin', $id_mesin)
+                    ->get('trs_settingfwm')
+                    ->row();
+
+        $pmyearly = $this->db->where('id_pmy', $pmMonthly->id_pmy)
+            ->get('pm_yearly')
+            ->row();            
         
-        // Update status pm_monthly
-        $data = [
-            'status' => 8,
-            'spv' => $id_user,
-            'approveBy' => $id_user,
-            'approveDate' => date('Y-m-d H:i:s')
-        ];
-        $this->db->where('id_pmm', $id_pmm)
-                 ->update('pm_monthly', $data);
-        
-        // Ambil data tanggal dari pm_monthly
-        $pmMonthly = $this->db->where('id_pmm', $id_pmm)
-                      ->get('pm_monthly')
-                      ->row();
-        
-        if ($pmMonthly) {
-            $tanggal_pmm = strtotime($pmMonthly->tanggal); // Konversi ke timestamp
-            $tanggal_sekarang = strtotime(date('Y-m-d'));
-    
-            // Tentukan status berdasarkan tanggal
-            $status_pm_yearly = ($tanggal_pmm < $tanggal_sekarang) ? 2 : 3;
-    
-            // Update status di pm_yearly
-            $this->db->where('id_pmy', $pmMonthly->id_pmy)
-                     ->update('pm_yearly', ['status' => $status_pm_yearly]);
-        }
-    
-        if ($pmMonthly) {
-            $id_mesin = $pmMonthly->id_mesin;
-            $freq = $this->db->where('id_mesin', $id_mesin)
-                        ->get('trs_settingfwm')
-                        ->row();
-    
-            $pmyearly = $this->db->where('id_pmy', $pmMonthly->id_pmy)
-                ->get('pm_yearly')
-                ->row();            
+        if ($freq && $pmyearly) {
+            $frekuensi = $freq->frekuensi;
             
-            if ($freq && $pmyearly) {
+            // Handle frekuensi mingguan
+            if (strpos($frekuensi, 'week') !== false) {
+    $lastCompletedPm = $this->db->where('id_mesin', $id_mesin)
+                            ->where('status', 8) // Hanya ambil yang COMPLETE
+                            ->order_by('tanggal', 'DESC')
+                            ->get('pm_monthly')
+                            ->row();
+    
+    if ($lastCompletedPm) {
+        $jumlah_minggu = (int) filter_var($frekuensi, FILTER_SANITIZE_NUMBER_INT);
+        $tanggal_baru = date('Y-m-d', strtotime("+$jumlah_minggu weeks", strtotime($lastCompletedPm->tanggal)));
+        $tahun_baru = date('Y', strtotime($tanggal_baru));
+        $bulan_baru = date('m', strtotime($tanggal_baru));
+
+        // 1. Cek apakah pm_yearly untuk tahun/bulan ini sudah ada
+        $existing_pmy = $this->db->where('id_mesin', $id_mesin)
+                             ->where('tahun', $tahun_baru)
+                             ->where('bulan', $bulan_baru)
+                             ->get('pm_yearly')
+                             ->row();
+
+        // 2. Jika pm_yearly belum ada, buat baru
+        if (!$existing_pmy) {
+            $data_pmy = [
+                'id_lini' => $pmyearly->id_lini,
+                'id_area' => $pmyearly->id_area,
+                'id_mesin' => $pmyearly->id_mesin,
+                'tahun' => $tahun_baru,
+                'bulan' => $bulan_baru,
+                'status' => 1
+            ];
+            $this->db->insert('pm_yearly', $data_pmy);
+            $id_pmy_baru = $this->db->insert_id();
+        } else {
+            $id_pmy_baru = $existing_pmy->id_pmy;
+        }
+
+        // 3. CARI RECORD "No Set" (tanggal NULL atau kosong)
+        $unset_pmm = $this->db->where('id_mesin', $id_mesin)
+                         ->group_start()
+                            ->where('tanggal IS NULL') // Tanggal belum di-set
+                            ->or_where('datePlan IS NULL') // Atau datePlan kosong
+                         ->group_end()
+                         ->where('status', 1) // Hanya yang statusnya "planned" (1)
+                         ->order_by('id_pmm', 'ASC')
+                         ->get('pm_monthly')
+                         ->row();
+
+        // 4. UPDATE RECORD "No Set" JIKA ADA
+        if ($unset_pmm) {
+            $this->db->where('id_pmm', $unset_pmm->id_pmm)
+                     ->update('pm_monthly', [
+                         'id_pmy' => $id_pmy_baru,
+                         'tanggal' => $tanggal_baru,
+                         'datePlan' => $tanggal_baru,
+                         'status' => 2 // Set status jadi "scheduled"
+                     ]);
+        } 
+        // 5. JIKA TIDAK ADA RECORD "No Set", BUAT BARU
+        else {
+            $data_pmm = [
+                'id_lini' => $pmyearly->id_lini,
+                'id_area' => $pmyearly->id_area,
+                'id_mesin' => $pmyearly->id_mesin,
+                'bulan' => $bulan_baru,
+                'tahun' => $tahun_baru,
+                'tanggal' => $tanggal_baru,
+                'status' => 2,
+                'datePlan' => $tanggal_baru,
+                'sysdate' => date('Y-m-d H:i:s'),
+                'id_pmy' => $id_pmy_baru
+            ];
+            $this->db->insert('pm_monthly', $data_pmm);
+        }
+    }
+}
+            // Handle frekuensi bulanan/tahunan (buat pm_yearly baru)
+            elseif (strpos($frekuensi, 'month') !== false || strpos($frekuensi, 'year') !== false) {
                 $tahun_lama = $pmyearly->tahun;
                 $bulan_lama = $pmyearly->bulan;
-                $frekuensi = $freq->frekuensi; // Format bisa '1 week', '2 months', '1 year'
                 
-                // Cek apakah frekuensi dalam bentuk minggu, bulan, atau tahun
-                if (strpos($frekuensi, 'week') !== false) {
-                    $jumlah_minggu = (int) filter_var($frekuensi, FILTER_SANITIZE_NUMBER_INT);
-                    $tanggal_baru = date('Y-m', strtotime("+$jumlah_minggu weeks", strtotime("$tahun_lama-$bulan_lama-01")));
-                } elseif (strpos($frekuensi, 'month') !== false) {
+                if (strpos($frekuensi, 'month') !== false) {
                     $jumlah_bulan = (int) filter_var($frekuensi, FILTER_SANITIZE_NUMBER_INT);
                     $tanggal_baru = date('Y-m', strtotime("+$jumlah_bulan months", strtotime("$tahun_lama-$bulan_lama-01")));
-                } elseif (strpos($frekuensi, 'year') !== false) {
+                } else {
                     $jumlah_tahun = (int) filter_var($frekuensi, FILTER_SANITIZE_NUMBER_INT);
                     $tanggal_baru = date('Y-m', strtotime("+$jumlah_tahun years", strtotime("$tahun_lama-$bulan_lama-01")));
-                } else {
-                    $tanggal_baru = "$tahun_lama-$bulan_lama"; // Default jika format tidak dikenal
                 }
-    
+                
                 list($tahun_baru, $bulan_baru) = explode('-', $tanggal_baru);
-    
-                // Insert data baru ke pm_yearly
+                
+                // Insert pm_yearly baru
                 $data_pmy = [
                     'id_lini' => $pmyearly->id_lini,
                     'id_area' => $pmyearly->id_area,
                     'id_mesin' => $pmyearly->id_mesin,
                     'tahun' => $tahun_baru,
                     'bulan' => $bulan_baru,
-                    'status' => 1 // Status default untuk entri baru
+                    'status' => 1
                 ];
                 $this->db->insert('pm_yearly', $data_pmy);
             }
         }
-        
-        return $this->db->trans_complete(); // Selesaikan transaksi
     }
+    
+    return $this->db->trans_complete();
+}
     
 }
 ?>
