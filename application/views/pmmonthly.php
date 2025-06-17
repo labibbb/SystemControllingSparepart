@@ -6,7 +6,7 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Schedule Monthly PM</h3>
+                    <h3 class="box-title">Schedule PM Monthly</h3>
                     <div class="mt-2">
                         <select id="id_lini" class="form-control" required style="width: 300px;">
                             <?php foreach ($lini as $l): ?>
@@ -367,6 +367,10 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         
         let tanggalInput = document.getElementById("tanggal_tgl2");
+        let tanggalLama = document.getElementById("tanggal_tgllama2").value;
+        let today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+        
+        // Validasi 1: Tanggal tidak boleh kosong
         if (!tanggalInput.value) {
             Swal.fire({
                 icon: "warning",
@@ -375,6 +379,37 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             return;
         }
+                // Validasi 3: Tanggal baru tidak boleh sama dengan tanggal lama
+        if (tanggalInput.value === tanggalLama) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tanggal Tidak Valid",
+                text: "Tanggal baru tidak boleh sama dengan tanggal lama!",
+            });
+            return;
+        }
+
+
+        // // Validasi 2: Tanggal baru tidak boleh sama dengan hari ini
+        // if (tanggalInput.value === today) {
+        //     Swal.fire({
+        //         icon: "warning",
+        //         title: "Tanggal Tidak Valid",
+        //         text: "Tanggal baru tidak boleh sama dengan hari ini!",
+        //     });
+        //     return;
+        // }
+
+        // Validasi 3: Tanggal baru tidak boleh kurang dari tanggal lama
+        if (new Date(tanggalInput.value) < new Date(tanggalLama)) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tanggal Tidak Valid",
+                text: "Tanggal baru tidak boleh kurang dari tanggal lama!",
+            });
+            return;
+        }
+        
 
         let selectedDate = new Date(tanggalInput.value);
         let selectedMonth = selectedDate.getMonth() + 1; // JS bulan dari 0
@@ -423,6 +458,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("id_pmm_mp").value = id;
         $('#modalMP').modal('show'); // Menggunakan Bootstrap modal
     }
+
 
     function editTanggalStatus(id, bulan, tahun) {
         document.getElementById("id_pmm_tglstts").value = id;
@@ -494,7 +530,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (result.length === 0) {
             rows = `<tr>
-                <td colspan="12" class="text-center text-danger">Data Not Found</td>
+                <td colspan="12" class="text-center text-danger">Data Tidak Ditemukan</td>
             </tr>`;
         } else {
             result.forEach((row, index) => {

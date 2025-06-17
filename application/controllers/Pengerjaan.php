@@ -78,43 +78,47 @@ class Pengerjaan extends CI_Controller
     }
 
     public function insertPengerjaan()
-    {
-        $dataList = $this->input->post('data');
-        $user_id = $this->session->userdata('user_id');
+{
+    $dataList = $this->input->post('data');
+    $user_id = $this->session->userdata('user_id');
 
-        $upload_path = './uploads/pengerjaan/';
-        if (!is_dir($upload_path)) {
-            mkdir($upload_path, 0777, true);
-        }
+    $upload_path = './uploads/pengerjaan/';
+    if (!is_dir($upload_path)) {
+        mkdir($upload_path, 0777, true);
+    }
 
+    // Inisialisasi array untuk menyimpan hasil
+    $response = ['status' => 'success', 'message' => 'Data berhasil disimpan'];
+    
+    // Proses data yang dikirim
+    if (!empty($dataList)) {
         foreach ($dataList as $index => $data) {
             $image_name = null;
+            $image_name2 = null;
 
-            // Cek apakah ada file gambar yang dikirim
+            // Proses upload gambar pertama (jika ada)
             if (!empty($_FILES["gambar_{$index}"]['name'])) {
                 $file_ext = pathinfo($_FILES["gambar_{$index}"]['name'], PATHINFO_EXTENSION);
-                $image_name = 'pengerjaan_' . time() . "_$index." . $file_ext; // Nama unik
+                $image_name = 'pengerjaan_' . time() . "_$index." . $file_ext;
                 $target_file = $upload_path . $image_name;
 
-                // Pindahkan file ke folder uploads
                 if (!move_uploaded_file($_FILES["gambar_{$index}"]['tmp_name'], $target_file)) {
-                    echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar']);
-                    return;
+                    $response = ['status' => 'error', 'message' => 'Gagal mengupload gambar'];
+                    // Lanjutkan ke item berikutnya meskipun ada error
+                    continue;
                 }
             }
 
-            $image_name2 = null;
-
-            // Cek apakah ada file gambar yang dikirim
-            if (!empty($_FILES["gambarPm_{$index}"]['name'])) {
+            // Proses upload gambar kedua (jika ada, hanya untuk index 0)
+            if ($index == 0 && !empty($_FILES["gambarPm_{$index}"]['name'])) {
                 $file_ext = pathinfo($_FILES["gambarPm_{$index}"]['name'], PATHINFO_EXTENSION);
-                $image_name2 = 'pengerjaanPm_' . time() . "_$index." . $file_ext; // Nama unik
+                $image_name2 = 'pengerjaanPm_' . time() . "_$index." . $file_ext;
                 $target_file = $upload_path . $image_name2;
 
-                // Pindahkan file ke folder uploads
                 if (!move_uploaded_file($_FILES["gambarPm_{$index}"]['tmp_name'], $target_file)) {
-                    echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar']);
-                    return;
+                    $response = ['status' => 'error', 'message' => 'Gagal mengupload gambar'];
+                    // Lanjutkan ke item berikutnya meskipun ada error
+                    continue;
                 }
             }
 
@@ -139,24 +143,29 @@ class Pengerjaan extends CI_Controller
 
             if (!$this->db->insert('trs_pengerjaan_checksheet', $insertData)) {
                 log_message('error', 'Failed to insert data');
+                $response = ['status' => 'error', 'message' => 'Gagal menyimpan data'];
+                // Lanjutkan ke item berikutnya meskipun ada error
+                continue;
             }
         }
+    }
 
+    // Update status pm_monthly jika semua data berhasil diproses
+    if ($response['status'] === 'success') {
         $uniquePmmIds = array_unique(array_column($dataList, 'id_pmm'));
 
         if (!empty($uniquePmmIds)) {
-            // Ambil data tanggal berdasarkan id_pmm
             $this->db->select('id_pmm, tanggal');
             $this->db->where_in('id_pmm', $uniquePmmIds);
             $query = $this->db->get('pm_monthly');
             $result = $query->result_array();
 
-            $today = date('Y-m-d'); // Tanggal hari ini
+            $today = date('Y-m-d');
+            $status = 5;
+            $preparedBy = $this->session->userdata('user_id');
+            $preparedDate = date('Y-m-d H:i:s');
 
             foreach ($result as $row) {
-                $status = 5;
-                $preparedBy = $this->session->userdata('user_id');
-                $preparedDate = date('Y-m-d H:i:s');
                 $this->db->where('id_pmm', $row['id_pmm']);
                 $this->db->update('pm_monthly', [
                     'status' => $status,
@@ -171,50 +180,53 @@ class Pengerjaan extends CI_Controller
                 }
             }
         }
-
-        echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
     }
+
+    echo json_encode($response);
+}
 
     public function insertPengerjaanRes($id_pmm2)
     {
-        $dataList = $this->input->post('data');
-        $user_id = $this->session->userdata('user_id');
+    $dataList = $this->input->post('data');
+    $user_id = $this->session->userdata('user_id');
 
-        $upload_path = './uploads/pengerjaan/';
-        if (!is_dir($upload_path)) {
-            mkdir($upload_path, 0777, true);
-        }
+    $upload_path = './uploads/pengerjaan/';
+    if (!is_dir($upload_path)) {
+        mkdir($upload_path, 0777, true);
+    }
 
-        $uniquePmmIds = array_unique(array_column($dataList, 'id_pmm'));
-
+    // Inisialisasi array untuk menyimpan hasil
+    $response = ['status' => 'success', 'message' => 'Data berhasil disimpan'];
+    
+    // Proses data yang dikirim
+    if (!empty($dataList)) {
         foreach ($dataList as $index => $data) {
             $image_name = null;
+            $image_name2 = null;
 
-            // Cek apakah ada file gambar yang dikirim
+            // Proses upload gambar pertama (jika ada)
             if (!empty($_FILES["gambar_{$index}"]['name'])) {
                 $file_ext = pathinfo($_FILES["gambar_{$index}"]['name'], PATHINFO_EXTENSION);
-                $image_name = 'pengerjaan_' . time() . "_$index." . $file_ext; // Nama unik
+                $image_name = 'pengerjaan_' . time() . "_$index." . $file_ext;
                 $target_file = $upload_path . $image_name;
 
-                // Pindahkan file ke folder uploads
                 if (!move_uploaded_file($_FILES["gambar_{$index}"]['tmp_name'], $target_file)) {
-                    echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar']);
-                    return;
+                    $response = ['status' => 'error', 'message' => 'Gagal mengupload gambar'];
+                    // Lanjutkan ke item berikutnya meskipun ada error
+                    continue;
                 }
             }
 
-            $image_name2 = null;
-
-            // Cek apakah ada file gambar yang dikirim
-            if (!empty($_FILES["gambarPm_{$index}"]['name'])) {
+            // Proses upload gambar kedua (jika ada, hanya untuk index 0)
+            if ($index == 0 && !empty($_FILES["gambarPm_{$index}"]['name'])) {
                 $file_ext = pathinfo($_FILES["gambarPm_{$index}"]['name'], PATHINFO_EXTENSION);
-                $image_name2 = 'pengerjaanPm_' . time() . "_$index." . $file_ext; // Nama unik
+                $image_name2 = 'pengerjaanPm_' . time() . "_$index." . $file_ext;
                 $target_file = $upload_path . $image_name2;
 
-                // Pindahkan file ke folder uploads
                 if (!move_uploaded_file($_FILES["gambarPm_{$index}"]['tmp_name'], $target_file)) {
-                    echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar']);
-                    return;
+                    $response = ['status' => 'error', 'message' => 'Gagal mengupload gambar'];
+                    // Lanjutkan ke item berikutnya meskipun ada error
+                    continue;
                 }
             }
 
@@ -233,29 +245,35 @@ class Pengerjaan extends CI_Controller
                 'status'     => isset($data['status']) ? (int)$data['status'] : 1,
                 'gambarPm'   => $image_name2,
                 'catatan'    => isset($data['catatan']) ? trim($data['catatan']) : null,
-
             ];
 
             log_message('debug', 'Insert Data: ' . print_r($insertData, true));
 
             if (!$this->db->insert('trs_pengerjaan_checksheet', $insertData)) {
                 log_message('error', 'Failed to insert data');
+                $response = ['status' => 'error', 'message' => 'Gagal menyimpan data'];
+                // Lanjutkan ke item berikutnya meskipun ada error
+                continue;
             }
         }
+    }
+
+    // Update status pm_monthly jika semua data berhasil diproses
+    if ($response['status'] === 'success') {
+        $uniquePmmIds = array_unique(array_column($dataList, 'id_pmm'));
 
         if (!empty($uniquePmmIds)) {
-            // Ambil data tanggal berdasarkan id_pmm
             $this->db->select('id_pmm, tanggal');
             $this->db->where_in('id_pmm', $uniquePmmIds);
             $query = $this->db->get('pm_monthly');
             $result = $query->result_array();
 
-            $today = date('Y-m-d'); // Tanggal hari ini
+            $today = date('Y-m-d');
+            $status = 5;
+            $preparedBy = $this->session->userdata('user_id');
+            $preparedDate = date('Y-m-d H:i:s');
 
             foreach ($result as $row) {
-                $status = 5;
-                $preparedBy = $this->session->userdata('user_id');
-                $preparedDate = date('Y-m-d H:i:s');
                 $this->db->where('id_pmm', $row['id_pmm']);
                 $this->db->update('pm_monthly', [
                     'status' => $status,
@@ -270,9 +288,10 @@ class Pengerjaan extends CI_Controller
                 }
             }
         }
-
-        echo json_encode(['status' => 'success', 'message' => 'Data berhasil disimpan']);
     }
+
+    echo json_encode($response);
+}
 
     public function detailRes()
     {

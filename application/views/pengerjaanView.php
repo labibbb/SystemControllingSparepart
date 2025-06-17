@@ -246,69 +246,117 @@
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        events: <?= json_encode(array_map(function ($row) {
-    $today = date("Y-m-d");
-    $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
-    $status = $row["status"];
-    $preparedDate = !empty($row["preparedDate"]) ? date("Y-m-d", strtotime($row["preparedDate"])) : null;
-    
-    // Cek apakah tugas dikerjakan terlambat (preparedDate > tanggal seharusnya)
-    $isDelayed = ($preparedDate && $preparedDate > $eventDate);
-    
-    // Cek kondisi status untuk warna
-    $isAbnormal = in_array($status, [7, 9]);
-    $isRegularDelay = in_array($status, [3, 4, 5, 6]);
-    $isComplete = ($status == 8);
-    $isPastDue = ($eventDate < $today); // Cek jika tanggal sudah lewat
+        events: <?= json_encode(array_merge(
+    array_map(function ($row) {
+        // Logika untuk Painting 1
+        $today = date("Y-m-d");
+        $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
+        $status = $row["status"];
+        $preparedDate = !empty($row["preparedDate"]) ? date("Y-m-d", strtotime($row["preparedDate"])) : null;
+        $isDelayed = ($preparedDate && $preparedDate > $eventDate);
+        $isAbnormal = in_array($status, [7, 9]);
+        $isRegularDelay = in_array($status, [3, 4, 5, 6]);
+        $isComplete = ($status == 8);
+        $isPastDue = ($eventDate < $today);
 
-    // Tentukan warna berdasarkan status
-    if ($isRegularDelay) {
-        $color = $isPastDue ? "orange" : "blue"; // Orange jika lewat tanggal, biru jika belum
-    } elseif ($isAbnormal) {
-        $color = "red"; // Warna untuk abnormality (status 7,9)
-    } elseif ($isComplete) {
-        $color = "lightseagreen"; // Warna untuk complete (status 8)
-    } else {
-        $color = "blue"; // Default (status lain/belum dikerjakan)
-    }
+        if ($isRegularDelay) {
+            if (in_array($status, [5, 6])) {
+                $color = $isDelayed ? "orange" : "blue";
+            } else {
+                $color = $isPastDue ? "orange" : "blue";
+            }
+        } elseif ($isAbnormal) {
+            $color = "red";
+        } elseif ($isComplete) {
+            $color = "lightseagreen";
+        } else {
+            $color = "blue";
+        }
 
-    return [
-        "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
-        "start" => $eventDate,
-        "allDay" => true,
-        "backgroundColor" => $color,
-        "borderColor" => $isDelayed ? "red" : $color,
-        "textColor" => "white",
-        "id_mesin" => $row["id_mesin"],
-        "tanggal" => $row["tanggal"],
-        "id_pmm" => $row["id_pmm"],
-        "extendedProps" => [
-            "isDelayed" => $isDelayed,
-            "isAbnormal" => $isAbnormal,
-            "preparedDate" => $preparedDate,
-            "isPastDue" => $isPastDue
-        ]
-    ];
-}, $pmmonthly3), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-            
-            eventDidMount: function(info) {
-                // Tambahkan tooltip khusus untuk yang delay
-                if (info.event.extendedProps.isDelayed) {
-                    info.el.setAttribute('title', 'Tugas ini delay (melewati tanggal seharusnya)');
-                    info.el.classList.add('delayed-event');
-                    
-                    // Tambahkan class khusus untuk abnormality
-                    if (info.event.extendedProps.isAbnormal) {
-                        info.el.classList.add('abnormal-event');
-                    }
+        return [
+            "title" => ($isDelayed ? "⏳ " : "") . "P1 | " . $row["nama_mesin"], // P1 untuk Painting 1
+            "start" => $eventDate,
+            "allDay" => true,
+            "backgroundColor" => $color,
+            "borderColor" => $isDelayed ? "red" : $color,
+            "textColor" => "white",
+            "id_mesin" => $row["id_mesin"],
+            "tanggal" => $row["tanggal"],
+            "id_pmm" => $row["id_pmm"],
+            "extendedProps" => [
+                "isDelayed" => $isDelayed,
+                "isAbnormal" => $isAbnormal,
+                "preparedDate" => $preparedDate,
+                "isPastDue" => $isPastDue,
+                "lini" => 1 // Tambahkan identifikasi lini
+            ]
+        ];
+    }, $pmmonthly),
+    array_map(function ($row) {
+        // Logika yang sama untuk Painting 2
+        $today = date("Y-m-d");
+        $eventDate = date("Y-m-d", strtotime($row["tanggal"]));
+        $status = $row["status"];
+        $preparedDate = !empty($row["preparedDate"]) ? date("Y-m-d", strtotime($row["preparedDate"])) : null;
+        $isDelayed = ($preparedDate && $preparedDate > $eventDate);
+        $isAbnormal = in_array($status, [7, 9]);
+        $isRegularDelay = in_array($status, [3, 4, 5, 6]);
+        $isComplete = ($status == 8);
+        $isPastDue = ($eventDate < $today);
+
+        if ($isRegularDelay) {
+            if (in_array($status, [5, 6])) {
+                $color = $isDelayed ? "orange" : "blue";
+            } else {
+                $color = $isPastDue ? "orange" : "blue";
+            }
+        } elseif ($isAbnormal) {
+            $color = "red";
+        } elseif ($isComplete) {
+            $color = "lightseagreen";
+        } else {
+            $color = "blue";
+        }
+
+        return [
+            "title" => ($isDelayed ? "⏳ " : "") . "P2 | " . $row["nama_mesin"], // P2 untuk Painting 2
+            "start" => $eventDate,
+            "allDay" => true,
+            "backgroundColor" => $color,
+            "borderColor" => $isDelayed ? "red" : $color,
+            "textColor" => "white",
+            "id_mesin" => $row["id_mesin"],
+            "tanggal" => $row["tanggal"],
+            "id_pmm" => $row["id_pmm"],
+            "extendedProps" => [
+                "isDelayed" => $isDelayed,
+                "isAbnormal" => $isAbnormal,
+                "preparedDate" => $preparedDate,
+                "isPastDue" => $isPastDue,
+                "lini" => 2 // Tambahkan identifikasi lini
+            ]
+        ];
+    }, $pmmonthly2)
+), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+        
+        eventDidMount: function(info) {
+            // Tambahkan tooltip khusus untuk yang delay
+            if (info.event.extendedProps.isDelayed) {
+                info.el.setAttribute('title', 'Tugas ini delay (melewati tanggal seharusnya)');
+                info.el.classList.add('delayed-event');
+                
+                // Tambahkan class khusus untuk abnormality
+                if (info.event.extendedProps.isAbnormal) {
+                    info.el.classList.add('abnormal-event');
                 }
-            },
-            
-            
-        });
-
-        calendar.render();
+            }
+        },
+        
+        
     });
+
+    calendar.render();
+});
 </script>
 
 
@@ -342,9 +390,12 @@
         var table1 = $('#table1').DataTable({
         "dom": '<"top"lf>rt<"bottom"ip>',
         "language": {
-            "lengthMenu": "Show _MENU_ entries",
-            "search": "Search:",
-            "searchPlaceholder": "..."
+            "lengthMenu": "Tampilkan _MENU_ entri",
+            "search": "Cari:",
+            "searchPlaceholder": "...",
+             "zeroRecords":   "Tidak ditemukan data yang sesuai",
+            "emptyTable":     "Tidak ada data yang tersedia"
+
         },
         "initComplete": function() {
             // Menyesuaikan margin untuk tablet
@@ -359,9 +410,12 @@
         "dom": '<"top"lf>rt<"bottom"ip>',
         
         "language": {
-            "lengthMenu": "Show _MENU_ entries",
-            "search": "Search:",
-            "searchPlaceholder": "..."
+            "lengthMenu": "Tampilkan _MENU_ entri",
+            "search": "Cari:",
+            "searchPlaceholder": "...",
+            "emptyTable":     "Tidak ada data yang tersedia",
+            "zeroRecords":   "Tidak ditemukan data yang sesuai"
+
         },
         "initComplete": function() {
             // Menyesuaikan margin untuk tablet

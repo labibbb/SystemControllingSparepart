@@ -73,7 +73,13 @@
 
         // Tentukan warna berdasarkan status
         if ($isRegularDelay) {
-            $color = $isPastDue ? "orange" : "blue"; // Orange jika lewat tanggal, biru jika belum
+            // Untuk status 5 dan 6, hanya berwarna orange jika memang delayed (preparedDate > eventDate)
+            if (in_array($status, [5, 6])) {
+                $color = $isDelayed ? "orange" : "blue";
+            } else {
+                // Untuk status 3 dan 4, tetap menggunakan logika sebelumnya
+                $color = $isPastDue ? "orange" : "blue";
+            }
         } elseif ($isAbnormal) {
             $color = "red"; // Warna untuk abnormality (status 7,9)
         } elseif ($isComplete) {
@@ -82,24 +88,24 @@
             $color = "blue"; // Default (status lain/belum dikerjakan)
         }
 
-        return [
-            "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
-            "start" => $eventDate,
-            "allDay" => true,
-            "backgroundColor" => $color,
-            "borderColor" => $isDelayed ? "red" : $color,
-            "textColor" => "white",
-            "id_mesin" => $row["id_mesin"],
-            "tanggal" => $row["tanggal"],
-            "id_pmm" => $row["id_pmm"],
-            "extendedProps" => [
-                "isDelayed" => $isDelayed,
-                "isAbnormal" => $isAbnormal,
-                "preparedDate" => $preparedDate,
-                "isPastDue" => $isPastDue
-            ]
-        ];
-    }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+    return [
+        "title" => ($isDelayed ? "⏳ " : "") . "P" . $row["id_lini"] . " | " . $row["nama_mesin"],
+        "start" => $eventDate,
+        "allDay" => true,
+        "backgroundColor" => $color,
+        "borderColor" => $isDelayed ? "red" : $color,
+        "textColor" => "white",
+        "id_mesin" => $row["id_mesin"],
+        "tanggal" => $row["tanggal"],
+        "id_pmm" => $row["id_pmm"],
+        "extendedProps" => [
+            "isDelayed" => $isDelayed,
+            "isAbnormal" => $isAbnormal,
+            "preparedDate" => $preparedDate,
+            "isPastDue" => $isPastDue
+        ]
+    ];
+}, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
         
         eventDidMount: function(info) {
             // Tambahkan tooltip khusus untuk yang delay
@@ -114,36 +120,36 @@
             }
         },
         
-        eventClick: function(info) {
-            <?php if ($this->session->userdata('level') == 2): ?>
-                return false;
-            <?php else: ?>
-                var form = document.createElement("form");
-                form.action = "<?= site_url('approvalSPV/read'); ?>";
-                form.method = "POST";
+        // eventClick: function(info) {
+        //     <?php if ($this->session->userdata('level') == 2): ?>
+        //         return false;
+        //     <?php else: ?>
+        //         var form = document.createElement("form");
+        //         form.action = "<?= site_url('approvalSPV/read'); ?>";
+        //         form.method = "POST";
 
-                var id_mesin = document.createElement("input");
-                id_mesin.type = "hidden";
-                id_mesin.name = "id_mesin";
-                id_mesin.value = info.event.extendedProps.id_mesin;
-                form.appendChild(id_mesin);
+        //         var id_mesin = document.createElement("input");
+        //         id_mesin.type = "hidden";
+        //         id_mesin.name = "id_mesin";
+        //         id_mesin.value = info.event.extendedProps.id_mesin;
+        //         form.appendChild(id_mesin);
 
-                var tanggal = document.createElement("input");
-                tanggal.type = "hidden";
-                tanggal.name = "tanggal";
-                tanggal.value = info.event.extendedProps.tanggal;
-                form.appendChild(tanggal);
+        //         var tanggal = document.createElement("input");
+        //         tanggal.type = "hidden";
+        //         tanggal.name = "tanggal";
+        //         tanggal.value = info.event.extendedProps.tanggal;
+        //         form.appendChild(tanggal);
 
-                var id_pmm = document.createElement("input");
-                id_pmm.type = "hidden";
-                id_pmm.name = "id_pmm";
-                id_pmm.value = info.event.extendedProps.id_pmm;
-                form.appendChild(id_pmm);
+        //         var id_pmm = document.createElement("input");
+        //         id_pmm.type = "hidden";
+        //         id_pmm.name = "id_pmm";
+        //         id_pmm.value = info.event.extendedProps.id_pmm;
+        //         form.appendChild(id_pmm);
 
-                document.body.appendChild(form);
-                form.submit();
-            <?php endif; ?>
-        }
+        //         document.body.appendChild(form);
+        //         form.submit();
+        //     <?php endif; ?>
+        // }
     });
 
     calendar.render();

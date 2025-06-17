@@ -201,10 +201,61 @@
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        var table1 = $('#table1').DataTable();
-        var table2 = $('#table2').DataTable();
+   $(document).ready(function() {
+    var table1 = $('#table1').DataTable({
+        "language": {
+            "decimal":        "",
+            "emptyTable":     "Tidak ada data yang tersedia di tabel",
+            "info":           "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+            "infoEmpty":      "Menampilkan 0 sampai 0 dari 0 entri",
+            "infoFiltered":   "(disaring dari _MAX_ total entri)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Tampilkan _MENU_ entri",
+            "loadingRecords": "Memuat...",
+            "processing":     "Sedang diproses...",
+            "search":         "Cari:",
+            "zeroRecords":    "Tidak ditemukan data yang cocok",
+            "paginate": {
+                "first":      "Pertama",
+                "last":       "Terakhir",
+                "next":       "Selanjutnya",
+                "previous":   "Sebelumnya"
+            },
+            "aria": {
+                "sortAscending":  ": aktifkan untuk mengurutkan kolom naik",
+                "sortDescending": ": aktifkan untuk mengurutkan kolom turun"
+            }
+        }
     });
+    
+    var table2 = $('#table2').DataTable({
+        "language": {
+            "decimal":        "",
+            "emptyTable":     "Tidak ada data yang tersedia di tabel",
+            "info":           "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+            "infoEmpty":      "Menampilkan 0 sampai 0 dari 0 entri",
+            "infoFiltered":   "(disaring dari _MAX_ total entri)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Tampilkan _MENU_ entri",
+            "loadingRecords": "Memuat...",
+            "processing":     "Sedang diproses...",
+            "search":         "Cari:",
+            "zeroRecords":    "Tidak ditemukan data yang cocok",
+            "paginate": {
+                "first":      "Pertama",
+                "last":       "Terakhir",
+                "next":       "Selanjutnya",
+                "previous":   "Sebelumnya"
+            },
+            "aria": {
+                "sortAscending":  ": aktifkan untuk mengurutkan kolom naik",
+                "sortDescending": ": aktifkan untuk mengurutkan kolom turun"
+            }
+        }
+    });
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php if ($this->session->userdata('level') == 3): ?>

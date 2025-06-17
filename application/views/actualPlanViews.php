@@ -233,6 +233,46 @@
     min-width: 220px;
     text-align: center;
 }
+/* Container tabel dengan scroll */
+    .gantt-container {
+        max-height: 500px;
+        overflow: auto;
+    }
+    
+    /* Header utama (baris pertama) */
+    thead tr:first-child th {
+        position: sticky;
+        top: 0;
+        background-color: #f4f4f4;
+        z-index: 20;
+    }
+    
+    /* Header bulan (baris kedua) */
+    thead tr:nth-child(2) th {
+        position: sticky;
+        top: 40px; /* Sesuaikan dengan tinggi header pertama */
+        background-color: #f4f4f4;
+        z-index: 15;
+    }
+    
+    /* Kolom pertama (nama mesin) */
+    th:first-child,
+    td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        z-index: 10;
+    }
+    
+    /* Header kolom pertama */
+    thead tr:first-child th:first-child {
+        z-index: 30;
+    }
+    thead tr:nth-child(2) th:first-child {
+        z-index: 25;
+    }
+
+
 </style>
 
 

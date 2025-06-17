@@ -279,6 +279,7 @@
                                             <td id="idCk_<?= $index; ?>" style="display: none;"><?= $row['id_ck']; ?></td>
                                             <td>
                                                 <select id="status_<?= $index; ?>" class="form-select status-dropdown" onchange="changeColor(this)">
+                                                    <option value="">-- Pilih --</option>
                                                     <option value="OK" class="bg-success text-white" <?= ($row['aktual'] == 'OK') ? 'selected' : ''; ?>>OK</option>
                                                     <option value="NG" class="bg-danger text-white" <?= ($row['aktual'] == 'NG') ? 'selected' : ''; ?>>NG</option>
                                                 </select>
@@ -351,7 +352,7 @@
                                 <input type="text" id="catatans" name="catatans" class="form-control mt-1" style="border-radius: 20px;">
                             </div>
                                 <div>
-                                    <strong>Masukkan Foto:</strong>
+                                    <strong>Masukkan Foto:</strong> <span class="text-danger">*</span>
                                     <div class="upload-box mt-2" id="uploadContainer">
                                         <label for="uploadFile">
                                             <img src="path_ke_gambar_upload.jpg" alt="Upload" class="img-fluid" disabled>
@@ -427,50 +428,60 @@
         });
 
         function simpanChecksheet() {
-            console.log("test");
-            // Validasi semua dropdown Aktual harus terisi
-            let allFilled = true;
-            let ngWithoutPhoto = false;
-            let mainPhotoMissing = false;
-            let errorMessage = "";
+    // Validasi semua dropdown Aktual harus terisi
+    let allFilled = true;
+    let ngWithoutPhoto = false;
+    let mainPhotoMissing = false;
+    let errorMessage = "";
 
-             // Validasi foto utama
-             const mainPhotoInput = document.getElementById('uploadFile');
-                if (!mainPhotoInput.files || mainPhotoInput.files.length === 0) {
-                    mainPhotoMissing = true;
-                    document.getElementById('uploadContainer').classList.add('border', 'border-danger');
-                    errorMessage = "Harap unggah foto utama checksheet!";
+    // Validasi foto utama
+    const mainPhotoInput = document.getElementById('uploadFile');
+    if (!mainPhotoInput.files || mainPhotoInput.files.length === 0) {
+        mainPhotoMissing = true;
+        document.getElementById('uploadContainer').classList.add('border', 'border-danger');
+        errorMessage = "Harap unggah foto utama checksheet!";
+    } else {
+        document.getElementById('uploadContainer').classList.remove('border', 'border-danger');
+    }
+
+   let invalidFileType = false;
+    $(".status-dropdown").each(function() {
+        const index = $(this).attr('id').split('_')[1];
+        if ($(this).val() === "") {
+            allFilled = false;
+            $(this).addClass("is-invalid");
+            errorMessage = "Semua kolom Aktual harus terisi!";
+            return false; // Keluar dari loop each
+        } else {
+            $(this).removeClass("is-invalid");
+
+            if ($(this).val() === "NG") {
+            const fileInput = $(`#keterangan_file_${index}`)[0];
+            if (!fileInput.files || fileInput.files.length === 0) {
+                ngWithoutPhoto = true;
+                $(`#keterangan_container_${index}`).addClass("border border-danger");
+                $(`#keterangan_file_${index}`).addClass("is-invalid");
+                errorMessage = "Harap unggah foto untuk item dengan status NG!";
+                return false;
+            } else {
+                const file = fileInput.files[0];
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                if (!allowedTypes.includes(file.type)) {
+                    ngWithoutPhoto = true;
+                    $(`#keterangan_container_${index}`).addClass("border border-danger");
+                    $(`#keterangan_file_${index}`).addClass("is-invalid");
+                    errorMessage = "Format gambar untuk status NG harus JPG, JPEG, atau PNG!";
+                    return false;
                 } else {
-                    document.getElementById('uploadContainer').classList.remove('border', 'border-danger');
-                }
+                    $(`#keterangan_container_${index}`).removeClass("border border-danger");
+                    $(`#keterangan_file_${index}`).removeClass("is-invalid");
+        }
+    }
+}
+        }
+    });
 
-            $(".status-dropdown").each(function() {
-                const index = $(this).attr('id').split('_')[1];
-                if ($(this).val() === "") {
-                    allFilled = false;
-                    $(this).addClass("is-invalid");
-                    errorMessage = "Semua kolom Aktual harus terisi!";
-                    return false; // Keluar dari loop each
-                } else {
-                    $(this).removeClass("is-invalid");
-
-                    // Validasi khusus untuk status NG
-                    if ($(this).val() === "NG") {
-                        const fileInput = $(`#keterangan_file_${index}`)[0];
-                        if (!fileInput.files || fileInput.files.length === 0) {
-                            ngWithoutPhoto = true;
-                            $(`#keterangan_container_${index}`).addClass("border border-danger");
-                            $(`#keterangan_file_${index}`).addClass("is-invalid");
-                            errorMessage = "Harap unggah foto untuk item dengan status NG!";
-                            return false;
-                        } else {
-                            $(`#keterangan_container_${index}`).removeClass("border border-danger");
-                            $(`#keterangan_file_${index}`).removeClass("is-invalid");
-                        }
-                    }
-                }
-            });
-            if (mainPhotoMissing) {
+    if (mainPhotoMissing) {
         Swal.fire({
             title: "Perhatian!",
             text: errorMessage,
@@ -480,105 +491,205 @@
         });
         return;
     }
+        if (invalidFileType) {
+        Swal.fire({
+            title: "Format Tidak Didukung!",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
 
-            if (!allFilled) {
+    if (!allFilled) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: errorMessage || "Semua kolom Aktual harus terisi!",
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    if (ngWithoutPhoto) {
+        Swal.fire({
+            title: "Perhatian!",
+            text: errorMessage || "Harap unggah foto untuk item dengan status NG!",
+            icon: "warning",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+      // Validasi format file utama (gambarPm)
+        const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+        if (mainPhotoInput.files.length > 0) {
+            const mainFileType = mainPhotoInput.files[0].type;
+            if (!allowedTypes.includes(mainFileType)) {
                 Swal.fire({
-                    title: "Perhatian!",
-                    text: errorMessage || "Semua kolom Aktual harus terisi!",
-                    icon: "warning",
+                    title: "Format Tidak Didukung!",
+                    text: "Foto utama hanya boleh berformat JPG, JPEG, atau PNG.",
+                    icon: "error",
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "OK"
                 });
                 return;
             }
+        }
 
-            if (ngWithoutPhoto) {
-                Swal.fire({
-                    title: "Perhatian!",
-                    text: errorMessage || "Harap unggah foto untuk item dengan status NG!",
-                    icon: "warning",
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "OK"
-                });
-                return;
-            }
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Data yang dimasukkan akan disimpan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, simpan!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Tampilkan loading
             Swal.fire({
-                title: "Apakah Anda yakin?",
-                text: "Data yang dimasukkan akan disimpan!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, simpan!",
-                cancelButtonText: "Batal"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let formData = new FormData();
-
-                    let idLini = $("#id_lini").val();
-                    let idArea = $("#id_area").val();
-                    let idMesin = $("#id_mesin").val();
-                    let idPmm = $("#id_pmm").val();
-                    let gambarPm = document.getElementById("uploadFile").files[0];
-                    let index = 0;
-                    let catatan = $("#catatans").val(); // Ambil nilai catatan
-
-
-                    // Iterasi tabel untuk mengambil data
-                    $("#tbCheckSheet tbody tr").each(function() {
-                        let idCk = $(this).find(`#idCk_${index}`).text().trim();
-                        let aktual = $(this).find(`#status_${index}`).val();
-                        let tindakan = $(this).find(`#tindakan_${index}`).val();
-                        let hasil = $(this).find(`#hasil_${index}`).val();
-                        let keterangan = $(this).find(`#keterangan_input_${index}`).val();
-                        let gambar = $(this).find(`#keterangan_file_${index}`)[0].files[0];
-
-                        // Tambahkan data ke formData
-                        formData.append(`data[${index}][id_pmm]`, idPmm);
-                        formData.append(`data[${index}][id_ck]`, idCk);
-                        formData.append(`data[${index}][id_lini]`, idLini);
-                        formData.append(`data[${index}][id_area]`, idArea);
-                        formData.append(`data[${index}][id_mesin]`, idMesin);
-                        formData.append(`data[${index}][aktual]`, aktual);
-                        formData.append(`data[${index}][tindakan]`, tindakan);
-                        formData.append(`data[${index}][hasil]`, hasil);
-                        formData.append(`data[${index}][keterangan]`, keterangan);
-                        formData.append(`data[${index}][status]`, "1");
-                        formData.append(`gambarPm_${index}`, gambarPm);
-                        formData.append(`data[${index}][catatan]`, catatan);
-
-                        // Jika ada gambar, tambahkan ke formData
-                        if (gambar) {
-                            formData.append(`gambar_${index}`, gambar);
-                        }
-
-                        index++;
-                    });
-
-                    // Kirim data dengan AJAX menggunakan FormData
-                    $.ajax({
-                        url: "<?= site_url('pengerjaan/addRes'); ?>/" + idPmm,
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.status === "success") {
-                                Swal.fire("Berhasil!", "Data berhasil disimpan!", "success").then(() => {
-                                    window.location.href = "<?= site_url('pengerjaan'); ?>";
-                                });
-                            } else {
-                                Swal.fire("Gagal!", response.message || "Terjadi kesalahan saat menyimpan!", "error");
-                            }
-                        },
-                        error: function() {
-                            Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server!", "error");
-                        }
-                    });
+                title: "Menyimpan data...",
+                html: "Sedang memproses data, harap tunggu...",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
                 }
             });
+
+            let idLini = $("#id_lini").val();
+            let idArea = $("#id_area").val();
+            let idMesin = $("#id_mesin").val();
+            let idPmm = $("#id_pmm").val();
+            let catatan = $("#catatans").val();
+            let gambarPm = document.getElementById("uploadFile").files[0];
+            
+            // Kumpulkan semua data yang akan dikirim
+            let allData = [];
+            let totalItems = 0;
+            let processedItems = 0;
+            let successCount = 0;
+            let errorCount = 0;
+            let errorMessages = [];
+
+            // Kumpulkan data dari setiap baris
+            $("#tbCheckSheet tbody tr").each(function(index) {
+                let idCk = $(this).find(`#idCk_${index}`).text().trim();
+                let aktual = $(this).find(`#status_${index}`).val();
+                let tindakan = $(this).find(`#tindakan_${index}`).val();
+                let hasil = $(this).find(`#hasil_${index}`).val();
+                let keterangan = $(this).find(`#keterangan_input_${index}`).val();
+                let gambar = $(this).find(`#keterangan_file_${index}`)[0].files[0];
+
+                allData.push({
+                    index: index,
+                    id_pmm: idPmm,
+                    id_ck: idCk,
+                    id_lini: idLini,
+                    id_area: idArea,
+                    id_mesin: idMesin,
+                    aktual: aktual,
+                    tindakan: tindakan,
+                    hasil: hasil,
+                    keterangan: keterangan,
+                    status: "1",
+                    catatan: catatan,
+                    gambar: gambar,
+                    gambarPm: index === 0 ? gambarPm : null // Hanya kirim gambarPm sekali
+                });
+            });
+
+            totalItems = allData.length;
+
+            // Fungsi untuk mengirim data satu per satu
+            function sendDataSequentially() {
+                if (processedItems >= totalItems) {
+                    // Semua data telah diproses
+                    Swal.close();
+                    if (errorCount > 0) {
+                        Swal.fire({
+                            title: "Peringatan!",
+                            html: `Data berhasil disimpan dengan beberapa masalah:<br>
+                                   Berhasil: ${successCount}<br>
+                                   Gagal: ${errorCount}<br><br>
+                                   Pesan error: ${errorMessages.join('<br>')}`,
+                            icon: "warning",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            window.location.href = "<?= site_url('pengerjaan'); ?>";
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Berhasil!",
+                            text: "Semua data berhasil disimpan!",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            window.location.href = "<?= site_url('pengerjaan'); ?>";
+                        });
+                    }
+                    return;
+                }
+
+                let currentData = allData[processedItems];
+                let formData = new FormData();
+
+                // Tambahkan semua data ke FormData
+                for (let key in currentData) {
+                    if (currentData[key] !== null && currentData[key] !== undefined) {
+                        if (key === 'gambar' || key === 'gambarPm') {
+                            if (currentData[key]) {
+                                formData.append(key === 'gambar' ? `gambar_${currentData.index}` : `gambarPm_${currentData.index}`, currentData[key]);
+                            }
+                        } else {
+                            formData.append(`data[${currentData.index}][${key}]`, currentData[key]);
+                        }
+                    }
+                }
+
+                // Update progress
+                Swal.update({
+                    html: `Menyimpan data...<br>
+                          Proses: ${processedItems + 1} dari ${totalItems}<br>
+                          Berhasil: ${successCount}<br>
+                          Gagal: ${errorCount}`
+                });
+
+                // Kirim data
+                $.ajax({
+                    url: "<?= site_url('pengerjaan/addRes'); ?>/" + idPmm,
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function(response) {
+                        processedItems++;
+                        if (response.status === "success") {
+                            successCount++;
+                        } else {
+                            errorCount++;
+                            errorMessages.push(`Baris ${currentData.index + 1}: ${response.message || 'Tidak ada pesan error'}`);
+                        }
+                        sendDataSequentially();
+                    },
+                    error: function(xhr) {
+                        processedItems++;
+                        errorCount++;
+                        errorMessages.push(`Baris ${currentData.index + 1}: ${xhr.statusText || 'Kesalahan jaringan'}`);
+                        sendDataSequentially();
+                    }
+                });
+            }
+
+            // Mulai proses pengiriman
+            sendDataSequentially();
         }
+    });
+}
     });
 </script>
 

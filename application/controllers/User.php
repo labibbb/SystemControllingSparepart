@@ -38,21 +38,59 @@ class User extends CI_Controller {
         $this->load->view('user', $data);
     }
 
-    public function add() {
-        date_default_timezone_set('Asia/Jakarta');
+     public function add() {
+        $username = $this->input->post('username');
+        
+        // Validasi untuk CREATE: username harus unik
+        if ($this->User_model->check_existing_data($username)) {
+            echo json_encode(['status' => 'error', 'message' => 'Username sudah terdaftar']);
+            return;
+        }
 
         $data = [
-            'username' => $this->input->post('username'),
-            'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
-            'dipname'  => $this->input->post('dipname'),
-            'level'    => $this->input->post('level'),
-            'id'     => $this->input->post('id'),
-            'plant'    => $this->input->post('plant'),
+            'username' => $username,
+            'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+            'dipname' => $this->input->post('dipname'),
+            'level' => $this->input->post('level'),
+            'id' => $this->input->post('id'),
+            'plant' => $this->input->post('plant'),
             'status' => 1,
             'active' => 1,
             'sysdate'  => date('Y-m-d H:i:s')
         ];
+
         $this->User_model->insert_user($data);
+        echo json_encode(['status' => 'success']);
+    }
+
+    public function update() {
+        $id = $this->input->post('id_users');
+        $username = $this->input->post('username');
+        $current_user = $this->User_model->get_user_by_id($id);
+
+        // Validasi untuk UPDATE: username unik hanya jika berubah/bukan milik user lain
+        if ($username != $current_user['username'] && $this->User_model->check_existing_data($username)) {
+            echo json_encode(['status' => 'error', 'message' => 'Username sudah terdaftar']);
+            return;
+        }
+
+        $data = [
+            'username' => $username,
+            'dipname' => $this->input->post('dipname'),
+            'level' => $this->input->post('level'),
+            'id' => $this->input->post('id'),
+            'plant' => $this->input->post('plant'),
+            'status' => 1,
+            'active' => 1,
+            'sysdate'  => date('Y-m-d H:i:s')
+        ];
+
+        // Update password hanya jika diisi
+        if (!empty($this->input->post('password'))) {
+            $data['password'] = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
+        }
+
+        $this->User_model->update_user($id, $data);
         echo json_encode(['status' => 'success']);
     }
 
@@ -61,28 +99,7 @@ class User extends CI_Controller {
         echo json_encode($user);
     }
 
-    public function update() {
-        $id = $this->input->post('id_users');
-        date_default_timezone_set('Asia/Jakarta');
-
-        $data = [
-            'username' => $this->input->post('username'),
-            'dipname'  => $this->input->post('dipname'),
-            'level'    => $this->input->post('level'),
-            'id'     => $this->input->post('id'),
-            'plant'    => $this->input->post('plant'),
-            'status' => 1,
-            'active' => 1,
-            'sysdate'  => date('Y-m-d H:i:s')
-        ];
-        
-        if ($this->input->post('password')) {
-            $data['password'] = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
-        }
-        
-        $this->User_model->update_user($id, $data); // Perbaiki dari User_Model ke User_model
-        echo json_encode(['status' => 'success']);
-    }
+    
 
     public function delete($id) {
         if ($id) {

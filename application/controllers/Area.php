@@ -39,6 +39,14 @@ class Area extends CI_Controller {
     }
 
     public function add() {
+        $existing = $this->Area_model->check_existing_data($this->input->post('nama_area'));
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
         $data = [
             'id_lini'   => $this->input->post('id_lini'),
             'nama_area' => $this->input->post('nama_area'),
@@ -53,10 +61,20 @@ class Area extends CI_Controller {
     }
 
     public function update() {
+        $existing = $this->Area_model->check_existing_data($this->input->post('nama_area'));
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
         $id = $this->input->post('id_area');
         $data = [
             'id_lini'   => $this->input->post('id_lini'),
-            'nama_area' => $this->input->post('nama_area')
+            'nama_area' => $this->input->post('nama_area'),
+            'status'    => 1
+
         ];
         $this->Area_model->update_area($id, $data);
         echo json_encode(['status' => 'success']);

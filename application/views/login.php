@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 	
 <body class="hold-transition theme-primary bg-img" style="background-image: url(<?= base_url() ?>public/images/auth-bg/bg-1.jpg)">
-	
+	 
 	<div class="container h-p100" id="loginPage">
 		<div class="row align-items-center justify-content-md-center h-p100">	
 			<div class="col-12">
@@ -47,6 +47,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										<div class="input-group mb-3">
 											<span class="input-group-text  bg-transparent"><i class="ti-lock"></i></span>
 											<input type="password" class="form-control ps-15 bg-transparent" name="password" placeholder="Password" required>
+											<span class="input-group-text bg-transparent" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password';this.querySelector('i').className=this.previousElementSibling.type==='password'?'ti-eye':'ti-eye-off'">
+												<i class="ti-eye"></i>
+											</span>
 										</div>
 									</div>
 									<div class="row">

@@ -175,7 +175,7 @@
                     <!-- Baris pertama: Tahun dan Bulan sebelahan -->
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>Tahun</label>
+                            <label>Tahun</label> <span class="text-danger">*</span>
                             <select id="tahun" class="form-control">
                                 <option value="">Pilih Tahun</option>
                                 <?php for ($i = date('Y'); $i <= date('Y') + 4; $i++): ?>
@@ -184,7 +184,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label>Bulan</label>
+                            <label>Bulan</label> <span class="text-danger">*</span>
                             <select id="bulan" class="form-control">
                                 <option value="">Pilih Bulan</option>
                                 <?php for ($i = 1; $i <= 12; $i++): ?>
@@ -197,7 +197,7 @@
                     <!-- Baris kedua: Lini dan Area sebelahan -->
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label>Lini</label>
+                            <label>Lini</label> <span class="text-danger">*</span>
                             <select id="id_lini" class="form-control">
                                 <option value="">Pilih Lini</option>
                                 <?php foreach ($lini as $l): ?>
@@ -206,15 +206,22 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label>Area</label>
+                            <label>Area</label> <span class="text-danger">*</span>
                             <select id="id_area" class="form-control" disabled></select>
                         </div>
                     </div>
                     
                     <!-- Baris ketiga: Mesin -->
+                    <!-- Baris ketiga: Mesin dengan search box -->
                     <div class="form-group">
-                        <label>Mesin</label>
-                        <select id="id_mesin" class="form-control" disabled></select>
+                        <label>Mesin</label> <span class="text-danger">*</span>
+                        <div class="input-group mb-2">
+                            <input type="text" id="searchMesin" class="form-control" placeholder="Cari mesin..." disabled>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            </div>
+                        </div>
+                        <select id="id_mesin" class="form-control" size="5" disabled required></select>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -241,7 +248,12 @@
             if (bulan === "") pesan += "Bulan harus dipilih.<br>";
             if (idLini === "") pesan += "Lini harus dipilih.<br>";
             if (idArea === "") pesan += "Area harus dipilih.<br>";
-            if (idMesin === "") pesan += "Mesin harus dipilih.<br>";
+            if (idMesin === "" || idMesin === null) {
+        pesan += "Mesin harus dipilih.<br>";
+        $("#id_mesin").css("border", "1px solid red");
+        $("#searchMesin").css("border", "1px solid red");
+        isValid = false;
+    }
 
             if (pesan !== "") {
                 // Jika ada input yang kosong, tampilkan peringatan
@@ -282,54 +294,94 @@
         });
 
         $('#table1').DataTable({
-            "ordering": true, // Mengaktifkan sorting
-            "paging": true,   // Mengaktifkan paginasi
-            "searching": true // Mengaktifkan fitur pencarian
-        });
+    "ordering": true,
+    "paging": true,
+    "searching": true,
+    "info": true,
+    "lengthChange": true,
+    "columnDefs": [
+        { "orderable": false, "targets": [0,5] } // Kolom No dan Aksi tidak bisa di-sort
+    ],
+    "order": [[1, 'asc']], // Default sort by tahun
+    "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        }
+});
 
-        $('#table2').DataTable({
-            "ordering": true,
-            "paging": true,
-            "searching": true
-        });
+$('#table2').DataTable({
+    "ordering": true,
+    "paging": true,
+    "searching": true,
+    "info": true,
+    "lengthChange": true,
+    "columnDefs": [
+        { "orderable": false, "targets": [0,5] }
+    ],
+    "order": [[1, 'asc']],
+    "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        }
+});
 
         function filterData() {
-        $.post("<?= base_url('pmyearly/filter'); ?>", {
-            tahun: $('#filterTahun1').val(),
-            bulan: $('#filterBulan1').val(),
-            area: $('#filterArea1').val()
-        }, function (data) {
-            let rows = '';
-            let result = JSON.parse(data);
+    $.post("<?= base_url('pmyearly/filter'); ?>", {
+        tahun: $('#filterTahun1').val(),
+        bulan: $('#filterBulan1').val(),
+        area: $('#filterArea1').val()
+    }, function(data) {
+        let result = JSON.parse(data);
+        let table = $('#table1').DataTable();
+        
+        table.clear();
+        
+        if (result.length === 0) {
+            table.row.add(['1', '', '', 'Data Tidak Ditemukan', '', '']).draw();
+        } else {
+            result.forEach((row, index) => {  // Tambahkan parameter index
+                let statusButton = '';
+                if (row.status == 1) {
+                    statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
+                } else if (row.status == 2) {
+                    statusButton = `<button class="btn btn-sm btn-danger">Finish On Delay</button>`;
+                } else if (row.status == 3) {
+                    statusButton = `<button class="btn btn-sm btn-success">Finish On Time</button>`;
+                }
 
-            if (result.length === 0) {
-                rows = `<tr>
-                    <td colspan="6" class="text-center text-danger">Data Not Found</td>
-                </tr>`;
-            } else {
-                result.forEach((row, index) => {
-                    let statusButton = '';
-                    if (row.status == 1) {
-                        statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
-                    } else if (row.status == 2) {
-                        statusButton = `<button class="btn btn-sm btn-danger">Finish On Delay</button>`;
-                    } else if (row.status == 3) {
-                        statusButton = `<button class="btn btn-sm btn-success">Finish On Time</button>`;
-                    }
-
-                    rows += `<tr>
-                        <td>${index + 1}</td>
-                        <td>${row.tahun}</td>
-                        <td>${row.bulan}</td>
-                        <td>${row.nama_mesin}</td>
-                        <td>${statusButton}</td>
-                        <td class="bg-secondary text-white text-center">No Action</td>
-                    </tr>`;
-                });
-            }
-
-            $('#table1-body').html(rows);
-        });
+                table.row.add([
+                    index + 1,  // Gunakan index + 1 untuk nomor urut
+                    row.tahun,
+                    row.bulan,
+                    row.nama_mesin,
+                    statusButton,
+                    '<span class="bg-secondary text-white text-center">No Action</span>'
+                ]);
+            });
+        }
+        
+        table.draw();
+    });
 }
 
 
@@ -337,43 +389,43 @@
         $('#filterTahun1, #filterBulan1, #filterArea1').on('change', filterData);
 
         function filterData2() {
-            $.post("<?= base_url('pmyearly/filter2'); ?>", {
-                tahun: $('#filterTahun2').val(),
-                bulan: $('#filterBulan2').val(),
-                area: $('#filterArea2').val()
-            }, function (data) {
-                let rows = '';
-                let result = JSON.parse(data);
-
-                if (result.length === 0) {
-                    rows = `<tr>
-                        <td colspan="6" class="text-center text-danger">Data Not Found</td>
-                    </tr>`;
-                } else {
-                    result.forEach((row, index) => {
-                        let statusButton = '';
-                        if (row.status == 1) {
-                            statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
-                        } else if (row.status == 2) {
-                            statusButton = `<button class="btn btn-sm btn-danger">Finish On Delay</button>`;
-                        } else if (row.status == 3) {
-                            statusButton = `<button class="btn btn-sm btn-success">Finish On Time</button>`;
-                        }
-
-                        rows += `<tr>
-                            <td>${index + 1}</td>
-                            <td>${row.tahun}</td>
-                            <td>${row.bulan}</td>
-                            <td>${row.nama_mesin}</td>
-                            <td>${statusButton}</td>
-                            <td class="bg-secondary text-white text-center">No Action</td>
-                        </tr>`;
-                    });
+    $.post("<?= base_url('pmyearly/filter2'); ?>", {
+        tahun: $('#filterTahun2').val(),
+        bulan: $('#filterBulan2').val(),
+        area: $('#filterArea2').val()
+    }, function(data) {
+        let result = JSON.parse(data);
+        let table = $('#table2').DataTable();
+        
+        table.clear();
+        
+        if (result.length === 0) {
+            table.row.add(['1', '', '', 'Data Tidak Ditemukan', '', '']).draw();
+        } else {
+            result.forEach((row, index) => {  // Tambahkan parameter index
+                let statusButton = '';
+                if (row.status == 1) {
+                    statusButton = `<button class="btn btn-sm btn-primary">Belum Terlaksana</button>`;
+                } else if (row.status == 2) {
+                    statusButton = `<button class="btn btn-sm btn-danger">Finish On Delay</button>`;
+                } else if (row.status == 3) {
+                    statusButton = `<button class="btn btn-sm btn-success">Finish On Time</button>`;
                 }
 
-                $('#table2-body').html(rows);
+                table.row.add([
+                    index + 1,  // Gunakan index + 1 untuk nomor urut
+                    row.tahun,
+                    row.bulan,
+                    row.nama_mesin,
+                    statusButton,
+                    '<span class="bg-secondary text-white text-center">No Action</span>'
+                ]);
             });
         }
+        
+        table.draw();
+    });
+}
 
         // Event listener hanya untuk filter yang berkaitan dengan table1
         $('#filterTahun2, #filterBulan2, #filterArea2').on('change', filterData2);
@@ -389,14 +441,28 @@
             });
         });
 
-        $('#id_area').change(function() {
+       $('#id_area').change(function() {
             let idArea = $(this).val();
             $('#id_mesin').prop('disabled', false);
+            $('#searchMesin').prop('disabled', false);
             $.post('<?= site_url("settingfwm/get_mesin"); ?>', { id_area: idArea }, function(data) {
                 $('#id_mesin').html('<option value="">Pilih Mesin</option>');
                 $.each(JSON.parse(data), function(index, value) {
                     $('#id_mesin').append('<option value="' + value.id_mesin + '">' + value.nama_mesin + '</option>');
                 });
+            });
+        });
+
+        // Fungsi untuk mencari mesin
+        $('#searchMesin').on('input', function() {
+            let searchText = $(this).val().toLowerCase();
+            $('#id_mesin option').each(function() {
+                let optionText = $(this).text().toLowerCase();
+                if (optionText.includes(searchText)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
             });
         });
     });

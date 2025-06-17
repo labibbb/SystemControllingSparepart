@@ -48,7 +48,7 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <?php if ($row['status'] == 1): ?>
+                                                        <?php if ($row['status'] == 1 || $row['status'] == 0): ?>
                                                             <button class="btn btn-warning btn-sm" onclick="editMesin(<?= $row['id_mesin']; ?>)">Edit</button>
                                                             <button class="btn btn-danger btn-sm" onclick="deleteMesin(<?= $row['id_mesin']; ?>)">Delete</button>
                                                         <?php endif; ?>
@@ -99,7 +99,7 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <?php if ($row['status'] == 1): ?>
+                                                        <?php if ($row['status'] == 1 || $row['status'] == 0): ?>
                                                             <button class="btn btn-warning btn-sm" onclick="editMesin(<?= $row['id_mesin']; ?>)">Edit</button>
                                                             <button class="btn btn-danger btn-sm" onclick="deleteMesin(<?= $row['id_mesin']; ?>)">Delete</button>
                                                         <?php endif; ?>
@@ -131,19 +131,19 @@
                 <form id="formMesin">
                     <input type="hidden" id="id_mesin">
                     <div class="form-group">
-                        <label>Nama Mesin</label>
+                       <label>Nama Mesin <span class="text-danger">*</span></label>
                         <input type="text" id="nama_mesin" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Tipe Mesin</label>
+                        <label>Tipe Mesin <span class="text-danger">*</span></label>
                         <input type="text" id="tipe_mesin" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Kapasitas</label>
+                        <label>Kapasitas</label> <span class="text-danger">*</span>
                         <input type="number" id="kapasitas" class="form-control" required>
                     </div>
                     <div class="form-group">
-                <label>Painting 1</label>
+                <label>Painting 1</label> <span class="text-danger">*</span>
                 <select id="id_area1" class="form-control area-select" name="id_area">
                     <option value="">-- Pilih Area Painting 1 --</option>
                     <?php foreach ($areas_painting1 as $area): ?>
@@ -153,7 +153,7 @@
             </div>
 
             <div class="form-group">
-                <label>Painting 2</label>
+                <label>Painting 2</label> <span class="text-danger">*</span>
                 <select id="id_area2" class="form-control area-select" name="id_area">
                     <option value="">-- Pilih Area Painting 2 --</option>
                     <?php foreach ($areas_painting2 as $area): ?>
@@ -184,13 +184,41 @@
     $('#tabel-mesin1').DataTable({
         "ordering": true, // Mengaktifkan sorting
         "paging": true,   // Mengaktifkan paginasi
-        "searching": true // Mengaktifkan fitur pencarian
+        "searching": true, // Mengaktifkan fitur pencarian
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        }
     });
 
     $('#tabel-mesin2').DataTable({
         "ordering": true,
         "paging": true,
-        "searching": true
+        "searching": true,
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        }
     });
 });
 
@@ -222,9 +250,14 @@ $(document).ready(function () {
             let url = id ? '<?= site_url("mesin/update"); ?>' : '<?= site_url("mesin/add"); ?>';
 
             $.post(url, { id_mesin: id, nama_mesin: nama_mesin, tipe_mesin: tipe_mesin, kapasitas: kapasitas, id_area: id_area }, function(response) {
-                console.log(response); // Debugging
-                $('#modalMesin').modal('hide');
-                Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
+                if (response.status === 'error') {
+            // Ini akan terpanggil ketika controller mengembalikan status error
+            Swal.fire('Peringatan!', ' nama mesin sudah ada dalam database.', 'warning');
+        } else {
+            // Jika sukses
+            $('#modalMesin').modal('hide');
+            Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
+        }
             }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
                 console.error("Error:", textStatus, errorThrown);
                 Swal.fire('Error!', 'Terjadi kesalahan pada server.', 'error');

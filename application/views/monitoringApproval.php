@@ -17,16 +17,16 @@
                             <h5>Status Description</h5>
                             <ul class="list-unstyled">
                                 <li class="d-flex align-items-center mb-2">
-                                    <span class="status-box" style="background-color: black;"></span> On Progress Checking
+                                    <span class="status-box" style="background-color: black;"></span> Sedang dalam pengerjaan
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
-                                    <span class="status-box" style="background-color: blue;"></span> On Waiting Approve Foreman
+                                    <span class="status-box" style="background-color: blue;"></span> Sedang menunggu approval foreman
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
-                                    <span class="status-box" style="background-color: red;"></span> Data Reject / Waiting Revision
+                                    <span class="status-box" style="background-color: red;"></span> Data Reject / Menunggu revisi
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
-                                    <span class="status-box" style="background-color: purple;"></span> On Waiting Approve Supervisor
+                                    <span class="status-box" style="background-color: purple;"></span> Sedang menunggu approval supervisor
                                 </li>
                                 <li class="d-flex align-items-center mb-2">
                                     <span class="status-box" style="background-color: lightseagreen;"></span> Complete All
@@ -76,41 +76,41 @@
                 ];
             }, $pmmonthly), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
 
-                eventClick: function(info) {
-                // Cek level user dari PHP session
-                <?php if ($this->session->userdata('level') == 2): ?>
-                    // Jika level 2, tidak melakukan apa-apa (nonaktifkan klik)
-                    return false;
-                <?php else: ?>
-                // Buat form secara dinamis
-                var form = document.createElement("form");
-                form.action = "<?= site_url('approvalSPV/read'); ?>";
-                form.method = "POST";
+            //     eventClick: function(info) {
+            //     // Cek level user dari PHP session
+            //     <?php if ($this->session->userdata('level') == 2): ?>
+            //         // Jika level 2, tidak melakukan apa-apa (nonaktifkan klik)
+            //         return false;
+            //     <?php else: ?>
+            //     // Buat form secara dinamis
+            //     var form = document.createElement("form");
+            //     form.action = "<?= site_url('approvalSPV/read'); ?>";
+            //     form.method = "POST";
 
-                // Tambahkan input hidden untuk data yang dikirim
-                var id_mesin = document.createElement("input");
-                id_mesin.type = "hidden";
-                id_mesin.name = "id_mesin";
-                id_mesin.value = info.event.extendedProps.id_mesin;
-                form.appendChild(id_mesin);
+            //     // Tambahkan input hidden untuk data yang dikirim
+            //     var id_mesin = document.createElement("input");
+            //     id_mesin.type = "hidden";
+            //     id_mesin.name = "id_mesin";
+            //     id_mesin.value = info.event.extendedProps.id_mesin;
+            //     form.appendChild(id_mesin);
 
-                var tanggal = document.createElement("input");
-                tanggal.type = "hidden";
-                tanggal.name = "tanggal";
-                tanggal.value = info.event.extendedProps.tanggal;
-                form.appendChild(tanggal);
+            //     var tanggal = document.createElement("input");
+            //     tanggal.type = "hidden";
+            //     tanggal.name = "tanggal";
+            //     tanggal.value = info.event.extendedProps.tanggal;
+            //     form.appendChild(tanggal);
 
-                var id_pmm = document.createElement("input");
-                id_pmm.type = "hidden";
-                id_pmm.name = "id_pmm";
-                id_pmm.value = info.event.extendedProps.id_pmm;
-                form.appendChild(id_pmm);
+            //     var id_pmm = document.createElement("input");
+            //     id_pmm.type = "hidden";
+            //     id_pmm.name = "id_pmm";
+            //     id_pmm.value = info.event.extendedProps.id_pmm;
+            //     form.appendChild(id_pmm);
 
-                // Tambahkan form ke body dan submit
-                document.body.appendChild(form);
-                form.submit();
-                <?php endif; ?>
-            }
+            //     // Tambahkan form ke body dan submit
+            //     document.body.appendChild(form);
+            //     form.submit();
+            //     <?php endif; ?>
+            // }
         });
 
         calendar.render();

@@ -32,5 +32,11 @@ class Area_model extends CI_Model {
         $this->db->where('id_area', $id);
         return $this->db->update('area', ['status' => 0]); // Soft delete
     }
+    public function check_existing_data($usernames) {
+        $this->db->where('nama_area', $usernames);
+        $query = $this->db->get('area'); // ganti dengan nama tabel yang benar jika berbeda
+    
+        return $query->num_rows() > 0;
+    }
 }
 ?>

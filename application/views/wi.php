@@ -6,7 +6,7 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h3 class="box-title">Setting Work Instruction</h3>
+                    <h3 class="box-title">Work Instruction</h3>
                     <button class="btn btn-success" onclick="openModal()">Tambah Work Instruction</button>
                 </div>
                 <div class="box-body">
@@ -55,12 +55,12 @@
             <div class="modal-body">
                 <form id="formWi" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="nama_wi">Nama WI</label>
+                        <label for="nama_wi">Nama WI</label> <span class="text-danger">*</span>
                         <input type="text" class="form-control" id="nama_wi" name="nama_wi" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="file_wi">Upload File Excel</label>
+                        <label for="file_wi">Upload File</label> <label>(File harus berextensi .xls, .xlsx, atau .pdf)</label> <span class="text-danger">*</span>
                         <input type="file" class="form-control" id="file_wi" name="file_wi" accept=".xls,.xlsx" required>
                     </div>
 
@@ -72,11 +72,50 @@
 </div>
 
 <script>
+
+    $(document).ready(function() {
+    $('#example1').DataTable({
+        "responsive": true,
+        "autoWidth": false,
+        "ordering": true,
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            },
+            "emptyTable": "Tidak ada data yang tersedia",
+            "loadingRecords": "Memuat...",
+            "processing": "Memproses..."
+        }
+    });
+});
 function openModal() {
     $('#modalWi').modal('show');
     $('#formWi')[0].reset();
-    $('#modal-title').text('Tambah Setting Instructions');
+    $('#modal-title').text('Tambah Work Instructions');
 }
+// Validasi ekstensi file
+$('#file_wi').on('change', function () {
+    const allowedExtensions = ['xls', 'xlsx', 'pdf'];
+    const file = this.files[0];
+    
+    if (file) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+            Swal.fire("Format Tidak Valid", "Hanya file dengan format .xls, .xlsx, atau .pdf yang diperbolehkan.", "error");
+            this.value = ''; // reset file input
+        }
+    }
+});
+
 
 $('#formWi').submit(function(e) {
     e.preventDefault();
@@ -109,7 +148,7 @@ $('#formWi').submit(function(e) {
                 $('#modalWi').modal('hide');
                 $('#formWi')[0].reset(); // Reset form setelah sukses
             } else {
-                Swal.fire("Error!", "Data dengan nama tersebut sudah terseida!", "error");
+                Swal.fire("Error!", "Data dengan nama tersebut sudah tersedia!", "error");
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {

@@ -45,6 +45,14 @@ class Mesin extends CI_Controller {
     
 
     public function add() {
+        $existing = $this->Mesin_model->check_existing_data($this->input->post('nama_mesin'));
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
         $data = [
             'id_area' => $this->input->post('id_area'),
             'nama_mesin' => $this->input->post('nama_mesin'),
@@ -61,12 +69,22 @@ class Mesin extends CI_Controller {
     }
 
     public function update() {
+        $existing = $this->Mesin_model->check_existing_data($this->input->post('nama_mesin'));
+
+        if ($existing) {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+            return;
+        }
         $id = $this->input->post('id_mesin');
         $data = [
             'id_area' => $this->input->post('id_area'),
             'nama_mesin' => $this->input->post('nama_mesin'),
             'tipe_mesin' => $this->input->post('tipe_mesin'),
-            'kapasitas' => $this->input->post('kapasitas')
+            'kapasitas' => $this->input->post('kapasitas'),
+                        'status' => 1
+
         ];
         $this->Mesin_model->update_mesin($id, $data);
         echo json_encode(['status' => 'success']);

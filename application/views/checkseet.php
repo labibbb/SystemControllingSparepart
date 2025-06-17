@@ -53,6 +53,30 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+    $('#example1').DataTable({
+        "responsive": true,
+        "autoWidth": false,
+        "ordering": true,
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            },
+            "emptyTable": "Tidak ada data yang tersedia",
+            "loadingRecords": "Memuat...",
+            "processing": "Memproses..."
+        }
+    });
+});
 </script>
 
 <?php $this->load->view('layouts/footer'); ?>

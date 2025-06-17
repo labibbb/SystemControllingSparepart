@@ -7,7 +7,7 @@
             <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
                     <h3 class="box-title">Setting FWM</h3>
-                    <button class="btn btn-success" onclick="openModal()">Tambah Setting</button>
+                    <button class="btn btn-success" onclick="openModal()">Tambah Setting FWM</button>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -60,7 +60,7 @@
             <div class="modal-body">
                 <form id="formSetting">
                     <div class="form-group">
-                        <label>Lini</label>
+                        <label>Lini</label> <span class="text-danger">*</span>
                         <select id="id_lini" class="form-control">
                             <option value="">Pilih Lini</option>
                             <?php foreach ($lini as $l): ?>
@@ -69,11 +69,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Area</label>
+                        <label>Area</label> <span class="text-danger">*</span>
                         <select id="id_area" class="form-control" disabled></select>
                     </div>
                     <div class="form-group">
-                        <label>Mesin</label>
+                        <label>Mesin</label> <span class="text-danger">*</span>
                         <select id="id_mesin" class="form-control" disabled></select>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -95,7 +95,7 @@
                 <form id="formFrekuensi">
                     <input type="hidden" id="id_fwp" name="id_fwp">
                     <div class="form-group">
-                        <label>Frekuensi</label>
+                        <label>Frekuensi</label> <span class="text-danger">*</span>
                         <select name="frekuensi" class="form-control">
                             <option value="1 week">1 Week</option>
                             <option value="2 weeks">2 Weeks</option>
@@ -129,7 +129,7 @@
                 <form id="formInstruksi">
                     <input type="hidden" id="id_instruksi" name="id_fwp">
                     <div class="form-group">
-                        <label>Instruksi Kerja</label>
+                        <label>Instruksi Kerja</label> <span class="text-danger">*</span>
                         <select name="instruksi_kerja" class="form-control">
                             <?php foreach ($wi as $row): ?>
                                 <option value="<?= $row['id_wi']; ?>"><?= $row['nama_wi']; ?></option>
@@ -291,6 +291,25 @@
             }
         });
     });
+
+    $(document).ready(function() {
+    $('#example1').DataTable({
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        }
+    });
+});
 </script>
 
 

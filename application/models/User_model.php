@@ -67,5 +67,14 @@ class User_model extends CI_Model {
         $this->db->where('id_users', $id);
         return $this->db->update('users', ['active' => 0]); // Soft delete
     }
+    public function check_existing_data($username, $exclude_id = null) {
+    $this->db->where('username', $username);
+    
+    if ($exclude_id) {
+        $this->db->where('id_users !=', $exclude_id);
+    }
+    
+    return $this->db->get('users')->num_rows() > 0;
+}
 }
 ?>

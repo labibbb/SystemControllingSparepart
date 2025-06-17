@@ -6,7 +6,7 @@
         <section class="content">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Schedule Monthly PM</h3>
+                    <h3 class="box-title">Schedule PM Monthly</h3>
                     <!-- <div class="mt-2">
                         <select id="id_lini" class="form-control" required style="width: 300px;">
                             <?php foreach ($lini as $l): ?>
@@ -83,19 +83,19 @@
                                                     echo '<span class="badge bg-warning">On Progress Checking</span>';
                                                     break;
                                                 case 5:
-                                                    echo '<span class="badge bg-warning">Waiting Approval Foreman</span>';
+                                                    echo '<span class="badge bg-warning">Menunggu Approval Foreman</span>';
                                                     break;
                                                 case 6:
-                                                    echo '<span class="badge bg-success">Waiting Approval Supervisor</span>';
+                                                    echo '<span class="badge bg-success">Menunggu Approval Supervisor</span>';
                                                     break;
                                                 case 7:
-                                                    echo '<span class="badge bg-danger">Rejected by Foreman</span>';
+                                                    echo '<span class="badge bg-danger">Ditolak Foreman</span>';
                                                     break;
                                                 case 8:
                                                     echo '<span class="badge bg-success">Complete All</span>';
                                                     break;
                                                 case 9:
-                                                    echo '<span class="badge bg-danger">Rejected by Superviosr</span>';
+                                                    echo '<span class="badge bg-danger">Ditolak Supervisor</span>';
                                                     break;
                                                 default:
                                                     echo '<span class="badge bg-secondary">Status Tidak Diketahui</span>';
@@ -177,7 +177,7 @@
 
             if (result.length === 0) {
                 rows = `<tr>
-                    <td colspan="12" class="text-center text-danger">Data Not Found</td>
+                    <td colspan="12" class="text-center text-danger">Data Tidak ditemukan</td>
                 </tr>`;
             } else {
                 result.forEach((row, index) => {
@@ -276,5 +276,40 @@
         });
     }
 </script>
+
+<script>
+$(document).ready(function() {
+    $('#example1').DataTable({
+        "language": {
+            "decimal":        "",
+            "emptyTable":     "Tidak ada data yang tersedia",
+            "info":           "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty":      "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered":   "(disaring dari _MAX_ total data)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":    "Tampilkan _MENU_ data",
+            "loadingRecords": "Memuat...",
+            "processing":    "Memproses...",
+            "search":        "Cari:",
+            "zeroRecords":   "Tidak ditemukan data yang sesuai",
+            "paginate": {
+                "first":    "Pertama",
+                "last":     "Terakhir",
+                "next":     "Selanjutnya",
+                "previous": "Sebelumnya"
+            },
+            "aria": {
+                "sortAscending":  ": aktifkan untuk mengurutkan kolom naik",
+                "sortDescending": ": aktifkan untuk mengurutkan kolom turun"
+            }
+        },
+        "responsive": true,
+        "autoWidth": false,
+        "order": [[0, 'asc']]
+    });
+});
+</script>
+
 
 <?php $this->load->view('layouts/footer'); ?>

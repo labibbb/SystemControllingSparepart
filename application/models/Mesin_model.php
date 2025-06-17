@@ -44,6 +44,12 @@ class Mesin_model extends CI_Model {
         $this->db->where('lini.nama_lini', $nama_lini);
         return $this->db->get()->result_array();
     }
+    public function check_existing_data($nama_mesin) {
+        $this->db->where('nama_mesin', $nama_mesin);
+        $query = $this->db->get('mesin'); // ganti dengan nama tabel yang benar jika berbeda
+    
+        return $query->num_rows() > 0;
+    }   
     
 }
 ?>

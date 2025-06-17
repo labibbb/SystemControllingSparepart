@@ -70,14 +70,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</a>
 				<ul class="dropdown-menu animated flipInX">
 				  <li class="user-body">
-					 <a class="dropdown-item" href="#"><i class="ti-user text-muted me-2"></i> Profile</a>
-					 <div class="dropdown-divider"></div>
-					 <li>
-                        <a href="<?= site_url('login'); ?>">
+					 <a href="<?= site_url('login'); ?>">
                             <i class="icon-Logout"><span class="path1"></span><span class="path2"></span></i>
                             <span>Logout</span>
                         </a>
-                    </li> 
+					 <div class="dropdown-divider"></div>
+					 
 				  </li>
 				</ul>
 			</li>	

@@ -11,30 +11,30 @@
                 <div class="box-body">
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="nama_form">Nama Check Sheet</label>
+                            <label for="nama_form">Nama CheckSheet</label> <span class="text-danger">*</span>
                             <input type="text" id="nama_form" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="tanggal_form">Tanggal</label>
+                            <label for="tanggal_form">Tanggal</label> <span class="text-danger">*</span>
                             <input type="date" id="tanggal_form" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="no_form">No Form</label>
+                            <label for="no_form">No Form</label> <span class="text-danger">*</span>
                             <input type="text" id="no_form" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="id_departemen">Pemilik Doc</label>
+                            <label for="id_departemen">Pemilik Doc</label> 
                             <input type="text" id="id_departemen" class="form-control" value="MAINTENANCE DEPT" required disabled>
                         </div>
                         <div class="col-md-6">
-                            <label for="no_doc">No Doc</label>
+                            <label for="no_doc">No Doc</label> <span class="text-danger">*</span>
                             <input type="text" id="no_doc" class="form-control" required>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label for="id_lini">Lini</label>
+                            <label for="id_lini">Lini</label> <span class="text-danger">*</span>
                             <select id="id_lini" class="form-control" required>
                                 <option value="">Pilih Lini</option>
                                 <?php foreach ($lini as $l): ?>
@@ -43,11 +43,11 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="id_area">Area</label>
+                            <label for="id_area">Area</label> <span class="text-danger">*</span>
                             <select id="id_area" class="form-control" required disabled></select>
                         </div>
                         <div class="col-md-6">
-                            <label for="id_mesin">Mesin</label>
+                            <label for="id_mesin">Mesin</label> <span class="text-danger">*</span>
                             <select id="id_mesin" class="form-control" required disabled></select>
                         </div>
                     </div>    
@@ -233,7 +233,7 @@
 
             // Pastikan ada data yang dikirim
             if (dataList.length === 0) {
-                Swal.fire("Gagal", "Isi tabel sebelum menyimpan!", "error");
+                Swal.fire("Gagal", "Isi tabel checksheet sebelum menyimpan!", "error");
                 return;
             }
 

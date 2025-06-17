@@ -302,7 +302,7 @@
 
             // Pastikan ada data yang dikirim
             if (dataList.length === 0) {
-                Swal.fire("Gagal", "Isi tabel sebelum menyimpan!", "error");
+                Swal.fire("Gagal", "Isi tabel Checksheet sebelum menyimpan!", "error");
                 return;
             }
 

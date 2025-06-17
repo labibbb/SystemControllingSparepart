@@ -40,7 +40,7 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <?php if ($row['status'] == 1): ?>
+                                                        <?php if ($row['status'] == 1 || $row['status'] == 0 ): ?>
                                                             <button class="btn btn-warning btn-sm" onclick="editArea(<?= $row['id_area']; ?>)">Edit</button>
                                                             <button class="btn btn-danger btn-sm" onclick="deleteArea(<?= $row['id_area']; ?>)">Delete</button>
                                                         <?php endif; ?>    
@@ -83,7 +83,7 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <?php if ($row['status'] == 1): ?>
+                                                        <?php if ($row['status'] == 1 || $row['status'] == 0): ?>
                                                             <button class="btn btn-warning btn-sm" onclick="editArea(<?= $row['id_area']; ?>)">Edit</button>
                                                             <button class="btn btn-danger btn-sm" onclick="deleteArea(<?= $row['id_area']; ?>)">Delete</button>
                                                         <?php endif; ?>    
@@ -118,7 +118,7 @@
                 <form id="formArea">
                     <input type="hidden" id="id_area">
                     <div class="form-group">
-                        <label>Lini</label>
+                        <label>Lini <span class="text-danger">*</span></label>
                         <select id="id_lini" class="form-control" required>
                             <?php foreach ($lini as $l): ?>
                                 <option value="<?= $l['id_lini']; ?>"><?= $l['nama_lini']; ?></option>
@@ -126,8 +126,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nama Area</label>
+                        <label>Nama Area <span class="text-danger">*</span></label>
                         <input type="text" id="nama_area" class="form-control" required>
+                    </div>
+                    <div class="text-muted mb-3">
+                        <small>Field dengan tanda <span class="text-danger">*</span> wajib diisi</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -143,7 +146,21 @@
         "columnDefs": [{
             "targets": [0, 1, 2, 3],
             "orderable": true
-        }]
+        }],
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        }
     });
 });
 
@@ -161,10 +178,22 @@ $('#formArea').submit(function(e) {
     let nama_area = $('#nama_area').val();
     let url = id ? '<?= site_url("area/update"); ?>' : '<?= site_url("area/add"); ?>';
 
+    
     $.post(url, { id_area: id, id_lini: id_lini, nama_area: nama_area }, function(response) {
-        Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
-    }, 'json');
+       if (response.status === 'error') {
+            // Ini akan terpanggil ketika controller mengembalikan status error
+            Swal.fire('Peringatan!', ' nama area sudah ada dalam database.', 'warning');
+        } else {
+            // Jika sukses
+            $('#modalArea').modal('hide');
+            Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
+        }
+            }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+                Swal.fire('Error!', 'Terjadi kesalahan pada server.', 'error');
+            });
 });
+
 
 function editArea(id) {
     $.get('<?= site_url("area/edit/"); ?>' + id, function(data) {

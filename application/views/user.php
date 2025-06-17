@@ -65,19 +65,19 @@
                 <form id="formUsers">
                     <input type="hidden" id="id_users">
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="username" class="form-control" required>
+                        <label>Username</label> <span class="text-danger">*</span>
+                        <input type="text" id="username" class="form-control" >
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="password" class="form-control" required>
+                        <label>Password</label> <span class="text-danger">*</span>
+                        <input type="password" id="password" class="form-control" >
                     </div>
                     <div class="form-group">
-                        <label>Display Name</label>
-                        <input type="text" id="dipname" class="form-control" required>
+                        <label>Display Name</label> <span class="text-danger">*</span>
+                        <input type="text" id="dipname" class="form-control" >
                     </div>
                     <div class="form-group">
-                        <label>Level</label>
+                        <label>Level</label> <span class="text-danger">*</span>
                         <select id="level" class="form-control" required>
                             <option value="1">Supervisor</option>
                             <option value="2">Foreman</option>
@@ -85,7 +85,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Departemen</label>
+                        <label>Departemen</label> <span class="text-danger">*</span>
                         <select id="id" class="form-control" required>
                             <?php foreach ($departemen as $l): ?>
                                 <option value="<?= $l['id']; ?>"><?= $l['dept']; ?></option>
@@ -93,8 +93,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Plant</label>
-                        <input type="text" id="plant" class="form-control" required>
+                        <label>Plant</label> <span class="text-danger">*</span>
+                        <input type="text" id="plant" class="form-control" >
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
@@ -104,6 +104,32 @@
 </div>
 
 <script>
+$(document).ready(function() {
+    $('#example1').DataTable({
+        "responsive": true,
+        "autoWidth": false,
+        "ordering": true,
+        "language": {
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "zeroRecords": "Tidak ada data yang ditemukan",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            },
+            "emptyTable": "Tidak ada data yang tersedia",
+            "loadingRecords": "Memuat...",
+            "processing": "Memproses..."
+        }
+    });
+});
+
+
 function openModal() {
     $('#modalUsers').modal('show');
     $('#formUsers')[0].reset();
@@ -120,13 +146,29 @@ $('#formUsers').submit(function(e) {
     let level = $('#level').val();
     let role = $('#id').val();
     let plant = $('#plant').val();
+    // Validasi manual (kecuali level dan departemen)
+    if (!username || !password || !dipname || !plant) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validasi Gagal',
+            text: 'Semua kolom harus diisi.'
+        });
+        return;
+    }
+
     let url = id ? '<?= site_url("user/update"); ?>' : '<?= site_url("user/add"); ?>';
 
     // Kirim data ke server
     $.post(url, { id_users: id, username: username, password: password, dipname: dipname, level: level, id: role, plant: plant  }, function(response) {
-        console.log(response);
-        $('#modalUsers').modal('hide');
-        Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
+        // Handle response dari controller
+        if (response.status === 'error') {
+            // Ini akan terpanggil ketika controller mengembalikan status error
+            Swal.fire('Peringatan!', ' username sudah ada dalam database.', 'warning');
+        } else {
+            // Jika sukses
+            $('#modalUsers').modal('hide');
+            Swal.fire('Berhasil!', 'Data berhasil disimpan.', 'success').then(() => location.reload());
+        }
     }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
         console.error("Error:", textStatus, errorThrown);
         Swal.fire('Error!', 'Terjadi kesalahan pada server.', 'error');
